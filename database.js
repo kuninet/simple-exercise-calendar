@@ -23,7 +23,9 @@ const createTablesSQL = `
     username TEXT UNIQUE NOT NULL,
     display_name TEXT NOT NULL,
     color_theme TEXT DEFAULT 'blue',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    default_exercise_id INTEGER DEFAULT 5,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (default_exercise_id) REFERENCES exercises (id)
   );
 
   -- エクササイズ種目テーブル
