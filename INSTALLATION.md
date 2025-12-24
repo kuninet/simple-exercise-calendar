@@ -51,7 +51,7 @@ npm --version
 #### Git を使用する場合
 ```bash
 # リポジトリをクローン
-git clone https://github.com/あなたのユーザー名/simple-exercise-calendar.git
+git clone https://github.com/kuninet/simple-exercise-calendar.git
 cd simple-exercise-calendar
 ```
 
