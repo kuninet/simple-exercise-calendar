@@ -1,0 +1,20 @@
+{
+  "name": "simple-exercise-calendar",
+  "version": "1.0.0",
+  "description": "シンプルなエクササイズカレンダー",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "init-db": "node database.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.6"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": ["exercise", "calendar", "fitness", "tracking"],
+  "author": "",
+  "license": "MIT"
+}

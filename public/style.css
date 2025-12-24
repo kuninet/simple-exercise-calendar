@@ -1,0 +1,2376 @@
+/* 基本スタイル */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f5f5;
+}
+
+.app {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ヘッダー */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+.header h1 {
+  color: #333;
+  font-size: 28px;
+  margin: 0;
+}
+
+.user-section {
+  position: relative;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #f8f9fa;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #e9ecef;
+}
+
+.user-info:hover {
+  background: #e9ecef;
+  transform: translateY(-1px);
+}
+
+.user-icon {
+  font-size: 18px;
+}
+
+.user-name {
+  font-weight: 500;
+  color: #333;
+  min-width: 80px;
+}
+
+.dropdown-arrow {
+  font-size: 12px;
+  color: #666;
+  transition: transform 0.2s ease;
+}
+
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  border: 1px solid #e9ecef;
+  min-width: 200px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.user-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.user-option:last-child {
+  border-bottom: none;
+}
+
+.user-option:hover {
+  background: #f8f9fa;
+}
+
+.user-option.active {
+  background: #e3f2fd;
+  color: #1976d2;
+  font-weight: 500;
+}
+
+.user-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+}
+
+/* ユーザー切り替えアニメーション */
+.user-transition {
+  transition: all 0.3s ease;
+}
+
+.user-switching {
+  opacity: 0.6;
+  transform: scale(0.98);
+}
+
+/* ドロップダウンアニメーション */
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  border: 1px solid #e9ecef;
+  min-width: 200px;
+  z-index: 1000;
+  overflow: hidden;
+  animation: dropdown-appear 0.2s ease-out;
+}
+
+@keyframes dropdown-appear {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* カレンダー */
+.calendar {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendar-header h2 {
+  color: #333;
+  font-size: 24px;
+  margin: 0;
+}
+
+.month-nav {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.month-nav:hover {
+  background: #45a049;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.weekday {
+  text-align: center;
+  font-weight: bold;
+  color: #666;
+  padding: 10px 0;
+  font-size: 14px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-top: 20px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  position: relative;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: visible; /* スタンプが見えるように */
+}
+
+.calendar-day:hover {
+  background-color: #f0f0f0;
+}
+
+.calendar-day.completed {
+  background-color: #e8f5e8; /* より薄い緑に変更 */
+  color: #2e7d32;
+}
+
+.calendar-day.completed:hover {
+  background-color: #d4edda;
+}
+
+.calendar-day.other-month {
+  color: #ccc;
+  background-color: #f9f9f9;
+}
+
+.calendar-day.today {
+  border: 2px solid #4CAF50;
+  font-weight: bold;
+}
+
+.calendar-day.today.completed {
+  border-color: #2E7D32;
+}
+
+.calendar-day.streak-day {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+  border: 1px solid #ffc107;
+}
+
+.calendar-day.multiple-completed {
+  background: linear-gradient(135deg, #e8f5e8, #d4edda);
+  color: #1b5e20;
+  font-weight: 500;
+}
+
+.day-indicators {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  position: relative;
+}
+
+/* 済スタンプのスタイル（ハンコ風・特大サイズ） */
+.stamp-done {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 45px;
+  height: 45px;
+  background: transparent;
+  color: #dc3545;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 900;
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
+  transform: rotate(-15deg);
+  border: 4px solid #dc3545;
+  z-index: 2;
+  animation: stampAppear 0.3s ease-out;
+  text-shadow: none;
+  letter-spacing: -0.5px;
+  /* ハンコらしい質感 */
+  filter: contrast(1.2) saturate(1.1);
+  position: relative;
+}
+
+/* ハンコの不規則な質感を表現 */
+.stamp-done::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 40%, 
+    rgba(220, 53, 69, 0.1) 0%, 
+    transparent 50%
+  ),
+  radial-gradient(
+    circle at 70% 60%, 
+    rgba(220, 53, 69, 0.08) 0%, 
+    transparent 40%
+  );
+  z-index: -1;
+}
+
+.stamp-done.stamp-large {
+  width: 52px;
+  height: 52px;
+  font-size: 21px;
+  top: -8px;
+  right: -8px;
+  transform: rotate(-12deg);
+  border: 4.5px solid #dc3545;
+  font-weight: 900;
+}
+
+/* 3つ以上のエクササイズ用の超特大サイズ */
+.stamp-done.stamp-xlarge {
+  width: 58px;
+  height: 58px;
+  font-size: 24px;
+  top: -12px;
+  right: -12px;
+  transform: rotate(-10deg);
+  border: 5px solid #dc3545;
+  font-weight: 900;
+}
+
+@keyframes stampAppear {
+  0% {
+    transform: rotate(-15deg) scale(0) translateY(-10px);
+    opacity: 0;
+  }
+  70% {
+    transform: rotate(-15deg) scale(1.1) translateY(0px);
+    opacity: 0.9;
+  }
+  100% {
+    transform: rotate(-15deg) scale(1) translateY(0px);
+    opacity: 1;
+  }
+}
+
+/* 今日のエクササイズ選択モーダル */
+.today-exercise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.today-exercise-modal {
+  background: white;
+  border-radius: 10px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.today-exercise-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.today-exercise-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.today-exercise-content {
+  padding: 20px;
+}
+
+.today-exercise-description {
+  margin-bottom: 20px;
+  color: #666;
+  text-align: center;
+}
+
+.today-exercise-actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.today-exercise-actions .cancel-button {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.today-exercise-actions .cancel-button:hover {
+  background: #5a6268;
+}
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+  .today-exercise-modal {
+    margin: 10px;
+    max-width: none;
+  }
+  
+  .today-exercise-header h3 {
+    font-size: 16px;
+  }
+}
+
+.record-count {
+  font-size: 10px;
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  position: absolute;
+  bottom: -4px;
+  left: -4px;
+  z-index: 3;
+  border: 1px solid white;
+}
+
+.streak-indicator {
+  font-size: 12px;
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.8));
+}
+
+.day-number {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.check-mark {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 2px;
+}
+
+/* エクササイズセクション */
+.exercise-section {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* 統計表示 */
+.stats-display {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 10px;
+  border: 1px solid #dee2e6;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-2px);
+}
+
+.stat-item.personal {
+  border-left: 4px solid #4CAF50;
+}
+
+.stat-item.family {
+  border-left: 4px solid #FF9800;
+}
+
+.stat-number {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  color: #4CAF50;
+  margin-bottom: 5px;
+}
+
+.stat-item.family .stat-number {
+  color: #FF9800;
+}
+
+.stat-label {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* 家族統計 */
+.family-stats-display {
+  margin-bottom: 25px;
+  padding: 20px;
+  background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+  border-radius: 10px;
+  border: 1px solid #ffcc02;
+}
+
+.family-stats-title {
+  margin: 0 0 15px 0;
+  font-size: 18px;
+  color: #e65100;
+  text-align: center;
+  font-weight: 600;
+}
+
+.family-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.exercise-selector {
+  margin-bottom: 20px;
+}
+
+.exercise-selector label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+.exercise-selector select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.exercise-selector select:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.exercise-selector select:invalid {
+  border-color: #ff6b6b;
+}
+
+.exercise-selector select option {
+  padding: 8px;
+}
+
+.today-button {
+  width: 100%;
+  padding: 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.today-button:hover:not(:disabled) {
+  background-color: #45a049;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.today-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.today-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+.today-button:disabled:hover {
+  background-color: #ccc;
+  transform: none;
+  box-shadow: none;
+}
+
+/* データ管理セクション */
+.data-management {
+  margin-top: 25px;
+  padding: 20px;
+  background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+  border-radius: 10px;
+  border: 1px solid #c8e6c9;
+}
+
+.data-management-title {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  color: #2e7d32;
+  text-align: center;
+  font-weight: 600;
+}
+
+.data-management-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.backup-button, .export-button {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.backup-button {
+  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  color: white;
+}
+
+.backup-button:hover {
+  background: linear-gradient(135deg, #45a049, #5cb85c);
+  transform: translateY(-1px);
+}
+
+.export-button {
+  background: linear-gradient(135deg, #2196F3, #42A5F5);
+  color: white;
+}
+
+.export-button:hover {
+  background: linear-gradient(135deg, #1976d2, #1e88e5);
+  transform: translateY(-1px);
+}
+
+/* 褒めアニメーション */
+.praise-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.praise-message {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  animation: praise-bounce 0.5s ease-out;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  max-width: 90%;
+}
+
+@keyframes praise-bounce {
+  0% { 
+    transform: scale(0.5); 
+    opacity: 0; 
+  }
+  50% { 
+    transform: scale(1.1); 
+  }
+  100% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+}
+
+@keyframes praise-pulse {
+  0%, 100% { 
+    transform: scale(1); 
+  }
+  50% { 
+    transform: scale(1.05); 
+  }
+}
+
+@keyframes praise-shake {
+  0%, 100% { 
+    transform: translateX(0); 
+  }
+  25% { 
+    transform: translateX(-5px); 
+  }
+  75% { 
+    transform: translateX(5px); 
+  }
+}
+
+@keyframes praise-rainbow {
+  0% { 
+    background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+    transform: scale(0.8) rotate(0deg);
+  }
+  25% { 
+    background: linear-gradient(45deg, #4ECDC4, #45B7D1);
+    transform: scale(1.1) rotate(90deg);
+  }
+  50% { 
+    background: linear-gradient(45deg, #45B7D1, #96CEB4);
+    transform: scale(1.2) rotate(180deg);
+  }
+  75% { 
+    background: linear-gradient(45deg, #96CEB4, #FFEAA7);
+    transform: scale(1.1) rotate(270deg);
+  }
+  100% { 
+    background: linear-gradient(45deg, #FFEAA7, #FF6B6B);
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+@keyframes praise-fireworks {
+  0% { 
+    transform: scale(0.5);
+    opacity: 0;
+    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+  }
+  25% { 
+    transform: scale(1.2);
+    opacity: 1;
+    box-shadow: 0 0 0 20px rgba(255, 107, 107, 0);
+  }
+  50% { 
+    transform: scale(1.1);
+    box-shadow: 0 0 0 40px rgba(78, 205, 196, 0);
+  }
+  75% { 
+    transform: scale(1.15);
+    box-shadow: 0 0 0 60px rgba(69, 183, 209, 0);
+  }
+  100% { 
+    transform: scale(1);
+    opacity: 1;
+    box-shadow: 0 0 0 80px rgba(150, 206, 180, 0);
+  }
+}
+
+@keyframes praise-celebration {
+  0% { 
+    transform: scale(0.3) rotate(0deg);
+    opacity: 0;
+  }
+  25% { 
+    transform: scale(1.3) rotate(90deg);
+    opacity: 1;
+  }
+  50% { 
+    transform: scale(1.1) rotate(180deg);
+  }
+  75% { 
+    transform: scale(1.2) rotate(270deg);
+  }
+  100% { 
+    transform: scale(1) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+@keyframes praise-sparkle {
+  0%, 100% { 
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  25% { 
+    transform: scale(1.05);
+    filter: brightness(1.3);
+  }
+  50% { 
+    transform: scale(1.1);
+    filter: brightness(1.5);
+  }
+  75% { 
+    transform: scale(1.05);
+    filter: brightness(1.3);
+  }
+}
+
+@keyframes praise-fire {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg);
+    filter: hue-rotate(0deg);
+  }
+  25% { 
+    transform: scale(1.1) rotate(5deg);
+    filter: hue-rotate(90deg);
+  }
+  50% { 
+    transform: scale(1.15) rotate(-5deg);
+    filter: hue-rotate(180deg);
+  }
+  75% { 
+    transform: scale(1.1) rotate(5deg);
+    filter: hue-rotate(270deg);
+  }
+}
+
+@keyframes praise-star {
+  0% { 
+    transform: scale(0.5) rotate(0deg);
+    opacity: 0;
+  }
+  50% { 
+    transform: scale(1.2) rotate(180deg);
+    opacity: 1;
+  }
+  100% { 
+    transform: scale(1) rotate(360deg);
+    opacity: 1;
+  }
+}
+
+@keyframes praise-confetti {
+  0% { 
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  25% { 
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  50% { 
+    transform: scale(1.05);
+  }
+  75% { 
+    transform: scale(1.1);
+  }
+  100% { 
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.praise-message {
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  font-size: 32px;
+  font-weight: bold;
+  text-align: center;
+  animation: praise-bounce 0.5s ease-out;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  max-width: 90%;
+  transition: all 0.3s ease;
+}
+
+/* タイプ別スタイル */
+.praise-message.daily {
+  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  color: white;
+}
+
+.praise-message.streak-start {
+  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  color: white;
+}
+
+.praise-message.streak-short {
+  background: linear-gradient(135deg, #2196F3, #42A5F5);
+  color: white;
+}
+
+.praise-message.streak-week {
+  background: linear-gradient(135deg, #FF9800, #FFB74D);
+  color: white;
+}
+
+.praise-message.streak-medium {
+  background: linear-gradient(135deg, #E91E63, #F06292);
+  color: white;
+}
+
+.praise-message.streak-long {
+  background: linear-gradient(135deg, #9C27B0, #BA68C8);
+  color: white;
+}
+
+.praise-message.milestone {
+  background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+  color: white;
+  font-size: 36px;
+  border: 3px solid gold;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+}
+
+.praise-message.master {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #333;
+  font-size: 38px;
+  border: 4px solid #FFD700;
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+}
+
+.praise-message.legendary {
+  background: linear-gradient(135deg, #FF1493, #00CED1, #FFD700);
+  color: white;
+  font-size: 40px;
+  border: 5px solid #FFD700;
+  box-shadow: 0 0 50px rgba(255, 215, 0, 1);
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* アニメーションタイプ別 */
+.praise-message.bounce {
+  animation: praise-bounce 0.6s ease-out;
+}
+
+.praise-message.pulse {
+  animation: praise-pulse 0.8s ease-in-out;
+}
+
+.praise-message.shake {
+  animation: praise-shake 0.8s ease-in-out;
+}
+
+.praise-message.rainbow {
+  animation: praise-rainbow 1.5s ease-in-out;
+}
+
+.praise-message.fireworks {
+  animation: praise-fireworks 1.2s ease-out;
+}
+
+.praise-message.celebration {
+  animation: praise-celebration 1.5s ease-in-out;
+}
+
+.praise-message.sparkle {
+  animation: praise-sparkle 1s ease-in-out;
+}
+
+.praise-message.fire {
+  animation: praise-fire 1s ease-in-out;
+}
+
+.praise-message.star {
+  animation: praise-star 1s ease-out;
+}
+
+.praise-message.confetti {
+  animation: praise-confetti 0.8s ease-out;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+  .app {
+    padding: 10px;
+  }
+  
+  .header {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+  
+  .header h1 {
+    font-size: 24px;
+  }
+  
+  .user-section {
+    width: 100%;
+  }
+  
+  .user-info {
+    justify-content: center;
+  }
+  
+  .user-dropdown {
+    right: 50%;
+    transform: translateX(50%);
+    width: 90%;
+    max-width: 250px;
+  }
+  
+  .calendar {
+    padding: 15px;
+  }
+  
+  .calendar-header h2 {
+    font-size: 20px;
+  }
+  
+  .month-nav {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+  }
+  
+  .calendar-grid {
+    gap: 3px;
+  }
+  
+  .day-number {
+    font-size: 14px;
+  }
+  
+  .check-mark {
+    font-size: 16px;
+  }
+  
+  .exercise-section {
+    padding: 15px;
+  }
+  
+  .stats-display {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+  }
+  
+  .family-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  .family-stats-display {
+    padding: 15px;
+  }
+  
+  .family-stats-title {
+    font-size: 16px;
+  }
+  
+  .data-management {
+    margin-top: 20px;
+    padding: 15px;
+  }
+  
+  .data-management-title {
+    font-size: 14px;
+  }
+  
+  .data-management-buttons {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .backup-button, .export-button {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  
+  .stat-number {
+    font-size: 20px;
+  }
+  
+  .stat-label {
+    font-size: 11px;
+  }
+  
+  .today-button {
+    font-size: 20px;
+    padding: 15px;
+  }
+  
+  .praise-message {
+    font-size: 24px;
+    padding: 30px;
+  }
+  
+  .praise-message.milestone {
+    font-size: 28px;
+  }
+  
+  .praise-message.master {
+    font-size: 30px;
+  }
+  
+  .praise-message.legendary {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendar-grid {
+    gap: 2px;
+  }
+  
+  .day-number {
+    font-size: 12px;
+  }
+  
+  .check-mark {
+    font-size: 14px;
+  }
+  
+  .today-button {
+    font-size: 18px;
+  }
+  
+  .praise-message {
+    font-size: 20px;
+    padding: 20px;
+  }
+}
+
+/* エラー・成功メッセージ */
+.error-overlay, .success-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: overlay-appear 0.3s ease-out;
+}
+
+.error-message, .success-message {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  max-width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: message-bounce 0.3s ease-out;
+}
+
+.error-overlay.warning .error-message {
+  border-left: 5px solid #FF9800;
+}
+
+.error-overlay.error .error-message {
+  border-left: 5px solid #F44336;
+}
+
+.success-message {
+  border-left: 5px solid #4CAF50;
+}
+
+.error-icon, .success-icon {
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+.error-text, .success-text {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.error-close {
+  background: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.error-close:hover {
+  background: #d32f2f;
+}
+
+.error-overlay.warning .error-close {
+  background: #FF9800;
+}
+
+.error-overlay.warning .error-close:hover {
+  background: #F57C00;
+}
+
+@keyframes overlay-appear {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes message-bounce {
+  0% { 
+    transform: scale(0.8); 
+    opacity: 0; 
+  }
+  100% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+}
+
+/* ローディングオーバーレイ */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: overlay-appear 0.3s ease-out;
+}
+
+.loading-message {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  max-width: 90%;
+  max-width: 300px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4CAF50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px auto;
+}
+
+.loading-text {
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* アニメーション無効化（パフォーマンス向上） */
+@media (prefers-reduced-motion: reduce) {
+  .today-button {
+    transition: none;
+  }
+  
+  .today-button:hover:not(:disabled) {
+    transform: none;
+  }
+  
+  .praise-message {
+    animation: none;
+  }
+  
+  .loading-spinner {
+    animation: none;
+  }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+  }
+  
+  .header,
+  .calendar,
+  .exercise-section {
+    background: #2d2d2d;
+    color: #e0e0e0;
+  }
+  
+  .calendar-day {
+    background: #2d2d2d;
+    border-color: #444;
+    color: #e0e0e0;
+  }
+  
+  .calendar-day:hover {
+    background-color: #3d3d3d;
+  }
+  
+  .exercise-selector select {
+    background: #2d2d2d;
+    color: #e0e0e0;
+    border-color: #444;
+  }
+  
+  .praise-message {
+    background: #2d2d2d;
+    color: #e0e0e0;
+  }
+}
+
+/* 日付詳細モーダル */
+.day-details-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: overlay-appear 0.3s ease-out;
+}
+
+.day-details-modal {
+  background: white;
+  border-radius: 15px;
+  max-width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: message-bounce 0.3s ease-out;
+}
+
+.day-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  color: white;
+}
+
+.day-details-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.day-details-content {
+  padding: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.no-records {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 20px;
+}
+
+.records-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #4CAF50;
+  transition: transform 0.2s ease;
+}
+
+.record-item:hover {
+  transform: translateX(5px);
+}
+
+.record-exercise {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.exercise-icon {
+  font-size: 20px;
+}
+
+.exercise-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.exercise-category {
+  color: #666;
+  font-size: 14px;
+}
+
+.record-time {
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* クリック可能な日付のスタイル */
+.calendar-day.clickable {
+  cursor: pointer;
+}
+
+.calendar-day.clickable:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .day-details-modal {
+    max-width: 95%;
+    margin: 10px;
+  }
+  
+  .day-details-header {
+    padding: 15px;
+  }
+  
+  .day-details-header h3 {
+    font-size: 16px;
+  }
+  
+  .day-details-content {
+    padding: 15px;
+  }
+  
+  .record-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .record-time {
+    align-self: flex-end;
+  }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .day-details-modal {
+    background: #2d2d2d;
+    color: #e0e0e0;
+  }
+  
+  .record-item {
+    background: #3d3d3d;
+    color: #e0e0e0;
+  }
+  
+  .exercise-name {
+    color: #e0e0e0;
+  }
+  
+  .exercise-category,
+  .record-time {
+    color: #bbb;
+  }
+  
+  .no-records {
+    color: #bbb;
+  }
+}
+/* 簡単記録セクション */
+.quick-record-section {
+  margin-bottom: 25px;
+  padding: 20px;
+  background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+  border-radius: 10px;
+  border: 1px solid #c8e6c9;
+  text-align: center;
+}
+
+.quick-record-title {
+  margin: 0 0 10px 0;
+  font-size: 18px;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.quick-record-description {
+  margin: 0 0 20px 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* エクササイズ追加フォーム */
+.add-exercise-form {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #dee2e6;
+}
+
+.add-exercise-form h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 16px;
+  text-align: center;
+}
+
+.exercise-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.exercise-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 15px 10px;
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 12px;
+}
+
+.exercise-option:hover {
+  border-color: #4CAF50;
+  background: #f8fff8;
+  transform: translateY(-2px);
+}
+
+.exercise-option .exercise-icon {
+  font-size: 20px;
+}
+
+.exercise-option .exercise-name {
+  font-weight: 500;
+  color: #333;
+}
+
+.cancel-add-button {
+  width: 100%;
+  padding: 10px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.cancel-add-button:hover {
+  background: #5a6268;
+}
+
+/* 記録アイテムの更新 */
+.record-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #4CAF50;
+  transition: transform 0.2s ease;
+}
+
+.record-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.remove-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+  font-size: 14px;
+}
+
+.remove-button:hover {
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.add-exercise-section {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.add-exercise-button {
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.add-exercise-button:hover {
+  background: linear-gradient(135deg, #45a049, #5cb85c);
+  transform: translateY(-1px);
+}
+
+.add-first-record-button {
+  padding: 15px 25px;
+  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-top: 15px;
+}
+
+.add-first-record-button:hover {
+  background: linear-gradient(135deg, #45a049, #5cb85c);
+  transform: translateY(-2px);
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .exercise-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+  }
+  
+  .exercise-option {
+    padding: 12px 8px;
+    font-size: 11px;
+  }
+  
+  .exercise-option .exercise-icon {
+    font-size: 18px;
+  }
+  
+  .record-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .record-actions {
+    align-self: flex-end;
+  }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .quick-record-section {
+    background: linear-gradient(135deg, #2d4a2d, #3d5a3d);
+    border-color: #4a6a4a;
+  }
+  
+  .quick-record-title {
+    color: #81c784;
+  }
+  
+  .quick-record-description {
+    color: #bbb;
+  }
+  
+  .add-exercise-form {
+    background: #3d3d3d;
+    border-color: #555;
+  }
+  
+  .add-exercise-form h4 {
+    color: #e0e0e0;
+  }
+  
+  .exercise-option {
+    background: #2d2d2d;
+    border-color: #555;
+    color: #e0e0e0;
+  }
+  
+  .exercise-option:hover {
+    border-color: #81c784;
+    background: #2d4a2d;
+  }
+  
+  .exercise-option .exercise-name {
+    color: #e0e0e0;
+  }
+}
+/* デフォルトエクササイズ設定 */
+.quick-record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.settings-button {
+  background: none;
+  border: 2px solid #4CAF50;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.settings-button:hover {
+  background: #4CAF50;
+  transform: rotate(90deg);
+}
+
+.default-exercise-settings {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f0f8f0;
+  border-radius: 10px;
+  border: 2px solid #4CAF50;
+}
+
+.default-exercise-settings h4 {
+  margin: 0 0 15px 0;
+  color: #2e7d32;
+  font-size: 16px;
+  text-align: center;
+}
+
+.exercise-option.selected {
+  border-color: #4CAF50;
+  background: #e8f5e8;
+  transform: scale(1.05);
+}
+
+.cancel-settings-button {
+  width: 100%;
+  padding: 10px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 15px;
+}
+
+.cancel-settings-button:hover {
+  background: #5a6268;
+}
+
+.quick-record-description small {
+  color: #666;
+  font-style: italic;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .quick-record-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .settings-button {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .default-exercise-settings {
+    background: #2d4a2d;
+    border-color: #81c784;
+  }
+  
+  .default-exercise-settings h4 {
+    color: #81c784;
+  }
+  
+  .exercise-option.selected {
+    border-color: #81c784;
+    background: #2d4a2d;
+  }
+  
+  .settings-button {
+    border-color: #81c784;
+    color: #81c784;
+  }
+  
+  .settings-button:hover {
+    background: #81c784;
+    color: #2d2d2d;
+  }
+  
+  .quick-record-description small {
+    color: #bbb;
+  }
+}
+/* ユーザー管理機能 */
+.user-management-section {
+  border-top: 1px solid #e9ecef;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+.user-management-button {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #6c757d, #868e96);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.user-management-button:hover {
+  background: linear-gradient(135deg, #5a6268, #6c757d);
+  transform: translateY(-1px);
+}
+
+/* ユーザー管理モーダル */
+.user-management-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: overlay-appear 0.3s ease-out;
+}
+
+.user-management-modal {
+  background: white;
+  border-radius: 15px;
+  max-width: 90%;
+  max-width: 500px;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: message-bounce 0.3s ease-out;
+}
+
+.user-management-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #6c757d, #868e96);
+  color: white;
+}
+
+.user-management-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.user-management-content {
+  padding: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.current-user-section,
+.add-user-section {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #6c757d;
+}
+
+.current-user-section h4,
+.add-user-section h4 {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.user-actions,
+.add-user-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-user-button,
+.add-user-button {
+  padding: 10px 15px;
+  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.edit-user-button:hover,
+.add-user-button:hover {
+  background: linear-gradient(135deg, #45a049, #5cb85c);
+  transform: translateY(-1px);
+}
+
+.edit-user-form,
+.add-user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.user-name-input {
+  padding: 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.2s ease;
+}
+
+.user-name-input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+.color-select {
+  padding: 12px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
+  cursor: pointer;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.save-button {
+  flex: 1;
+  padding: 12px;
+  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.save-button:hover {
+  background: linear-gradient(135deg, #45a049, #5cb85c);
+}
+
+.cancel-button {
+  flex: 1;
+  padding: 12px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.cancel-button:hover {
+  background: #5a6268;
+}
+
+/* 簡単記録セクションの更新 */
+.quick-record-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.default-exercise-display {
+  background: rgba(76, 175, 80, 0.1);
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2e7d32;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.quick-record-section {
+  margin-bottom: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+  border-radius: 10px;
+  border: 1px solid #c8e6c9;
+  text-align: center;
+}
+
+.quick-record-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.quick-record-title {
+  margin: 0;
+  font-size: 18px;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .user-management-modal {
+    max-width: 95%;
+    margin: 10px;
+  }
+  
+  .user-management-content {
+    padding: 15px;
+  }
+  
+  .quick-record-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .quick-record-controls {
+    justify-content: center;
+  }
+  
+  .form-buttons {
+    flex-direction: column;
+  }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+  .user-management-modal {
+    background: #2d2d2d;
+    color: #e0e0e0;
+  }
+  
+  .current-user-section,
+  .add-user-section {
+    background: #3d3d3d;
+    border-left-color: #868e96;
+  }
+  
+  .current-user-section h4,
+  .add-user-section h4 {
+    color: #e0e0e0;
+  }
+  
+  .user-name-input,
+  .color-select {
+    background: #2d2d2d;
+    color: #e0e0e0;
+    border-color: #555;
+  }
+  
+  .user-name-input:focus {
+    border-color: #81c784;
+  }
+  
+  .default-exercise-display {
+    background: rgba(129, 199, 132, 0.2);
+    color: #81c784;
+    border-color: rgba(129, 199, 132, 0.3);
+  }
+}
+
+/* ハンコのモバイル対応 */
+@media (max-width: 768px) {
+  .stamp-done {
+    width: 38px;
+    height: 38px;
+    font-size: 15px;
+    top: -3px;
+    right: -3px;
+    border: 3px solid #dc3545;
+    font-weight: 900;
+  }
+  
+  .stamp-done.stamp-large {
+    width: 44px;
+    height: 44px;
+    font-size: 17px;
+    top: -6px;
+    right: -6px;
+    border: 3.5px solid #dc3545;
+  }
+  
+  .stamp-done.stamp-xlarge {
+    width: 50px;
+    height: 50px;
+    font-size: 19px;
+    top: -9px;
+    right: -9px;
+    border: 4px solid #dc3545;
+  }
+}
+/* 日付詳細ヘッダーのアクション部分 */
+.day-details-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.reset-button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background-color 0.2s;
+}
+
+.reset-button:hover {
+  background: #c82333;
+}
+
+/* リセット確認モーダル */
+.reset-confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  padding: 20px;
+}
+
+.reset-confirm-modal {
+  background: white;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.reset-confirm-header {
+  padding: 20px 20px 10px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.reset-confirm-header h3 {
+  margin: 0;
+  color: #dc3545;
+  font-size: 18px;
+  text-align: center;
+}
+
+.reset-confirm-content {
+  padding: 20px;
+  text-align: center;
+}
+
+.reset-confirm-content p {
+  margin: 10px 0;
+  color: #666;
+}
+
+.reset-confirm-content strong {
+  color: #dc3545;
+}
+
+.reset-confirm-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.reset-confirm-button {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.reset-confirm-button:hover {
+  background: #c82333;
+}
+
+.reset-cancel-button {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.reset-cancel-button:hover {
+  background: #5a6268;
+}
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+  .reset-confirm-modal {
+    margin: 10px;
+    max-width: none;
+  }
+  
+  .reset-button {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  
+  .day-details-actions {
+    gap: 6px;
+  }
+}
+/* 登録済みエクササイズのスタイル */
+.exercise-option.exercise-registered {
+  background: #f8f9fa;
+  color: #6c757d;
+  border: 2px solid #dee2e6;
+  cursor: not-allowed;
+  opacity: 0.7;
+  position: relative;
+}
+
+.exercise-option.exercise-registered:hover {
+  background: #f8f9fa;
+  transform: none;
+  box-shadow: none;
+}
+
+.exercise-option.exercise-registered .exercise-icon {
+  opacity: 0.5;
+}
+
+.exercise-option.exercise-registered .exercise-name {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.registered-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #28a745;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: bold;
+  z-index: 1;
+}
+
+/* モバイル対応 */
+@media (max-width: 768px) {
+  .registered-badge {
+    font-size: 9px;
+    padding: 1px 4px;
+    top: -3px;
+    right: -3px;
+  }
+}
