@@ -235,21 +235,49 @@ export PORT=3000
 export DB_PATH=/path/to/production/database.db
 ```
 
-### プロセス管理（PM2）
+### 🔄 プロセス管理（PM2）- 推奨
+
+**PM2とは？**
+Node.jsアプリを安全に運用するためのプロセス管理ツールです。
+
+**PM2の利点：**
+- アプリがクラッシュしても自動再起動
+- サーバー再起動後も自動でアプリが起動
+- ログの自動管理
+- バックグラウンドで永続実行
+
+**PM2のインストールと設定：**
 
 ```bash
-# PM2 をインストール
+# PM2をインストール
 npm install -g pm2
 
 # アプリケーションを起動
 pm2 start server.js --name "exercise-calendar"
 
-# 自動起動設定
+# サーバー再起動時の自動起動設定
 pm2 startup
 pm2 save
+
+# 状態確認
+pm2 status
+
+# ログ確認
+pm2 logs exercise-calendar
 ```
 
-### リバースプロキシ（Nginx）
+### 🌐 Webサーバー（Nginx）- オプション
+
+**Nginxが必要な場合：**
+- インターネットに公開する場合
+- HTTPS（SSL）を使いたい場合
+- 複数のアプリを運用する場合
+- 高いセキュリティが必要な場合
+
+**家庭内・個人利用の場合：**
+PM2のみで十分です。Nginxは不要です。
+
+**Nginx設定例（上級者向け）：**
 
 ```nginx
 server {
@@ -269,6 +297,31 @@ server {
     }
 }
 ```
+
+### 📋 デプロイ方法の選択
+
+**🏠 家庭内・個人利用（推奨）:**
+```bash
+# シンプルな方法
+pm2 start server.js --name "exercise-calendar"
+pm2 startup
+pm2 save
+```
+- 設定が簡単
+- 家庭内ネットワークで十分
+- メンテナンスが楽
+
+**🌍 インターネット公開（上級者向け）:**
+```bash
+# 本格的な方法
+pm2 start server.js --name "exercise-calendar"
+sudo apt install nginx
+# SSL証明書の設定
+# ドメインの設定
+```
+- 高いセキュリティ
+- HTTPS対応
+- 外部からアクセス可能
 
 ## 📱 モバイルアクセス
 
