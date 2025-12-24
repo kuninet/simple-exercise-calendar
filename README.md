@@ -2,8 +2,6 @@
 
 シンプルで使いやすいエクササイズ記録カレンダーアプリです。日々の運動を記録し、継続をサポートします。
 
-![Exercise Calendar Screenshot](https://via.placeholder.com/800x400/4CAF50/FFFFFF?text=Exercise+Calendar+Screenshot)
-
 ## ✨ 特徴
 
 - **シンプルな記録**: 「今日やった！」ボタンで簡単記録
