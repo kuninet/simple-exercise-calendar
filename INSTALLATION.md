@@ -99,6 +99,26 @@ http://localhost:3000 でアクセスできます
 
 ブラウザで http://localhost:3000 を開いてください。
 
+### 7. モバイル・タブレットでアプリ化（オプション）
+
+**iPhone・iPadの場合：**
+1. Safariでアプリにアクセス
+2. 共有ボタン（□に↑）をタップ
+3. 「ホーム画面に追加」を選択
+4. 「追加」をタップ
+
+**Androidの場合：**
+1. Chromeでアプリにアクセス
+2. メニュー（⋮）をタップ
+3. 「ホーム画面に追加」を選択
+4. 「追加」をタップ
+
+**アプリ化後の利点：**
+- ホーム画面から直接起動
+- フルスクリーン表示
+- オフライン対応
+- 高速起動
+
 ## 🔧 トラブルシューティング
 
 ### よくある問題と解決方法
@@ -305,9 +325,9 @@ npm start
 
 インストールで問題が発生した場合：
 
-1. [GitHub Issues](https://github.com/あなたのユーザー名/simple-exercise-calendar/issues) で既存の問題を確認
+1. [GitHub Issues](https://github.com/kuninet/simple-exercise-calendar/issues) で既存の問題を確認
 2. 新しい Issue を作成（エラーメッセージとシステム情報を含める）
-3. [Discussions](https://github.com/あなたのユーザー名/simple-exercise-calendar/discussions) で質問
+3. [Discussions](https://github.com/kuninet/simple-exercise-calendar/discussions) で質問
 
 ### Issue 作成時に含める情報
 
