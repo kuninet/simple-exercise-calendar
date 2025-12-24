@@ -817,7 +817,9 @@ createApp({
 
     // エクササイズ追加モードの切り替え
     const toggleAddExercise = () => {
+      console.log('toggleAddExercise called, current state:', showAddExercise.value)
       showAddExercise.value = !showAddExercise.value
+      console.log('toggleAddExercise new state:', showAddExercise.value)
     }
     // JST時刻フォーマット関数（改良版）
     const formatTimeJST = (timeString) => {
@@ -902,6 +904,34 @@ createApp({
       }
     }
 
+    // PWAインストール促進
+    const showInstallPrompt = ref(false)
+    let deferredPrompt = null
+
+    // PWAインストール可能イベント
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault()
+      deferredPrompt = e
+      showInstallPrompt.value = true
+    })
+
+    // PWAインストール実行
+    const installPWA = async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt()
+        const { outcome } = await deferredPrompt.userChoice
+        console.log(`PWAインストール結果: ${outcome}`)
+        deferredPrompt = null
+        showInstallPrompt.value = false
+      }
+    }
+
+    // PWAインストール促進を閉じる
+    const dismissInstallPrompt = () => {
+      showInstallPrompt.value = false
+      deferredPrompt = null
+    }
+
     // 初期化
     onMounted(() => {
       // ユーザー読み込みから開始
@@ -933,6 +963,9 @@ createApp({
       showDefaultExerciseSettings,
       showTodayExerciseSelector,
       showResetConfirm,
+      showInstallPrompt,
+      installPWA,
+      dismissInstallPrompt,
       recordToday,
       addTodayExercise,
       isTodayExerciseRegistered,
@@ -997,6 +1030,21 @@ createApp({
           </div>
         </div>
       </header>
+
+      <!-- PWAインストール促進バナー -->
+      <div v-if="showInstallPrompt" class="install-banner">
+        <div class="install-content">
+          <span class="install-icon">📱</span>
+          <div class="install-text">
+            <strong>アプリとしてインストール</strong>
+            <p>ホーム画面に追加してアプリのように使えます</p>
+          </div>
+          <div class="install-actions">
+            <button class="install-button" @click="installPWA">インストール</button>
+            <button class="dismiss-button" @click="dismissInstallPrompt">×</button>
+          </div>
+        </div>
+      </div>
 
       <!-- 簡単記録セクション（カレンダーの上に移動） -->
       <div class="quick-record-section">
@@ -1297,7 +1345,7 @@ createApp({
                 </div>
               </div>
               <div class="add-exercise-section">
-                <button class="add-exercise-button" @click="toggleAddExercise">
+                <button class="add-exercise-button" @click.stop="toggleAddExercise">
                   ➕ エクササイズを追加
                 </button>
               </div>

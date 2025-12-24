@@ -162,6 +162,9 @@ body {
   padding: 20px;
   margin-bottom: 30px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 100%;
+  overflow: visible; /* ハンコがはみ出せるように */
 }
 
 .calendar-header {
@@ -216,6 +219,9 @@ body {
   grid-template-columns: repeat(7, 1fr);
   gap: 5px;
   margin-top: 20px;
+  width: 100%;
+  max-width: 100%;
+  overflow: visible; /* ハンコがはみ出せるように */
 }
 
 .calendar-day {
@@ -230,7 +236,10 @@ body {
   background: white;
   cursor: pointer;
   transition: all 0.2s ease;
-  overflow: visible; /* スタンプが見えるように */
+  overflow: visible; /* ハンコがはみ出せるように */
+  min-height: 50px;
+  font-size: 14px;
+  padding: 2px;
 }
 
 .calendar-day:hover {
@@ -280,41 +289,41 @@ body {
   position: relative;
 }
 
-/* 済スタンプのスタイル（ハンコ風・特大サイズ） */
+/* 済スタンプのスタイル（透過重ね合わせ版） */
 .stamp-done {
   position: absolute;
-  top: -5px;
-  right: -5px;
-  width: 45px;
-  height: 45px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-15deg);
+  width: 35px;
+  height: 35px;
   background: transparent;
-  color: #dc3545;
+  color: rgba(220, 53, 69, 0.8);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 900;
   font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
-  transform: rotate(-15deg);
-  border: 4px solid #dc3545;
-  z-index: 2;
+  border: 3px solid rgba(220, 53, 69, 0.8);
+  z-index: 10;
   animation: stampAppear 0.3s ease-out;
   text-shadow: none;
   letter-spacing: -0.5px;
+  pointer-events: none; /* クリックイベントを通す */
   /* ハンコらしい質感 */
   filter: contrast(1.2) saturate(1.1);
-  position: relative;
 }
 
-/* ハンコの不規則な質感を表現 */
+/* ハンコの不規則な質感を表現（透過版） */
 .stamp-done::before {
   content: '';
   position: absolute;
-  top: -4px;
-  left: -4px;
-  right: -4px;
-  bottom: -4px;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
   border-radius: 50%;
   background: radial-gradient(
     circle at 30% 40%, 
@@ -330,26 +339,22 @@ body {
 }
 
 .stamp-done.stamp-large {
-  width: 52px;
-  height: 52px;
-  font-size: 21px;
-  top: -8px;
-  right: -8px;
-  transform: rotate(-12deg);
-  border: 4.5px solid #dc3545;
-  font-weight: 900;
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+  border: 3.5px solid rgba(220, 53, 69, 0.8);
+  color: rgba(220, 53, 69, 0.85);
+  transform: translate(-50%, -50%) rotate(-12deg);
 }
 
-/* 3つ以上のエクササイズ用の超特大サイズ */
+/* 3つ以上のエクササイズ用の特大サイズ */
 .stamp-done.stamp-xlarge {
-  width: 58px;
-  height: 58px;
-  font-size: 24px;
-  top: -12px;
-  right: -12px;
-  transform: rotate(-10deg);
-  border: 5px solid #dc3545;
-  font-weight: 900;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  border: 4px solid rgba(220, 53, 69, 0.8);
+  color: rgba(220, 53, 69, 0.9);
+  transform: translate(-50%, -50%) rotate(-10deg);
 }
 
 @keyframes stampAppear {
@@ -459,10 +464,11 @@ body {
   justify-content: center;
   font-weight: bold;
   position: absolute;
-  bottom: -4px;
-  left: -4px;
-  z-index: 3;
+  top: 2px;
+  right: 2px;
+  z-index: 15; /* スタンプより上に */
   border: 1px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 .streak-indicator {
@@ -1021,16 +1027,19 @@ body {
 @media (max-width: 768px) {
   .app {
     padding: 10px;
+    max-width: 100%;
+    overflow-x: hidden;
   }
   
   .header {
     flex-direction: column;
     text-align: center;
     gap: 15px;
+    padding: 15px;
   }
   
   .header h1 {
-    font-size: 24px;
+    font-size: 20px;
   }
   
   .user-section {
@@ -1049,33 +1058,87 @@ body {
   }
   
   .calendar {
-    padding: 15px;
+    padding: 10px;
+    margin-bottom: 20px;
+    overflow: visible; /* ハンコがはみ出せるように */
+  }
+  
+  .calendar-header {
+    margin-bottom: 15px;
   }
   
   .calendar-header h2 {
-    font-size: 20px;
+    font-size: 18px;
   }
   
   .month-nav {
     width: 35px;
     height: 35px;
-    font-size: 18px;
+    font-size: 16px;
   }
   
   .calendar-grid {
-    gap: 3px;
+    gap: 2px;
+    margin-top: 15px;
+  }
+  
+  .calendar-day {
+    min-height: 45px;
+    font-size: 12px;
   }
   
   .day-number {
-    font-size: 14px;
+    font-size: 12px;
   }
   
   .check-mark {
-    font-size: 16px;
+    font-size: 14px;
+  }
+  
+  /* 済スタンプのモバイル調整（透過重ね合わせ版） */
+  .stamp-done {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+    border: 2.5px solid rgba(220, 53, 69, 0.8);
+    color: rgba(220, 53, 69, 0.8);
+  }
+  
+  .stamp-done.stamp-large {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+    border: 3px solid rgba(220, 53, 69, 0.8);
+    color: rgba(220, 53, 69, 0.85);
+  }
+  
+  .stamp-done.stamp-xlarge {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    border: 3.5px solid rgba(220, 53, 69, 0.8);
+    color: rgba(220, 53, 69, 0.9);
+  }
+  
+  .record-count {
+    width: 14px;
+    height: 14px;
+    font-size: 9px;
+    top: 1px;
+    right: 1px;
   }
   
   .exercise-section {
     padding: 15px;
+  }
+  
+  .quick-record-section {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .quick-record-title {
+    font-size: 16px;
   }
   
   .stats-display {
@@ -1118,7 +1181,7 @@ body {
   }
   
   .stat-number {
-    font-size: 20px;
+    font-size: 18px;
   }
   
   .stat-label {
@@ -1126,48 +1189,128 @@ body {
   }
   
   .today-button {
-    font-size: 20px;
+    font-size: 18px;
     padding: 15px;
   }
   
   .praise-message {
-    font-size: 24px;
-    padding: 30px;
+    font-size: 20px;
+    padding: 25px;
+    margin: 10px;
   }
   
   .praise-message.milestone {
-    font-size: 28px;
+    font-size: 24px;
   }
   
   .praise-message.master {
-    font-size: 30px;
+    font-size: 26px;
   }
   
   .praise-message.legendary {
-    font-size: 32px;
+    font-size: 28px;
+  }
+  
+  /* PWAインストールバナーのモバイル調整 */
+  .install-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+  
+  .install-actions {
+    justify-content: center;
   }
 }
 
 @media (max-width: 480px) {
-  .calendar-grid {
-    gap: 2px;
+  .app {
+    padding: 5px;
   }
   
-  .day-number {
-    font-size: 12px;
+  .header {
+    padding: 10px;
   }
   
-  .check-mark {
-    font-size: 14px;
-  }
-  
-  .today-button {
+  .header h1 {
     font-size: 18px;
   }
   
+  .calendar {
+    padding: 8px;
+  }
+  
+  .calendar-header h2 {
+    font-size: 16px;
+  }
+  
+  .month-nav {
+    width: 30px;
+    height: 30px;
+    font-size: 14px;
+  }
+  
+  .calendar-grid {
+    gap: 1px;
+  }
+  
+  .calendar-day {
+    min-height: 40px;
+    font-size: 11px;
+  }
+  
+  .day-number {
+    font-size: 11px;
+  }
+  
+  .check-mark {
+    font-size: 12px;
+  }
+  
+  /* 超小画面用のスタンプ調整（透過重ね合わせ版） */
+  .stamp-done {
+    width: 25px;
+    height: 25px;
+    font-size: 11px;
+    border: 2px solid rgba(220, 53, 69, 0.8);
+    color: rgba(220, 53, 69, 0.8);
+  }
+  
+  .stamp-done.stamp-large {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+    border: 2.5px solid rgba(220, 53, 69, 0.8);
+    color: rgba(220, 53, 69, 0.85);
+  }
+  
+  .stamp-done.stamp-xlarge {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+    border: 3px solid rgba(220, 53, 69, 0.8);
+    color: rgba(220, 53, 69, 0.9);
+  }
+  
+  .today-button {
+    font-size: 16px;
+    padding: 12px;
+  }
+  
   .praise-message {
-    font-size: 20px;
+    font-size: 18px;
     padding: 20px;
+    margin: 5px;
+  }
+  
+  .stats-display {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .family-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
   }
 }
 
@@ -1325,6 +1468,111 @@ body {
   }
 }
 
+/* PWAインストール促進バナー */
+.install-banner {
+  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  color: white;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+  animation: slideDown 0.3s ease-out;
+}
+
+.install-content {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.install-icon {
+  font-size: 24px;
+}
+
+.install-text {
+  flex: 1;
+}
+
+.install-text strong {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.install-text p {
+  margin: 0;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.install-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.install-button {
+  background: white;
+  color: #4CAF50;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.install-button:hover {
+  background: #f8f9fa;
+  transform: translateY(-1px);
+}
+
+.dismiss-button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.dismiss-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* PWA表示時のスタイル調整 */
+@media (display-mode: standalone) {
+  .header {
+    padding-top: 30px; /* ステータスバー分の余白 */
+  }
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+  .install-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+  
+  .install-actions {
+    justify-content: center;
+  }
+}
+
 /* ダークモード対応 */
 @media (prefers-color-scheme: dark) {
   body {
@@ -1426,6 +1674,8 @@ body {
   padding: 20px;
   max-height: 400px;
   overflow-y: auto;
+  position: relative;
+  z-index: 1001; /* モーダル内で最上位に */
 }
 
 .no-records {
@@ -1578,6 +1828,8 @@ body {
   background: #f8f9fa;
   border-radius: 10px;
   border: 1px solid #dee2e6;
+  position: relative;
+  z-index: 30; /* 最上位に */
 }
 
 .add-exercise-form h4 {
@@ -1673,6 +1925,8 @@ body {
 .add-exercise-section {
   margin-top: 15px;
   text-align: center;
+  position: relative;
+  z-index: 25; /* 確実に最上位に */
 }
 
 .add-exercise-button {
@@ -1685,6 +1939,8 @@ body {
   font-size: 14px;
   font-weight: 500;
   transition: all 0.2s ease;
+  position: relative;
+  z-index: 20; /* スタンプより上に */
 }
 
 .add-exercise-button:hover {

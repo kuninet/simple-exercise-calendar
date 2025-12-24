@@ -1,0 +1,36 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="512" height="512" fill="#4CAF50" rx="80"/>
+  
+  <!-- カレンダー本体 -->
+  <rect x="80" y="120" width="352" height="280" fill="white" rx="20"/>
+  
+  <!-- カレンダーヘッダー -->
+  <rect x="80" y="120" width="352" height="60" fill="#2E7D32" rx="20"/>
+  <rect x="80" y="160" width="352" height="20" fill="#2E7D32"/>
+  
+  <!-- 日付グリッド -->
+  <g fill="#E8F5E8" stroke="#4CAF50" stroke-width="2">
+    <rect x="100" y="200" width="40" height="30" rx="5"/>
+    <rect x="160" y="200" width="40" height="30" rx="5"/>
+    <rect x="220" y="200" width="40" height="30" rx="5"/>
+    <rect x="280" y="200" width="40" height="30" rx="5"/>
+    <rect x="340" y="200" width="40" height="30" rx="5"/>
+    
+    <rect x="100" y="250" width="40" height="30" rx="5"/>
+    <rect x="160" y="250" width="40" height="30" rx="5"/>
+    <rect x="220" y="250" width="40" height="30" rx="5"/>
+    <rect x="280" y="250" width="40" height="30" rx="5"/>
+    <rect x="340" y="250" width="40" height="30" rx="5"/>
+  </g>
+  
+  <!-- 済スタンプ -->
+  <circle cx="180" cy="215" r="15" fill="none" stroke="#dc3545" stroke-width="3"/>
+  <text x="180" y="222" text-anchor="middle" fill="#dc3545" font-family="serif" font-size="16" font-weight="bold">済</text>
+  
+  <circle cx="300" cy="215" r="15" fill="none" stroke="#dc3545" stroke-width="3"/>
+  <text x="300" y="222" text-anchor="middle" fill="#dc3545" font-family="serif" font-size="16" font-weight="bold">済</text>
+  
+  <!-- 筋肉アイコン -->
+  <text x="256" y="360" text-anchor="middle" font-size="60">💪</text>
+</svg>
