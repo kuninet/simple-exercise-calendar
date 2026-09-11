@@ -12,46 +12,116 @@ createApp({
     const exercises = ref([])
     const showPraise = ref(false)
     const praiseMessage = ref('')
+    const praiseClass = ref('praise-message')
+    const praiseTimer = ref(null)
+
+    // トーストの同時表示上限（これを超えたら古いものから消す）
+    const MAX_TOASTS = 3
+
+    // トースト表示の共通処理
+    // 画面上部に小さく積み上げるだけで背面は覆わないため、表示中もカレンダー・ボタンを操作できる
+    const getToastContainer = () => {
+      let container = document.querySelector('.toast-container')
+      if (!container) {
+        container = document.createElement('div')
+        container.className = 'toast-container'
+        // 全画面オーバーレイをやめた分、支援技術には読み上げで伝える
+        container.setAttribute('role', 'status')
+        container.setAttribute('aria-live', 'polite')
+        container.setAttribute('aria-atomic', 'true')
+        document.body.appendChild(container)
+      }
+      return container
+    }
+
+    // トーストを閉じる（フェードアウト後に DOM から取り除く）
+    const removeToast = (toast) => {
+      if (toast.dataset.closing === 'true') return
+      toast.dataset.closing = 'true'
+      if (toast.dismissTimer) {
+        clearTimeout(toast.dismissTimer)
+        toast.dismissTimer = null
+      }
+      toast.classList.add('toast-hide')
+
+      const removeFromDom = () => {
+        if (toast.parentNode) {
+          toast.parentNode.removeChild(toast)
+        }
+      }
+      // 子要素のトランジションで早期撤去されないよう、トースト自身のものだけ拾う
+      toast.addEventListener('transitionend', (event) => {
+        if (event.target === toast) {
+          removeFromDom()
+        }
+      })
+      // トランジションが走らない環境（reduced-motion 等）向けのフォールバック撤去
+      setTimeout(removeFromDom, 600)
+    }
+
+    // トーストを1件表示する
+    const showToast = ({ message, icon = '', bodyClass = '', duration = 3000, closable = false }) => {
+      const toast = document.createElement('div')
+      toast.className = 'toast'
+
+      const body = document.createElement('div')
+      body.className = `toast-body ${bodyClass}`.trim()
+
+      if (icon) {
+        const iconElement = document.createElement('span')
+        iconElement.className = 'toast-icon'
+        iconElement.textContent = icon
+        body.appendChild(iconElement)
+      }
+
+      // サーバー由来の文字列が入るため textContent で埋めてエスケープ漏れを防ぐ
+      const textElement = document.createElement('span')
+      textElement.className = 'toast-text'
+      textElement.textContent = message
+      body.appendChild(textElement)
+
+      if (closable) {
+        const closeButton = document.createElement('button')
+        closeButton.className = 'toast-close'
+        closeButton.type = 'button'
+        closeButton.setAttribute('aria-label', '閉じる')
+        closeButton.textContent = '×'
+        body.appendChild(closeButton)
+      }
+
+      toast.appendChild(body)
+      // トースト本体（閉じるボタン含む）のどこをタップしても即座に消す
+      toast.addEventListener('click', () => removeToast(toast))
+
+      const container = getToastContainer()
+      container.appendChild(toast)
+      // 連投で画面上部が埋まらないよう、古いものから間引く
+      const living = [...container.children].filter(t => t.dataset.closing !== 'true')
+      living.slice(0, Math.max(0, living.length - MAX_TOASTS)).forEach(removeToast)
+
+      toast.dismissTimer = setTimeout(() => removeToast(toast), duration)
+      return toast
+    }
 
     // エラー表示機能
     const showError = (message, type = 'error') => {
-      // エラーメッセージを表示するオーバーレイを作成
-      const errorOverlay = document.createElement('div')
-      errorOverlay.className = `error-overlay ${type}`
-      errorOverlay.innerHTML = `
-        <div class="error-message">
-          <div class="error-icon">${type === 'warning' ? '⚠️' : '❌'}</div>
-          <div class="error-text">${message}</div>
-          <button class="error-close" onclick="this.parentElement.parentElement.remove()">閉じる</button>
-        </div>
-      `
-      document.body.appendChild(errorOverlay)
-      
-      // 5秒後に自動で閉じる
-      setTimeout(() => {
-        if (errorOverlay.parentNode) {
-          errorOverlay.parentNode.removeChild(errorOverlay)
-        }
-      }, 5000)
+      showToast({
+        message,
+        icon: type === 'warning' ? '⚠️' : '❌',
+        bodyClass: `toast-${type === 'warning' ? 'warning' : 'error'}`,
+        duration: 4000,
+        closable: true
+      })
     }
 
     // 成功メッセージ表示
     const showSuccess = (message) => {
-      const successOverlay = document.createElement('div')
-      successOverlay.className = 'success-overlay'
-      successOverlay.innerHTML = `
-        <div class="success-message">
-          <div class="success-icon">✅</div>
-          <div class="success-text">${message}</div>
-        </div>
-      `
-      document.body.appendChild(successOverlay)
-      
-      setTimeout(() => {
-        if (successOverlay.parentNode) {
-          successOverlay.parentNode.removeChild(successOverlay)
-        }
-      }, 3000)
+      showToast({
+        message,
+        icon: '✅',
+        bodyClass: 'toast-success',
+        duration: 2000
+      })
     }
 
     // カレンダー表示用の計算プロパティ（最適化版）
@@ -295,31 +365,66 @@ createApp({
       }
     }
 
+    // マイルストーン演出のキー操作（PC 向けの Esc クローズ）
+    const handlePraiseKeydown = (event) => {
+      if (event.key === 'Escape') {
+        closePraise()
+      }
+    }
+
+    // マイルストーン演出を閉じる（タイマーとキーリスナーを必ず後始末する）
+    const closePraise = () => {
+      if (praiseTimer.value) {
+        clearTimeout(praiseTimer.value)
+        praiseTimer.value = null
+      }
+      document.removeEventListener('keydown', handlePraiseKeydown)
+      clearConfettiEffect()
+      showPraise.value = false
+    }
+
     // 褒めアニメーション表示
     const showPraiseAnimation = (message, type = 'daily', animationType = 'bounce', isMilestone = false) => {
+      // 通常の褒めは操作をブロックしないトーストで表示する（見た目のバリエーションはクラスで維持）
+      if (!isMilestone) {
+        showToast({
+          message,
+          bodyClass: `praise-message toast-praise ${type} ${animationType}`,
+          duration: 3000
+        })
+        return
+      }
+
+      // マイルストーン時のみ従来どおり全画面演出 + 紙吹雪を出す
+      // 前回のタイマー・キーリスナーが残らないよう、必ず閉じてから開き直す
+      closePraise()
       praiseMessage.value = message
+      // praiseType が 'milestone' の場合にクラスが重複しないよう Set でまとめる
+      praiseClass.value = [...new Set(['praise-message', type, animationType, 'milestone'])].join(' ')
       showPraise.value = true
-      
-      // アニメーションタイプに応じてCSSクラスを設定
-      setTimeout(() => {
-        const praiseElement = document.querySelector('.praise-message')
-        if (praiseElement) {
-          praiseElement.className = `praise-message ${type} ${animationType}`
-          
-          // マイルストーン時は特別なエフェクト
-          if (isMilestone) {
-            praiseElement.classList.add('milestone')
-            // 紙吹雪エフェクト（可能であれば）
-            createConfettiEffect()
-          }
+      createConfettiEffect()
+
+      document.addEventListener('keydown', handlePraiseKeydown)
+      praiseTimer.value = setTimeout(() => {
+        closePraise()
+      }, 5000)
+    }
+
+    // 紙吹雪の生成タイマーと表示中の紙片（早期クローズ時に止めるため保持する）
+    const confettiTimers = []
+    const confettiElements = []
+
+    // 紙吹雪を止めて片付ける
+    const clearConfettiEffect = () => {
+      while (confettiTimers.length) {
+        clearTimeout(confettiTimers.pop())
+      }
+      while (confettiElements.length) {
+        const confetti = confettiElements.pop()
+        if (confetti.parentNode) {
+          confetti.parentNode.removeChild(confetti)
         }
-      }, 50)
-      
-      // 表示時間をタイプに応じて調整
-      const displayTime = isMilestone ? 5000 : 3000
-      setTimeout(() => {
-        showPraise.value = false
-      }, displayTime)
+      }
     }
 
     // 紙吹雪エフェクト
@@ -328,7 +433,7 @@ createApp({
       const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD']
       
       for (let i = 0; i < 50; i++) {
-        setTimeout(() => {
+        confettiTimers.push(setTimeout(() => {
           const confetti = document.createElement('div')
           confetti.className = 'confetti'
           confetti.style.cssText = `
@@ -344,13 +449,18 @@ createApp({
             animation: confetti-fall 3s linear forwards;
           `
           document.body.appendChild(confetti)
+          confettiElements.push(confetti)
           
-          setTimeout(() => {
+          confettiTimers.push(setTimeout(() => {
+            const index = confettiElements.indexOf(confetti)
+            if (index !== -1) {
+              confettiElements.splice(index, 1)
+            }
             if (confetti.parentNode) {
               confetti.parentNode.removeChild(confetti)
             }
-          }, 3000)
-        }, i * 50)
+          }, 3000))
+        }, i * 50))
       }
     }
 
@@ -955,6 +1065,8 @@ createApp({
       calendarDays,
       showPraise,
       praiseMessage,
+      praiseClass,
+      closePraise,
       stats,
       familyStats,
       showDayDetails,
@@ -1232,9 +1344,9 @@ createApp({
         </div>
       </main>
 
-      <!-- 褒めアニメーション -->
-      <div v-if="showPraise" class="praise-overlay">
-        <div class="praise-message">
+      <!-- 褒めアニメーション（マイルストーン時のみ全画面。背景・本体どこをタップしても閉じる） -->
+      <div v-if="showPraise" class="praise-overlay" @click="closePraise">
+        <div :class="praiseClass">
           {{ praiseMessage }}
         </div>
       </div>
