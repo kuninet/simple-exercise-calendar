@@ -420,105 +420,27 @@ body {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(-12deg);
+  transform: translate(-50%, -50%) rotate(-8deg);
   width: 38px;
   height: 38px;
-  background: radial-gradient(
-    circle at 45% 45%,
-    rgba(255, 107, 129, 0.18) 0%,
-    rgba(255, 71, 87, 0.08) 65%,
-    transparent 100%
-  );
-  color: #ff4757;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
-  font-weight: 900;
-  font-family:
-    'Hiragino Maru Gothic ProN', 'Rounded Mplus 1c', 'Yu Gothic', 'Meiryo',
-    sans-serif;
-  border: 2.8px solid rgba(255, 71, 87, 0.88);
   z-index: 10;
   animation: catStampBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   pointer-events: none; /* クリックイベントを通す */
   user-select: none;
   overflow: visible;
-  filter: drop-shadow(0 2px 4px rgba(255, 71, 87, 0.25));
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15));
   box-sizing: border-box;
 }
 
-/* 可愛いネコ耳（::before: 左耳, ::after: 右耳） */
-.stamp-done::before,
-.stamp-done::after {
-  content: '';
-  position: absolute;
-  top: -8px;
-  width: 11px;
-  height: 11px;
-  background: rgba(255, 107, 129, 0.22);
-  border-top: 2.8px solid rgba(255, 71, 87, 0.88);
-  box-sizing: border-box;
+.cat-stamp-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   pointer-events: none;
-}
-
-/* 左耳: 少し外側に傾けて丸みを持たせる */
-.stamp-done::before {
-  left: 3px;
-  border-left: 2.8px solid rgba(255, 71, 87, 0.88);
-  border-top-left-radius: 6px 8px;
-  border-top-right-radius: 2px;
-  transform: rotate(-18deg) skewX(-10deg);
-}
-
-/* 右耳: 少し外側に傾けて丸みを持たせる */
-.stamp-done::after {
-  right: 3px;
-  border-right: 2.8px solid rgba(255, 71, 87, 0.88);
-  border-top-right-radius: 6px 8px;
-  border-top-left-radius: 2px;
-  transform: rotate(18deg) skewX(10deg);
-}
-
-/* ネコ耳の内側アクセント */
-.stamp-done .cat-ear-l,
-.stamp-done .cat-ear-r {
-  position: absolute;
-  top: -5px;
-  width: 5px;
-  height: 5px;
-  background: rgba(255, 107, 129, 0.6);
-  pointer-events: none;
-}
-
-.stamp-done .cat-ear-l {
-  left: 6px;
-  border-top-left-radius: 4px;
-  transform: rotate(-18deg);
-}
-
-.stamp-done .cat-ear-r {
-  right: 6px;
-  border-top-right-radius: 4px;
-  transform: rotate(18deg);
-}
-
-/* 可愛いヒゲ（左右） */
-.stamp-done .cat-whiskers {
-  position: absolute;
-  top: 50%;
-  width: 6px;
-  height: 1.5px;
-  background-color: rgba(255, 71, 87, 0.85);
-  border-radius: 1px;
-  pointer-events: none;
-}
-
-.stamp-done .cat-whisker-l {
-  left: 2px;
-  box-shadow: 0 4px 0 rgba(255, 71, 87, 0.85);
-  transform: translateY(-2px) rotate(8deg);
+  user-select: none;
 }
 
 .stamp-done .cat-whisker-r {

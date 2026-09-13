@@ -1373,27 +1373,36 @@ createApp({
         id: 'red_cat',
         name: '朱肉にゃんこ',
         icon: '🐱',
+        file: 'cat_red.svg',
         desc: '王道の済ハンコ'
       },
       {
         id: 'pink_paw',
         name: 'ぷにぷに肉球',
         icon: '🐾',
+        file: 'cat_pink.svg',
         desc: 'ピンクの足跡'
       },
       {
         id: 'white_cat',
         name: 'ニッコリしろねこ',
         icon: '😺',
+        file: 'cat_white.svg',
         desc: '笑顔のしろねこ'
       },
       {
         id: 'black_cat',
         name: 'おちゃめクロネコ',
         icon: '🐈‍⬛',
+        file: 'cat_black.svg',
         desc: '黒猫アイコン'
       }
     ]
+
+    const getCatStampFile = (type) => {
+      const found = catStampTypes.find((st) => st.id === type)
+      return found ? found.file : 'cat_red.svg'
+    }
 
     // ユーザー管理用の状態
     const showUserManagement = ref(false)
@@ -1775,6 +1784,7 @@ createApp({
       onFileInputChange,
       fileInput,
       catStampTypes,
+      getCatStampFile,
       newUserCatStamp,
       editUserCatStamp,
       updateUserStamp,
@@ -1877,7 +1887,7 @@ createApp({
               :class="['cat-stamp-type-card', { active: (currentUser?.cat_stamp_type || 'red_cat') === st.id }]"
               @click="updateUserStamp(st.id)"
             >
-              <span class="cat-stamp-icon">{{ st.icon }}</span>
+              <img :src="'/stamps/' + st.file" class="cat-stamp-thumb-img" alt="スタンプ" />
               <span class="cat-stamp-name">{{ st.name }}</span>
             </button>
           </div>
@@ -1947,11 +1957,7 @@ createApp({
                        }
                      ]"
                      :title="day.recordCount >= 3 ? '大変よくできましたニャ！🐾' : (day.recordCount === 2 ? 'よくできましたニャ！🐾' : 'できたニャ！🐾')">
-                  <span class="cat-ear-l" aria-hidden="true"></span>
-                  <span class="cat-ear-r" aria-hidden="true"></span>
-                  <span class="cat-whiskers cat-whisker-l" aria-hidden="true"></span>
-                  <span class="cat-face-text">済</span>
-                  <span class="cat-whiskers cat-whisker-r" aria-hidden="true"></span>
+                  <img :src="'/stamps/' + getCatStampFile(currentUser?.cat_stamp_type)" class="cat-stamp-img" alt="ネコスタンプ" />
                   <span v-if="day.recordCount >= 2" class="cat-paw-badge" aria-hidden="true">🐾</span>
                 </div>
                 <span v-if="day.recordCount > 1" class="record-count">{{ day.recordCount }}</span>
@@ -2083,7 +2089,7 @@ createApp({
                     :class="['cat-stamp-type-card', { active: (currentUser?.cat_stamp_type || 'red_cat') === st.id }]"
                     @click="updateUserStamp(st.id)"
                   >
-                    <span class="cat-stamp-icon">{{ st.icon }}</span>
+                    <img :src="'/stamps/' + st.file" class="cat-stamp-thumb-img" alt="スタンプ" />
                     <span class="cat-stamp-name">{{ st.name }}</span>
                   </button>
                 </div>
