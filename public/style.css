@@ -421,8 +421,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-8deg);
-  width: 52px;
-  height: 52px;
+  width: 72px;
+  height: 72px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -458,12 +458,12 @@ body {
   text-shadow: 0 0 1px rgba(255, 71, 87, 0.4);
 }
 
-/* 肉球バッジ（複数記録時のアクセント） */
+/* 肉球バッジ（複数記録時のアクセント・中央寄り右下に配置） */
 .stamp-done .cat-paw-badge {
   position: absolute;
-  bottom: -10px;
-  right: -10px;
-  font-size: 14px;
+  bottom: -6px;
+  right: -4px;
+  font-size: 15px;
   line-height: 1;
   z-index: 12;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
@@ -473,9 +473,9 @@ body {
 
 /* 2回記録時のスタンプ（ラージ） */
 .stamp-done.stamp-large {
-  width: 58px;
-  height: 58px;
-  font-size: 17px;
+  width: 82px;
+  height: 82px;
+  font-size: 19px;
   border-width: 3.2px;
   transform: translate(-50%, -50%) rotate(-8deg);
   animation: catStampBounceLarge 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -518,16 +518,16 @@ body {
 }
 
 .stamp-done.stamp-large .cat-paw-badge {
-  font-size: 15px;
-  bottom: -12px;
-  right: -12px;
+  font-size: 16px;
+  bottom: -8px;
+  right: -6px;
 }
 
 /* 3つ以上のエクササイズ用の特大サイズ（エクストララージ） */
 .stamp-done.stamp-xlarge {
-  width: 68px;
-  height: 68px;
-  font-size: 21px;
+  width: 92px;
+  height: 92px;
+  font-size: 23px;
   border-width: 3.6px;
   transform: translate(-50%, -50%) rotate(-5deg);
   animation: catStampBounceXLarge 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -570,9 +570,9 @@ body {
 }
 
 .stamp-done.stamp-xlarge .cat-paw-badge {
-  font-size: 16px;
-  bottom: -6px;
-  right: -7px;
+  font-size: 17px;
+  bottom: -10px;
+  right: -8px;
 }
 
 /* ネコスタンプのアニメーション（ぽんと可愛く押されるバウンス演出） */
@@ -762,21 +762,23 @@ body {
 }
 
 .record-count {
-  font-size: 10px;
+  font-size: 11px;
   background: rgba(220, 53, 69, 0.9);
   color: white;
   border-radius: 50%;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   position: absolute;
-  top: 2px;
-  right: 2px;
+  bottom: 3px;
+  left: 3px;
+  right: auto;
+  top: auto;
   z-index: 15; /* スタンプより上に */
-  border: 1px solid white;
+  border: 1.5px solid white;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
@@ -1574,11 +1576,13 @@ body {
   }
 
   .record-count {
-    width: 14px;
-    height: 14px;
-    font-size: 9px;
-    top: 1px;
-    right: 1px;
+    width: 15px;
+    height: 15px;
+    font-size: 9.5px;
+    bottom: 2px;
+    left: 2px;
+    top: auto;
+    right: auto;
   }
 
   .exercise-section {
@@ -3179,68 +3183,24 @@ body {
    ネコスタンプ タイプ別バリエーション (ユーザー設定対応)
    ========================================================================== */
 
-/* ① 朱肉にゃんこ (デフォルト・コーラルレッド) */
-.stamp-done.stamp-type-red_cat {
-  color: #ff4757;
-  border-color: rgba(255, 71, 87, 0.88);
+/* 画像切り出しスタンプ用：背景・黒枠・擬似要素を完全クリア */
+.stamp-done.stamp-type-red_cat,
+.stamp-done.stamp-type-pink_paw,
+.stamp-done.stamp-type-white_cat,
+.stamp-done.stamp-type-black_cat {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
 }
 .stamp-done.stamp-type-red_cat::before,
-.stamp-done.stamp-type-red_cat::after {
-  border-color: rgba(255, 71, 87, 0.88);
-  background: rgba(255, 107, 129, 0.22);
-}
-
-/* ② ぷにぷに肉球 (ピンク足跡) */
-.stamp-done.stamp-type-pink_paw {
-  color: #e84393;
-  border-color: rgba(232, 67, 147, 0.88);
-  border-style: dashed;
-  background: radial-gradient(
-    circle at 45% 45%,
-    rgba(253, 121, 168, 0.25) 0%,
-    transparent 100%
-  );
-}
+.stamp-done.stamp-type-red_cat::after,
 .stamp-done.stamp-type-pink_paw::before,
-.stamp-done.stamp-type-pink_paw::after {
-  border-color: rgba(232, 67, 147, 0.88);
-  background: rgba(253, 121, 168, 0.35);
-}
-
-/* ③ ニッコリしろねこ (パステルクリーム & パープル) */
-.stamp-done.stamp-type-white_cat {
-  color: #6c5ce7;
-  border-color: rgba(108, 92, 231, 0.88);
-  background: radial-gradient(
-    circle at 45% 45%,
-    rgba(255, 255, 255, 0.95) 0%,
-    rgba(162, 155, 254, 0.15) 100%
-  );
-}
+.stamp-done.stamp-type-pink_paw::after,
 .stamp-done.stamp-type-white_cat::before,
-.stamp-done.stamp-type-white_cat::after {
-  border-color: rgba(108, 92, 231, 0.88);
-  background: #a29bfe;
-}
-
-/* ④ おちゃめクロネコ (シックダーク) */
-.stamp-done.stamp-type-black_cat {
-  color: #ffeaa7;
-  border-color: #2d3436;
-  background: radial-gradient(
-    circle at 45% 45%,
-    rgba(45, 52, 54, 0.92) 0%,
-    rgba(0, 0, 0, 0.85) 100%
-  );
-}
+.stamp-done.stamp-type-white_cat::after,
 .stamp-done.stamp-type-black_cat::before,
 .stamp-done.stamp-type-black_cat::after {
-  border-color: #2d3436;
-  background: #2d3436;
-}
-.stamp-done.stamp-type-black_cat .cat-whiskers {
-  background: #fdcb6e;
-  box-shadow: 0 4px 0 #fdcb6e;
+  display: none !important;
 }
 
 /* ネコスタンプ選択カード (ユーザー管理モーダル用) */
