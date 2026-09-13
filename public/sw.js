@@ -1,4 +1,4 @@
-const CACHE_NAME = 'exercise-calendar-v16'
+const CACHE_NAME = 'exercise-calendar-v18'
 const urlsToCache = [
   '/',
   '/index.html',

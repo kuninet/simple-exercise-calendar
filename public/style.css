@@ -460,12 +460,12 @@ body {
   text-shadow: 0 0 1px rgba(255, 71, 87, 0.4);
 }
 
-/* 肉球バッジ（複数記録時のアクセント・猫スタンプ右下の中央寄りに配置） */
+/* 肉球バッジ（複数記録時のアクセント・猫のお顔に一切被らないよう右下隅の外縁に配置） */
 .stamp-done .cat-paw-badge {
   position: absolute;
-  bottom: 8px;
-  right: 8px;
-  font-size: 22px;
+  bottom: -4px;
+  right: -2px;
+  font-size: 14px;
   line-height: 1;
   z-index: 12;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
@@ -542,9 +542,9 @@ body {
 }
 
 .stamp-done.stamp-large .cat-paw-badge {
-  font-size: 25px;
-  bottom: 10px;
-  right: 10px;
+  font-size: 16px;
+  bottom: -2px;
+  right: 0px;
 }
 
 .stamp-done.stamp-large .record-count {
@@ -602,9 +602,9 @@ body {
 }
 
 .stamp-done.stamp-xlarge .cat-paw-badge {
-  font-size: 28px;
-  bottom: 12px;
-  right: 12px;
+  font-size: 18px;
+  bottom: 0px;
+  right: 2px;
 }
 
 .stamp-done.stamp-xlarge .record-count {
