@@ -77,12 +77,6 @@ test.describe('Wi-Fi同期とローカルファーストストレージのテス
     await expect(badge).toBeVisible()
     await expect(badge).toContainText('同期完了')
 
-    // ヘッダー内のバックアップ/復元ボタンの確認
-    const backupBtn = page.locator('.header-backup-section .backup-btn')
-    const restoreBtn = page.locator('.header-backup-section .restore-btn')
-    await expect(backupBtn).toBeVisible()
-    await expect(restoreBtn).toBeVisible()
-
     // 下部データ管理セクションの確認
     const dataManagementSection = page.locator('.data-management')
     await expect(dataManagementSection).toBeVisible()
@@ -146,7 +140,7 @@ test.describe('Wi-Fi同期とローカルファーストストレージのテス
 
     // ダウンロードイベントを監視
     const downloadPromise = page.waitForEvent('download')
-    await page.locator('.header-backup-section .backup-btn').click()
+    await page.locator('.data-management .backup-button').click()
     const download = await downloadPromise
 
     expect(download.suggestedFilename()).toMatch(/^exercise_backup_.*\.json$/)
@@ -191,7 +185,7 @@ test.describe('Wi-Fi同期とローカルファーストストレージのテス
     }
 
     const fileChooserPromise = page.waitForEvent('filechooser')
-    await page.locator('.header-backup-section .restore-btn').click()
+    await page.locator('.data-management .restore-button').click()
     const fileChooser = await fileChooserPromise
     await fileChooser.setFiles({
       name: 'restore_test.json',

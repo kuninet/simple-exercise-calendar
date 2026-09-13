@@ -1733,16 +1733,6 @@ createApp({
           </div>
 
           <div class="header-controls">
-            <!-- バックアップ/復元ボタン（ヘッダー） -->
-            <div class="header-backup-section">
-              <button class="header-btn backup-btn" @click="exportData" title="全データをJSONファイルとして保存">
-                💾 JSONバックアップ保存
-              </button>
-              <button class="header-btn restore-btn" @click="triggerImportFile" title="JSONファイルから全データを復元">
-                📥 JSONバックアップ復元
-              </button>
-            </div>
-
             <div class="user-section">
               <div class="user-info" @click="toggleUserSelector">
                 <span class="user-icon">👤</span>
