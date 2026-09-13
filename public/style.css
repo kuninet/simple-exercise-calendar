@@ -421,8 +421,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-8deg);
-  width: 38px;
-  height: 38px;
+  width: 52px;
+  height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -441,6 +441,7 @@ body {
   object-fit: contain;
   pointer-events: none;
   user-select: none;
+  overflow: visible;
 }
 
 .stamp-done .cat-whisker-r {
@@ -472,8 +473,8 @@ body {
 
 /* 2回記録時のスタンプ（ラージ） */
 .stamp-done.stamp-large {
-  width: 44px;
-  height: 44px;
+  width: 58px;
+  height: 58px;
   font-size: 17px;
   border-width: 3.2px;
   transform: translate(-50%, -50%) rotate(-8deg);
@@ -524,8 +525,8 @@ body {
 
 /* 3つ以上のエクササイズ用の特大サイズ（エクストララージ） */
 .stamp-done.stamp-xlarge {
-  width: 52px;
-  height: 52px;
+  width: 68px;
+  height: 68px;
   font-size: 21px;
   border-width: 3.6px;
   transform: translate(-50%, -50%) rotate(-5deg);
