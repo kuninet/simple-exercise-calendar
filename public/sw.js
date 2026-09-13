@@ -1,4 +1,4 @@
-const CACHE_NAME = 'exercise-calendar-v2'
+const CACHE_NAME = 'exercise-calendar-v3'
 const urlsToCache = [
   '/',
   '/index.html',
@@ -25,27 +25,39 @@ self.addEventListener('install', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url)
 
-  // APIリクエストはNetwork-First（失敗時はオフラインフォールバックJSONを返却）
+  // APIリクエストはNetwork-First（1秒でタイムアウトしオフラインフォールバックJSONを返却）
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(
-      fetch(event.request).catch(() => {
-        console.log(
-          `🔌 Service Worker: オフラインのためAPIをフォールバック [${url.pathname}]`
-        )
-        return new Response(
-          JSON.stringify({
-            success: false,
-            offline: true,
-            status: 'offline',
-            error: 'オフラインのためローカルモードで動作中'
-          }),
-          {
-            status: 503,
-            statusText: 'Service Unavailable (Offline)',
-            headers: { 'Content-Type': 'application/json; charset=utf-8' }
-          }
-        )
-      })
+      (async () => {
+        const controller = new AbortController()
+        const timeoutId = setTimeout(() => controller.abort(), 1000)
+        try {
+          const response = await fetch(event.request, {
+            signal: controller.signal
+          })
+          clearTimeout(timeoutId)
+          return response
+        } catch (error) {
+          clearTimeout(timeoutId)
+          console.log(
+            `🔌 Service Worker: オフラインまたはタイムアウトのためAPIをフォールバック [${url.pathname}]`,
+            error.message
+          )
+          return new Response(
+            JSON.stringify({
+              success: false,
+              offline: true,
+              status: 'offline',
+              error: 'オフラインのためローカルモードで動作中'
+            }),
+            {
+              status: 503,
+              statusText: 'Service Unavailable (Offline)',
+              headers: { 'Content-Type': 'application/json; charset=utf-8' }
+            }
+          )
+        }
+      })()
     )
     return
   }

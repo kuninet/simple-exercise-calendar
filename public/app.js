@@ -115,7 +115,7 @@ const LocalStore = {
     if (navigator.onLine) {
       try {
         const controller = new AbortController()
-        const timer = setTimeout(() => controller.abort(), 2000)
+        const timer = setTimeout(() => controller.abort(), 800)
         const ping = await fetch('/api/ping', { signal: controller.signal })
         clearTimeout(timer)
 
@@ -706,9 +706,9 @@ createApp({
       }
 
       try {
-        // 1. /api/ping でサーバー疎通確認（3秒タイムアウト）
+        // 1. /api/ping でサーバー疎通確認（超高速800msタイムアウト）
         const controller = new AbortController()
-        const timer = setTimeout(() => controller.abort(), 3000)
+        const timer = setTimeout(() => controller.abort(), 800)
         const pingRes = await fetch('/api/ping', { signal: controller.signal })
         clearTimeout(timer)
 
