@@ -1,4 +1,4 @@
-const CACHE_NAME = 'exercise-calendar-v3'
+const CACHE_NAME = 'exercise-calendar-v18'
 const urlsToCache = [
   '/',
   '/index.html',
@@ -7,7 +7,11 @@ const urlsToCache = [
   '/manifest.json',
   '/icon-192.png',
   '/icon-512.png',
-  'https://unpkg.com/vue@3/dist/vue.global.js'
+  'https://unpkg.com/vue@3/dist/vue.global.js',
+  '/stamps/cat_red.svg',
+  '/stamps/cat_pink.svg',
+  '/stamps/cat_white.svg',
+  '/stamps/cat_black.svg'
 ]
 
 // インストール時に静的アセットをキャッシュ（Cache-First用）

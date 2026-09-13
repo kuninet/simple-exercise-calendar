@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <path id="blackTextArc" d="M 23 78 A 34 34 0 0 0 77 78" />
+  </defs>
+
+  <!-- 背後円形バッジ (黒色ベース) -->
+  <circle cx="50" cy="50" r="42" fill="#ffffff" stroke="#1e272e" stroke-width="5" />
+
+  <!-- 黒猫の顔＆耳 (全黒 `#1e272e`) -->
+  <!-- 左耳 -->
+  <path d="M 18 38 L 26 8 C 27 6, 30 6, 32 8 L 46 26 Z" fill="#1e272e" stroke="#1e272e" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M 24 34 L 28 14 L 40 25 Z" fill="#ff7675"/>
+  <!-- 右耳 -->
+  <path d="M 82 38 L 74 8 C 73 6, 70 6, 68 8 L 54 26 Z" fill="#1e272e" stroke="#1e272e" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M 76 34 L 72 14 L 60 25 Z" fill="#ff7675"/>
+
+  <!-- 猫顔の本体 (黒い円) -->
+  <circle cx="50" cy="48" r="33" fill="#1e272e" />
+
+  <!-- 大きな黄色い瞳 (左) -->
+  <circle cx="34" cy="44" r="8" fill="#f1c40f"/>
+  <ellipse cx="34" cy="44" rx="3" ry="7" fill="#1e272e"/>
+  <circle cx="32" cy="40" r="2.2" fill="#ffffff"/>
+
+  <!-- 大きな黄色い瞳 (右) -->
+  <circle cx="66" cy="44" r="8" fill="#f1c40f"/>
+  <ellipse cx="66" cy="44" rx="3" ry="7" fill="#1e272e"/>
+  <circle cx="64" cy="40" r="2.2" fill="#ffffff"/>
+
+  <!-- 鼻 (ピンク) と八重歯/お口 -->
+  <polygon points="50,51 47,48 53,48" fill="#ff7675"/>
+  <!-- にっこり口ライン (グレー/白) -->
+  <path d="M 42 54 Q 50 61 58 54" fill="#1e272e" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- ちょこんと出た白い八重歯ふたつ -->
+  <polygon points="45,55 47,60 48.5,55" fill="#ffffff"/>
+  <polygon points="51.5,55 53,60 55,55" fill="#ffffff"/>
+
+  <!-- 白いヒゲ (左右2本ずつ) -->
+  <line x1="8" y1="45" x2="21" y2="47" stroke="#7f8c8d" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="10" y1="53" x2="22" y2="51" stroke="#7f8c8d" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="92" y1="45" x2="79" y2="47" stroke="#7f8c8d" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="90" y1="53" x2="78" y2="51" stroke="#7f8c8d" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- 下部ブラックバッジ領域 & "TRACKED" テキスト -->
+  <path d="M 15 62 A 42 42 0 0 0 85 62 C 80 90, 20 90, 15 62 Z" fill="#1e272e" stroke="#1e272e" stroke-width="2" />
+  <text font-family="'Arial Black', sans-serif" font-size="8" font-weight="900" fill="#ffffff" letter-spacing="1">
+    <textPath href="#blackTextArc" startOffset="50%" text-anchor="middle">TRACKED</textPath>
+  </text>
+</svg>

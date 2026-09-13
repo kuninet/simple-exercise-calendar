@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <path id="pinkTextArc" d="M 18 78 Q 50 100 82 78" />
+  </defs>
+
+  <!-- 外枠スカラップ/全形アウトライン -->
+  <path d="M 50 8 C 78 8, 95 28, 95 56 C 95 78, 78 90, 50 90 C 22 90, 5 78, 5 56 C 5 28, 22 8, 50 8 Z" fill="#ffffff" stroke="#e84393" stroke-width="5" />
+
+  <!-- 主肉球 (ハートシェイプの大きな掌球) -->
+  <path d="M 50 44 C 32 44, 24 58, 30 72 C 36 82, 64 82, 70 72 C 76 58, 68 44, 50 44 Z" fill="#fd79a8" stroke="#e84393" stroke-width="3" />
+  <!-- ツヤ/ハイライト -->
+  <path d="M 40 52 C 45 47, 55 47, 60 52 C 55 54, 45 54, 40 52 Z" fill="#ffffff" opacity="0.7"/>
+
+  <!-- 指肉球 4つ (ぷっくり楕円/ハート) -->
+  <!-- 左下 -->
+  <ellipse cx="23" cy="38" rx="9" ry="12" transform="rotate(-28 23 38)" fill="#fd79a8" stroke="#e84393" stroke-width="3"/>
+  <ellipse cx="21" cy="34" rx="3" ry="5" transform="rotate(-28 21 34)" fill="#ffffff" opacity="0.6"/>
+  <!-- 左上 -->
+  <ellipse cx="38" cy="20" rx="9" ry="12" transform="rotate(-12 38 20)" fill="#fd79a8" stroke="#e84393" stroke-width="3"/>
+  <ellipse cx="36" cy="16" rx="3" ry="5" transform="rotate(-12 36 16)" fill="#ffffff" opacity="0.6"/>
+  <!-- 右上 -->
+  <ellipse cx="62" cy="20" rx="9" ry="12" transform="rotate(12 62 20)" fill="#fd79a8" stroke="#e84393" stroke-width="3"/>
+  <ellipse cx="64" cy="16" rx="3" ry="5" transform="rotate(12 64 16)" fill="#ffffff" opacity="0.6"/>
+  <!-- 右下 -->
+  <ellipse cx="77" cy="38" rx="9" ry="12" transform="rotate(28 77 38)" fill="#fd79a8" stroke="#e84393" stroke-width="3"/>
+  <ellipse cx="79" cy="34" rx="3" ry="5" transform="rotate(28 79 34)" fill="#ffffff" opacity="0.6"/>
+
+  <!-- 下部テキスト "FITNESS!" とハート -->
+  <text font-family="'Arial Black', sans-serif" font-size="8" font-weight="900" fill="#e84393" letter-spacing="1">
+    <textPath href="#pinkTextArc" startOffset="50%" text-anchor="middle">FITNESS!</textPath>
+  </text>
+
+  <!-- 小さなハートマーク (FITNESS! の左側) -->
+  <path d="M 18 73 C 16 70, 13 70, 12 72 C 11 74, 12 76, 15 78 L 18 81 L 21 78 C 24 76, 25 74, 24 72 C 23 70, 20 70, 18 73 Z" fill="#e84393"/>
+</svg>
