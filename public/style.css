@@ -3294,6 +3294,14 @@ body {
   font-size: 18px;
 }
 
+.cat-stamp-thumb-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.12));
+}
+
 .cat-stamp-name {
   color: #333;
 }
