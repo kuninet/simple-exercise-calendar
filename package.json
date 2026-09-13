@@ -5,7 +5,20 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "init-db": "node database.js"
+    "init-db": "node database.js",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "prepare": "husky",
+    "test": "playwright test"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,css,html,md}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "express": "^4.18.2",
@@ -14,7 +27,21 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "keywords": ["exercise", "calendar", "fitness", "tracking"],
+  "keywords": [
+    "exercise",
+    "calendar",
+    "fitness",
+    "tracking"
+  ],
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
+    "eslint": "^10.10.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.5.1",
+    "playwright": "^1.63.0",
+    "prettier": "^3.9.6"
+  }
 }

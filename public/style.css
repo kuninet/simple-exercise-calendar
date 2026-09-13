@@ -25,7 +25,7 @@ body {
   padding: 20px;
   background: white;
   border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
 }
 
@@ -33,6 +33,132 @@ body {
   color: #333;
   font-size: 28px;
   margin: 0;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  width: 100%;
+}
+
+.header-title-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* 同期ステータスバッジ */
+.sync-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  user-select: none;
+}
+
+.sync-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* 同期完了（オンライン） */
+.sync-status-badge.synced {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+.sync-status-badge.synced .sync-status-dot {
+  background-color: #4caf50;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.6);
+}
+
+/* ローカル動作中（オフライン） */
+.sync-status-badge.offline {
+  background-color: #fff3e0;
+  color: #e65100;
+  border: 1px solid #ffe0b2;
+}
+.sync-status-badge.offline .sync-status-dot {
+  background-color: #ff9800;
+  box-shadow: 0 0 6px rgba(255, 152, 0, 0.5);
+}
+
+/* 同期中 */
+.sync-status-badge.syncing {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #bbdefb;
+}
+.sync-status-badge.syncing .sync-status-dot {
+  background-color: #2196f3;
+  animation: sync-pulse 1s infinite alternate;
+}
+
+@keyframes sync-pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.3);
+    opacity: 1;
+    box-shadow: 0 0 8px #2196f3;
+  }
+}
+
+/* ヘッダー内バックアップ/復元ボタン */
+.header-backup-section {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.header-btn {
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.header-btn.backup-btn {
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
+  color: white;
+}
+.header-btn.backup-btn:hover {
+  background: linear-gradient(135deg, #43a047, #5cb85c);
+  transform: translateY(-1px);
+}
+
+.header-btn.restore-btn {
+  background: linear-gradient(135deg, #2196f3, #42a5f5);
+  color: white;
+}
+.header-btn.restore-btn:hover {
+  background: linear-gradient(135deg, #1e88e5, #1976d2);
+  transform: translateY(-1px);
 }
 
 .user-section {
@@ -79,7 +205,7 @@ body {
   margin-top: 8px;
   background: white;
   border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   border: 1px solid #e9ecef;
   min-width: 200px;
   z-index: 1000;
@@ -115,7 +241,7 @@ body {
   height: 12px;
   border-radius: 50%;
   border: 2px solid white;
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 /* ユーザー切り替えアニメーション */
@@ -136,7 +262,7 @@ body {
   margin-top: 8px;
   background: white;
   border-radius: 10px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   border: 1px solid #e9ecef;
   min-width: 200px;
   z-index: 1000;
@@ -161,7 +287,7 @@ body {
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 100%;
   overflow: visible; /* ハンコがはみ出せるように */
@@ -181,7 +307,7 @@ body {
 }
 
 .month-nav {
-  background: #4CAF50;
+  background: #4caf50;
   color: white;
   border: none;
   border-radius: 50%;
@@ -261,12 +387,12 @@ body {
 }
 
 .calendar-day.today {
-  border: 2px solid #4CAF50;
+  border: 2px solid #4caf50;
   font-weight: bold;
 }
 
 .calendar-day.today.completed {
-  border-color: #2E7D32;
+  border-color: #2e7d32;
 }
 
 .calendar-day.streak-day {
@@ -325,16 +451,17 @@ body {
   right: -3px;
   bottom: -3px;
   border-radius: 50%;
-  background: radial-gradient(
-    circle at 30% 40%, 
-    rgba(220, 53, 69, 0.1) 0%, 
-    transparent 50%
-  ),
-  radial-gradient(
-    circle at 70% 60%, 
-    rgba(220, 53, 69, 0.08) 0%, 
-    transparent 40%
-  );
+  background:
+    radial-gradient(
+      circle at 30% 40%,
+      rgba(220, 53, 69, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 70% 60%,
+      rgba(220, 53, 69, 0.08) 0%,
+      transparent 40%
+    );
   z-index: -1;
 }
 
@@ -446,7 +573,7 @@ body {
     margin: 10px;
     max-width: none;
   }
-  
+
   .today-exercise-header h3 {
     font-size: 16px;
   }
@@ -468,7 +595,7 @@ body {
   right: 2px;
   z-index: 15; /* スタンプより上に */
   border: 1px solid white;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .streak-indicator {
@@ -492,7 +619,7 @@ body {
   background: white;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* 統計表示 */
@@ -512,7 +639,7 @@ body {
   padding: 10px;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
 }
 
@@ -521,23 +648,23 @@ body {
 }
 
 .stat-item.personal {
-  border-left: 4px solid #4CAF50;
+  border-left: 4px solid #4caf50;
 }
 
 .stat-item.family {
-  border-left: 4px solid #FF9800;
+  border-left: 4px solid #ff9800;
 }
 
 .stat-number {
   display: block;
   font-size: 24px;
   font-weight: bold;
-  color: #4CAF50;
+  color: #4caf50;
   margin-bottom: 5px;
 }
 
 .stat-item.family .stat-number {
-  color: #FF9800;
+  color: #ff9800;
 }
 
 .stat-label {
@@ -589,12 +716,14 @@ body {
   font-size: 16px;
   background: white;
   cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .exercise-selector select:focus {
   outline: none;
-  border-color: #4CAF50;
+  border-color: #4caf50;
   box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
 }
 
@@ -609,7 +738,7 @@ body {
 .today-button {
   width: 100%;
   padding: 20px;
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   border: none;
   border-radius: 10px;
@@ -666,7 +795,8 @@ body {
   gap: 15px;
 }
 
-.backup-button, .export-button {
+.backup-button,
+.export-button {
   padding: 12px 16px;
   border: none;
   border-radius: 8px;
@@ -678,7 +808,7 @@ body {
 }
 
 .backup-button {
-  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
   color: white;
 }
 
@@ -688,7 +818,7 @@ body {
 }
 
 .export-button {
-  background: linear-gradient(135deg, #2196F3, #42A5F5);
+  background: linear-gradient(135deg, #2196f3, #42a5f5);
   color: white;
 }
 
@@ -704,7 +834,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -720,88 +850,90 @@ body {
   font-weight: bold;
   text-align: center;
   animation: praise-bounce 0.5s ease-out;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   max-width: 90%;
 }
 
 @keyframes praise-bounce {
-  0% { 
-    transform: scale(0.5); 
-    opacity: 0; 
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
   }
-  50% { 
-    transform: scale(1.1); 
+  50% {
+    transform: scale(1.1);
   }
-  100% { 
-    transform: scale(1); 
-    opacity: 1; 
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
 @keyframes praise-pulse {
-  0%, 100% { 
-    transform: scale(1); 
+  0%,
+  100% {
+    transform: scale(1);
   }
-  50% { 
-    transform: scale(1.05); 
+  50% {
+    transform: scale(1.05);
   }
 }
 
 @keyframes praise-shake {
-  0%, 100% { 
-    transform: translateX(0); 
+  0%,
+  100% {
+    transform: translateX(0);
   }
-  25% { 
-    transform: translateX(-5px); 
+  25% {
+    transform: translateX(-5px);
   }
-  75% { 
-    transform: translateX(5px); 
+  75% {
+    transform: translateX(5px);
   }
 }
 
 @keyframes praise-rainbow {
-  0% { 
-    background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+  0% {
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
     transform: scale(0.8) rotate(0deg);
   }
-  25% { 
-    background: linear-gradient(45deg, #4ECDC4, #45B7D1);
+  25% {
+    background: linear-gradient(45deg, #4ecdc4, #45b7d1);
     transform: scale(1.1) rotate(90deg);
   }
-  50% { 
-    background: linear-gradient(45deg, #45B7D1, #96CEB4);
+  50% {
+    background: linear-gradient(45deg, #45b7d1, #96ceb4);
     transform: scale(1.2) rotate(180deg);
   }
-  75% { 
-    background: linear-gradient(45deg, #96CEB4, #FFEAA7);
+  75% {
+    background: linear-gradient(45deg, #96ceb4, #ffeaa7);
     transform: scale(1.1) rotate(270deg);
   }
-  100% { 
-    background: linear-gradient(45deg, #FFEAA7, #FF6B6B);
+  100% {
+    background: linear-gradient(45deg, #ffeaa7, #ff6b6b);
     transform: scale(1) rotate(360deg);
   }
 }
 
 @keyframes praise-fireworks {
-  0% { 
+  0% {
     transform: scale(0.5);
     opacity: 0;
     box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
   }
-  25% { 
+  25% {
     transform: scale(1.2);
     opacity: 1;
     box-shadow: 0 0 0 20px rgba(255, 107, 107, 0);
   }
-  50% { 
+  50% {
     transform: scale(1.1);
     box-shadow: 0 0 0 40px rgba(78, 205, 196, 0);
   }
-  75% { 
+  75% {
     transform: scale(1.15);
     box-shadow: 0 0 0 60px rgba(69, 183, 209, 0);
   }
-  100% { 
+  100% {
     transform: scale(1);
     opacity: 1;
     box-shadow: 0 0 0 80px rgba(150, 206, 180, 0);
@@ -809,95 +941,97 @@ body {
 }
 
 @keyframes praise-celebration {
-  0% { 
+  0% {
     transform: scale(0.3) rotate(0deg);
     opacity: 0;
   }
-  25% { 
+  25% {
     transform: scale(1.3) rotate(90deg);
     opacity: 1;
   }
-  50% { 
+  50% {
     transform: scale(1.1) rotate(180deg);
   }
-  75% { 
+  75% {
     transform: scale(1.2) rotate(270deg);
   }
-  100% { 
+  100% {
     transform: scale(1) rotate(360deg);
     opacity: 1;
   }
 }
 
 @keyframes praise-sparkle {
-  0%, 100% { 
+  0%,
+  100% {
     transform: scale(1);
     filter: brightness(1);
   }
-  25% { 
+  25% {
     transform: scale(1.05);
     filter: brightness(1.3);
   }
-  50% { 
+  50% {
     transform: scale(1.1);
     filter: brightness(1.5);
   }
-  75% { 
+  75% {
     transform: scale(1.05);
     filter: brightness(1.3);
   }
 }
 
 @keyframes praise-fire {
-  0%, 100% { 
+  0%,
+  100% {
     transform: scale(1) rotate(0deg);
     filter: hue-rotate(0deg);
   }
-  25% { 
+  25% {
     transform: scale(1.1) rotate(5deg);
     filter: hue-rotate(90deg);
   }
-  50% { 
+  50% {
     transform: scale(1.15) rotate(-5deg);
     filter: hue-rotate(180deg);
   }
-  75% { 
+  75% {
     transform: scale(1.1) rotate(5deg);
     filter: hue-rotate(270deg);
   }
 }
 
 @keyframes praise-star {
-  0% { 
+  0% {
     transform: scale(0.5) rotate(0deg);
     opacity: 0;
   }
-  50% { 
+  50% {
     transform: scale(1.2) rotate(180deg);
     opacity: 1;
   }
-  100% { 
+  100% {
     transform: scale(1) rotate(360deg);
     opacity: 1;
   }
 }
 
 @keyframes praise-confetti {
-  0% { 
+  0% {
     transform: scale(0.8);
     opacity: 0;
   }
-  25% { 
+  25% {
     transform: scale(1.1);
     opacity: 1;
   }
-  50% { 
+  50% {
     transform: scale(1.05);
   }
-  75% { 
+  75% {
     transform: scale(1.1);
   }
-  100% { 
+  100% {
     transform: scale(1);
     opacity: 1;
   }
@@ -922,44 +1056,44 @@ body {
   font-weight: bold;
   text-align: center;
   animation: praise-bounce 0.5s ease-out;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   max-width: 90%;
   transition: all 0.3s ease;
 }
 
 /* タイプ別スタイル */
 .praise-message.daily {
-  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
   color: white;
 }
 
 .praise-message.streak-start {
-  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
   color: white;
 }
 
 .praise-message.streak-short {
-  background: linear-gradient(135deg, #2196F3, #42A5F5);
+  background: linear-gradient(135deg, #2196f3, #42a5f5);
   color: white;
 }
 
 .praise-message.streak-week {
-  background: linear-gradient(135deg, #FF9800, #FFB74D);
+  background: linear-gradient(135deg, #ff9800, #ffb74d);
   color: white;
 }
 
 .praise-message.streak-medium {
-  background: linear-gradient(135deg, #E91E63, #F06292);
+  background: linear-gradient(135deg, #e91e63, #f06292);
   color: white;
 }
 
 .praise-message.streak-long {
-  background: linear-gradient(135deg, #9C27B0, #BA68C8);
+  background: linear-gradient(135deg, #9c27b0, #ba68c8);
   color: white;
 }
 
 .praise-message.milestone {
-  background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+  background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
   color: white;
   font-size: 36px;
   border: 3px solid gold;
@@ -967,20 +1101,20 @@ body {
 }
 
 .praise-message.master {
-  background: linear-gradient(135deg, #FFD700, #FFA500);
+  background: linear-gradient(135deg, #ffd700, #ffa500);
   color: #333;
   font-size: 38px;
-  border: 4px solid #FFD700;
+  border: 4px solid #ffd700;
   box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
 }
 
 .praise-message.legendary {
-  background: linear-gradient(135deg, #FF1493, #00CED1, #FFD700);
+  background: linear-gradient(135deg, #ff1493, #00ced1, #ffd700);
   color: white;
   font-size: 40px;
-  border: 5px solid #FFD700;
+  border: 5px solid #ffd700;
   box-shadow: 0 0 50px rgba(255, 215, 0, 1);
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 /* アニメーションタイプ別 */
@@ -1030,24 +1164,24 @@ body {
     max-width: 900px;
     padding: 30px;
   }
-  
+
   .header h1 {
     font-size: 32px;
   }
-  
+
   .calendar {
     padding: 30px;
   }
-  
+
   .calendar-day {
     min-height: 60px;
     font-size: 16px;
   }
-  
+
   .day-number {
     font-size: 18px;
   }
-  
+
   /* iPadでのスタンプサイズ */
   .stamp-done {
     width: 45px;
@@ -1055,27 +1189,27 @@ body {
     font-size: 18px;
     border: 4px solid rgba(220, 53, 69, 0.8);
   }
-  
+
   .stamp-done.stamp-large {
     width: 50px;
     height: 50px;
     font-size: 20px;
     border: 4.5px solid rgba(220, 53, 69, 0.8);
   }
-  
+
   .stamp-done.stamp-xlarge {
     width: 55px;
     height: 55px;
     font-size: 22px;
     border: 5px solid rgba(220, 53, 69, 0.8);
   }
-  
+
   .stats-display {
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
     padding: 25px;
   }
-  
+
   .today-button {
     font-size: 26px;
     padding: 25px;
@@ -1087,11 +1221,11 @@ body {
   .app {
     max-width: 1200px;
   }
-  
+
   .calendar-grid {
     gap: 8px;
   }
-  
+
   .calendar-day {
     min-height: 70px;
   }
@@ -1104,71 +1238,71 @@ body {
     max-width: 100%;
     overflow-x: hidden;
   }
-  
+
   .header {
     flex-direction: column;
     text-align: center;
     gap: 15px;
     padding: 15px;
   }
-  
+
   .header h1 {
     font-size: 20px;
   }
-  
+
   .user-section {
     width: 100%;
   }
-  
+
   .user-info {
     justify-content: center;
   }
-  
+
   .user-dropdown {
     right: 50%;
     transform: translateX(50%);
     width: 90%;
     max-width: 250px;
   }
-  
+
   .calendar {
     padding: 10px;
     margin-bottom: 20px;
     overflow: visible; /* ハンコがはみ出せるように */
   }
-  
+
   .calendar-header {
     margin-bottom: 15px;
   }
-  
+
   .calendar-header h2 {
     font-size: 18px;
   }
-  
+
   .month-nav {
     width: 35px;
     height: 35px;
     font-size: 16px;
   }
-  
+
   .calendar-grid {
     gap: 2px;
     margin-top: 15px;
   }
-  
+
   .calendar-day {
     min-height: 45px;
     font-size: 12px;
   }
-  
+
   .day-number {
     font-size: 12px;
   }
-  
+
   .check-mark {
     font-size: 14px;
   }
-  
+
   /* 済スタンプのモバイル調整（透過重ね合わせ版） */
   .stamp-done {
     width: 28px;
@@ -1177,7 +1311,7 @@ body {
     border: 2.5px solid rgba(220, 53, 69, 0.8);
     color: rgba(220, 53, 69, 0.8);
   }
-  
+
   .stamp-done.stamp-large {
     width: 32px;
     height: 32px;
@@ -1185,7 +1319,7 @@ body {
     border: 3px solid rgba(220, 53, 69, 0.8);
     color: rgba(220, 53, 69, 0.85);
   }
-  
+
   .stamp-done.stamp-xlarge {
     width: 40px;
     height: 40px;
@@ -1193,7 +1327,7 @@ body {
     border: 3.5px solid rgba(220, 53, 69, 0.8);
     color: rgba(220, 53, 69, 0.9);
   }
-  
+
   .record-count {
     width: 14px;
     height: 14px;
@@ -1201,97 +1335,98 @@ body {
     top: 1px;
     right: 1px;
   }
-  
+
   .exercise-section {
     padding: 15px;
   }
-  
+
   .quick-record-section {
     padding: 15px;
     margin-bottom: 20px;
   }
-  
+
   .quick-record-title {
     font-size: 16px;
   }
-  
+
   .stats-display {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     margin-bottom: 20px;
     padding: 15px;
   }
-  
+
   .family-stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
-  
+
   .family-stats-display {
     padding: 15px;
   }
-  
+
   .family-stats-title {
     font-size: 16px;
   }
-  
+
   .data-management {
     margin-top: 20px;
     padding: 15px;
   }
-  
+
   .data-management-title {
     font-size: 14px;
   }
-  
+
   .data-management-buttons {
     grid-template-columns: 1fr;
     gap: 10px;
   }
-  
-  .backup-button, .export-button {
+
+  .backup-button,
+  .export-button {
     padding: 10px 14px;
     font-size: 13px;
   }
-  
+
   .stat-number {
     font-size: 18px;
   }
-  
+
   .stat-label {
     font-size: 11px;
   }
-  
+
   .today-button {
     font-size: 18px;
     padding: 15px;
   }
-  
+
   .praise-message {
     font-size: 20px;
     padding: 25px;
     margin: 10px;
   }
-  
+
   .praise-message.milestone {
     font-size: 24px;
   }
-  
+
   .praise-message.master {
     font-size: 26px;
   }
-  
+
   .praise-message.legendary {
     font-size: 28px;
   }
-  
+
   /* PWAインストールバナーのモバイル調整 */
   .install-content {
     flex-direction: column;
     text-align: center;
     gap: 10px;
   }
-  
+
   .install-actions {
     justify-content: center;
   }
@@ -1301,46 +1436,46 @@ body {
   .app {
     padding: 5px;
   }
-  
+
   .header {
     padding: 10px;
   }
-  
+
   .header h1 {
     font-size: 18px;
   }
-  
+
   .calendar {
     padding: 8px;
   }
-  
+
   .calendar-header h2 {
     font-size: 16px;
   }
-  
+
   .month-nav {
     width: 30px;
     height: 30px;
     font-size: 14px;
   }
-  
+
   .calendar-grid {
     gap: 1px;
   }
-  
+
   .calendar-day {
     min-height: 40px;
     font-size: 11px;
   }
-  
+
   .day-number {
     font-size: 11px;
   }
-  
+
   .check-mark {
     font-size: 12px;
   }
-  
+
   /* 超小画面用のスタンプ調整（透過重ね合わせ版） */
   .stamp-done {
     width: 25px;
@@ -1349,7 +1484,7 @@ body {
     border: 2px solid rgba(220, 53, 69, 0.8);
     color: rgba(220, 53, 69, 0.8);
   }
-  
+
   .stamp-done.stamp-large {
     width: 28px;
     height: 28px;
@@ -1357,7 +1492,7 @@ body {
     border: 2.5px solid rgba(220, 53, 69, 0.8);
     color: rgba(220, 53, 69, 0.85);
   }
-  
+
   .stamp-done.stamp-xlarge {
     width: 36px;
     height: 36px;
@@ -1365,23 +1500,23 @@ body {
     border: 3px solid rgba(220, 53, 69, 0.8);
     color: rgba(220, 53, 69, 0.9);
   }
-  
+
   .today-button {
     font-size: 16px;
     padding: 12px;
   }
-  
+
   .praise-message {
     font-size: 18px;
     padding: 20px;
     margin: 5px;
   }
-  
+
   .stats-display {
     grid-template-columns: 1fr;
     gap: 8px;
   }
-  
+
   .family-stats-grid {
     grid-template-columns: 1fr;
     gap: 8px;
@@ -1409,7 +1544,9 @@ body {
   pointer-events: auto;
   cursor: pointer;
   opacity: 1;
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
   animation: toast-in 0.25s ease-out;
 }
 
@@ -1443,7 +1580,7 @@ body {
   font-size: 15px;
   line-height: 1.4;
   text-align: left;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .toast-icon {
@@ -1462,7 +1599,7 @@ body {
   height: 24px;
   border: none;
   border-radius: 50%;
-  background: rgba(0,0,0,0.08);
+  background: rgba(0, 0, 0, 0.08);
   color: inherit;
   font-size: 16px;
   line-height: 1;
@@ -1471,19 +1608,19 @@ body {
 }
 
 .toast-close:hover {
-  background: rgba(0,0,0,0.16);
+  background: rgba(0, 0, 0, 0.16);
 }
 
 .toast-body.toast-error {
-  border-left: 5px solid #F44336;
+  border-left: 5px solid #f44336;
 }
 
 .toast-body.toast-warning {
-  border-left: 5px solid #FF9800;
+  border-left: 5px solid #ff9800;
 }
 
 .toast-body.toast-success {
-  border-left: 5px solid #4CAF50;
+  border-left: 5px solid #4caf50;
 }
 
 /* 褒めメッセージのトースト。タイプ別の配色（.praise-message.xxx）はそのまま活かしつつ、
@@ -1495,22 +1632,26 @@ body {
   border-radius: 10px;
   font-size: 16px;
   max-width: none;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 @keyframes overlay-appear {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes message-bounce {
-  0% { 
-    transform: scale(0.8); 
-    opacity: 0; 
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
   }
-  100% { 
-    transform: scale(1); 
-    opacity: 1; 
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
@@ -1521,7 +1662,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1534,7 +1675,7 @@ body {
   padding: 40px;
   border-radius: 15px;
   text-align: center;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   max-width: 90%;
   max-width: 300px;
 }
@@ -1543,7 +1684,7 @@ body {
   width: 40px;
   height: 40px;
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #4CAF50;
+  border-top: 4px solid #4caf50;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 20px auto;
@@ -1556,8 +1697,12 @@ body {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* アニメーション無効化（パフォーマンス向上） */
@@ -1565,15 +1710,15 @@ body {
   .today-button {
     transition: none;
   }
-  
+
   .today-button:hover:not(:disabled) {
     transform: none;
   }
-  
+
   .praise-message {
     animation: none;
   }
-  
+
   .loading-spinner {
     animation: none;
   }
@@ -1581,7 +1726,7 @@ body {
 
 /* PWAインストール促進バナー */
 .install-banner {
-  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
   color: white;
   padding: 15px 20px;
   margin-bottom: 20px;
@@ -1624,7 +1769,7 @@ body {
 
 .install-button {
   background: white;
-  color: #4CAF50;
+  color: #4caf50;
   border: none;
   padding: 8px 16px;
   border-radius: 20px;
@@ -1678,7 +1823,7 @@ body {
     text-align: center;
     gap: 10px;
   }
-  
+
   .install-actions {
     justify-content: center;
   }
@@ -1690,30 +1835,30 @@ body {
     background-color: #1a1a1a;
     color: #e0e0e0;
   }
-  
+
   .header,
   .calendar,
   .exercise-section {
     background: #2d2d2d;
     color: #e0e0e0;
   }
-  
+
   .calendar-day {
     background: #2d2d2d;
     border-color: #444;
     color: #e0e0e0;
   }
-  
+
   .calendar-day:hover {
     background-color: #3d3d3d;
   }
-  
+
   .exercise-selector select {
     background: #2d2d2d;
     color: #e0e0e0;
     border-color: #444;
   }
-  
+
   .praise-message {
     background: #2d2d2d;
     color: #e0e0e0;
@@ -1727,7 +1872,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1742,7 +1887,7 @@ body {
   max-width: 500px;
   max-height: 80vh;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   animation: message-bounce 0.3s ease-out;
 }
 
@@ -1751,7 +1896,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
   color: white;
 }
 
@@ -1809,7 +1954,7 @@ body {
   padding: 15px;
   background: #f8f9fa;
   border-radius: 10px;
-  border-left: 4px solid #4CAF50;
+  border-left: 4px solid #4caf50;
   transition: transform 0.2s ease;
 }
 
@@ -1859,25 +2004,25 @@ body {
     max-width: 95%;
     margin: 10px;
   }
-  
+
   .day-details-header {
     padding: 15px;
   }
-  
+
   .day-details-header h3 {
     font-size: 16px;
   }
-  
+
   .day-details-content {
     padding: 15px;
   }
-  
+
   .record-item {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
-  
+
   .record-time {
     align-self: flex-end;
   }
@@ -1889,21 +2034,21 @@ body {
     background: #2d2d2d;
     color: #e0e0e0;
   }
-  
+
   .record-item {
     background: #3d3d3d;
     color: #e0e0e0;
   }
-  
+
   .exercise-name {
     color: #e0e0e0;
   }
-  
+
   .exercise-category,
   .record-time {
     color: #bbb;
   }
-  
+
   .no-records {
     color: #bbb;
   }
@@ -1972,7 +2117,7 @@ body {
 }
 
 .exercise-option:hover {
-  border-color: #4CAF50;
+  border-color: #4caf50;
   background: #f8fff8;
   transform: translateY(-2px);
 }
@@ -2009,7 +2154,7 @@ body {
   padding: 15px;
   background: #f8f9fa;
   border-radius: 10px;
-  border-left: 4px solid #4CAF50;
+  border-left: 4px solid #4caf50;
   transition: transform 0.2s ease;
 }
 
@@ -2042,7 +2187,7 @@ body {
 
 .add-exercise-button {
   padding: 10px 20px;
-  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
   color: white;
   border: none;
   border-radius: 8px;
@@ -2061,7 +2206,7 @@ body {
 
 .add-first-record-button {
   padding: 15px 25px;
-  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
   color: white;
   border: none;
   border-radius: 10px;
@@ -2083,22 +2228,22 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 8px;
   }
-  
+
   .exercise-option {
     padding: 12px 8px;
     font-size: 11px;
   }
-  
+
   .exercise-option .exercise-icon {
     font-size: 18px;
   }
-  
+
   .record-item {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
-  
+
   .record-actions {
     align-self: flex-end;
   }
@@ -2110,35 +2255,35 @@ body {
     background: linear-gradient(135deg, #2d4a2d, #3d5a3d);
     border-color: #4a6a4a;
   }
-  
+
   .quick-record-title {
     color: #81c784;
   }
-  
+
   .quick-record-description {
     color: #bbb;
   }
-  
+
   .add-exercise-form {
     background: #3d3d3d;
     border-color: #555;
   }
-  
+
   .add-exercise-form h4 {
     color: #e0e0e0;
   }
-  
+
   .exercise-option {
     background: #2d2d2d;
     border-color: #555;
     color: #e0e0e0;
   }
-  
+
   .exercise-option:hover {
     border-color: #81c784;
     background: #2d4a2d;
   }
-  
+
   .exercise-option .exercise-name {
     color: #e0e0e0;
   }
@@ -2153,7 +2298,7 @@ body {
 
 .settings-button {
   background: none;
-  border: 2px solid #4CAF50;
+  border: 2px solid #4caf50;
   border-radius: 50%;
   width: 35px;
   height: 35px;
@@ -2166,7 +2311,7 @@ body {
 }
 
 .settings-button:hover {
-  background: #4CAF50;
+  background: #4caf50;
   transform: rotate(90deg);
 }
 
@@ -2175,7 +2320,7 @@ body {
   padding: 20px;
   background: #f0f8f0;
   border-radius: 10px;
-  border: 2px solid #4CAF50;
+  border: 2px solid #4caf50;
 }
 
 .default-exercise-settings h4 {
@@ -2186,7 +2331,7 @@ body {
 }
 
 .exercise-option.selected {
-  border-color: #4CAF50;
+  border-color: #4caf50;
   background: #e8f5e8;
   transform: scale(1.05);
 }
@@ -2219,7 +2364,7 @@ body {
     gap: 10px;
     text-align: center;
   }
-  
+
   .settings-button {
     width: 30px;
     height: 30px;
@@ -2233,26 +2378,26 @@ body {
     background: #2d4a2d;
     border-color: #81c784;
   }
-  
+
   .default-exercise-settings h4 {
     color: #81c784;
   }
-  
+
   .exercise-option.selected {
     border-color: #81c784;
     background: #2d4a2d;
   }
-  
+
   .settings-button {
     border-color: #81c784;
     color: #81c784;
   }
-  
+
   .settings-button:hover {
     background: #81c784;
     color: #2d2d2d;
   }
-  
+
   .quick-record-description small {
     color: #bbb;
   }
@@ -2288,7 +2433,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2303,7 +2448,7 @@ body {
   max-width: 500px;
   max-height: 80vh;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   animation: message-bounce 0.3s ease-out;
 }
 
@@ -2353,7 +2498,7 @@ body {
 .edit-user-button,
 .add-user-button {
   padding: 10px 15px;
-  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
   color: white;
   border: none;
   border-radius: 8px;
@@ -2386,7 +2531,7 @@ body {
 
 .user-name-input:focus {
   outline: none;
-  border-color: #4CAF50;
+  border-color: #4caf50;
 }
 
 .color-select {
@@ -2406,7 +2551,7 @@ body {
 .save-button {
   flex: 1;
   padding: 12px;
-  background: linear-gradient(135deg, #4CAF50, #66BB6A);
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
   color: white;
   border: none;
   border-radius: 8px;
@@ -2482,21 +2627,21 @@ body {
     max-width: 95%;
     margin: 10px;
   }
-  
+
   .user-management-content {
     padding: 15px;
   }
-  
+
   .quick-record-header {
     flex-direction: column;
     gap: 10px;
     text-align: center;
   }
-  
+
   .quick-record-controls {
     justify-content: center;
   }
-  
+
   .form-buttons {
     flex-direction: column;
   }
@@ -2508,29 +2653,29 @@ body {
     background: #2d2d2d;
     color: #e0e0e0;
   }
-  
+
   .current-user-section,
   .add-user-section {
     background: #3d3d3d;
     border-left-color: #868e96;
   }
-  
+
   .current-user-section h4,
   .add-user-section h4 {
     color: #e0e0e0;
   }
-  
+
   .user-name-input,
   .color-select {
     background: #2d2d2d;
     color: #e0e0e0;
     border-color: #555;
   }
-  
+
   .user-name-input:focus {
     border-color: #81c784;
   }
-  
+
   .default-exercise-display {
     background: rgba(129, 199, 132, 0.2);
     color: #81c784;
@@ -2549,7 +2694,7 @@ body {
     border: 3px solid #dc3545;
     font-weight: 900;
   }
-  
+
   .stamp-done.stamp-large {
     width: 44px;
     height: 44px;
@@ -2558,7 +2703,7 @@ body {
     right: -6px;
     border: 3.5px solid #dc3545;
   }
-  
+
   .stamp-done.stamp-xlarge {
     width: 50px;
     height: 50px;
@@ -2684,12 +2829,12 @@ body {
     margin: 10px;
     max-width: none;
   }
-  
+
   .reset-button {
     font-size: 11px;
     padding: 4px 8px;
   }
-  
+
   .day-details-actions {
     gap: 6px;
   }

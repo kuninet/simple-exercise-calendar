@@ -5,11 +5,13 @@ Simple Exercise Calendar の詳細なインストール手順です。
 ## 📋 システム要件
 
 ### 必須要件
+
 - **Node.js**: 16.0.0 以上
 - **npm**: 7.0.0 以上（Node.js に同梱）
 - **OS**: Windows 10/11, macOS 10.15+, Ubuntu 18.04+ またはその他のLinuxディストリビューション
 
 ### 推奨要件
+
 - **RAM**: 512MB 以上
 - **ストレージ**: 100MB 以上の空き容量
 - **ブラウザ**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
@@ -19,15 +21,18 @@ Simple Exercise Calendar の詳細なインストール手順です。
 ### 1. Node.js のインストール
 
 #### Windows
+
 1. [Node.js 公式サイト](https://nodejs.org/) から LTS版をダウンロード
 2. インストーラーを実行し、指示に従ってインストール
 3. コマンドプロンプトまたはPowerShellで確認：
+
 ```cmd
 node --version
 npm --version
 ```
 
 #### macOS
+
 ```bash
 # Homebrew を使用する場合
 brew install node
@@ -36,6 +41,7 @@ brew install node
 ```
 
 #### Ubuntu/Debian
+
 ```bash
 # NodeSource リポジトリを使用
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
@@ -49,6 +55,7 @@ npm --version
 ### 2. プロジェクトのセットアップ
 
 #### Git を使用する場合
+
 ```bash
 # リポジトリをクローン
 git clone https://github.com/kuninet/simple-exercise-calendar.git
@@ -56,6 +63,7 @@ cd simple-exercise-calendar
 ```
 
 #### ZIP ダウンロードの場合
+
 1. GitHub リポジトリページで「Code」→「Download ZIP」
 2. ダウンロードしたファイルを解凍
 3. 解凍したフォルダに移動
@@ -77,6 +85,7 @@ npm run init-db
 ```
 
 このコマンドにより以下が実行されます：
+
 - SQLite データベースファイル（`exercise-app.db`）の作成
 - 必要なテーブルの作成
 - 初期データ（エクササイズ種類、サンプルユーザー）の挿入
@@ -88,6 +97,7 @@ npm start
 ```
 
 成功すると以下のメッセージが表示されます：
+
 ```
 サーバーがポート3000で起動しました
 http://localhost:3000 でアクセスできます
@@ -102,18 +112,21 @@ http://localhost:3000 でアクセスできます
 ### 7. モバイル・タブレットでアプリ化（オプション）
 
 **iPhone・iPadの場合：**
+
 1. Safariでアプリにアクセス
 2. 共有ボタン（□に↑）をタップ
 3. 「ホーム画面に追加」を選択
 4. 「追加」をタップ
 
 **Androidの場合：**
+
 1. Chromeでアプリにアクセス
 2. メニュー（⋮）をタップ
 3. 「ホーム画面に追加」を選択
 4. 「追加」をタップ
 
 **アプリ化後の利点：**
+
 - ホーム画面から直接起動
 - フルスクリーン表示
 - オフライン対応
@@ -124,6 +137,7 @@ http://localhost:3000 でアクセスできます
 ### よくある問題と解決方法
 
 #### 1. Node.js のバージョンが古い
+
 ```bash
 # 現在のバージョンを確認
 node --version
@@ -132,6 +146,7 @@ node --version
 ```
 
 #### 2. ポート 3000 が使用中
+
 ```bash
 # 他のプロセスがポート3000を使用している場合
 # Windows
@@ -145,6 +160,7 @@ PORT=3001 npm start
 ```
 
 #### 3. npm install でエラーが発生
+
 ```bash
 # npm キャッシュをクリア
 npm cache clean --force
@@ -155,6 +171,7 @@ npm install
 ```
 
 #### 4. データベース初期化エラー
+
 ```bash
 # 既存のデータベースファイルを削除
 rm exercise-app.db
@@ -164,6 +181,7 @@ npm run init-db
 ```
 
 #### 5. 権限エラー（Linux/macOS）
+
 ```bash
 # npm のグローバルディレクトリを変更
 mkdir ~/.npm-global
@@ -203,7 +221,7 @@ services:
   exercise-calendar:
     build: .
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - ./data:/app/data
     environment:
@@ -241,6 +259,7 @@ export DB_PATH=/path/to/production/database.db
 Node.jsアプリを安全に運用するためのプロセス管理ツールです。
 
 **PM2の利点：**
+
 - アプリがクラッシュしても自動再起動
 - サーバー再起動後も自動でアプリが起動
 - ログの自動管理
@@ -269,6 +288,7 @@ pm2 logs exercise-calendar
 ### 🌐 Webサーバー（Nginx）- オプション
 
 **Nginxが必要な場合：**
+
 - インターネットに公開する場合
 - HTTPS（SSL）を使いたい場合
 - 複数のアプリを運用する場合
@@ -301,17 +321,20 @@ server {
 ### 📋 デプロイ方法の選択
 
 **🏠 家庭内・個人利用（推奨）:**
+
 ```bash
 # シンプルな方法
 pm2 start server.js --name "exercise-calendar"
 pm2 startup
 pm2 save
 ```
+
 - 設定が簡単
 - 家庭内ネットワークで十分
 - メンテナンスが楽
 
 **🌍 インターネット公開（上級者向け）:**
+
 ```bash
 # 本格的な方法
 pm2 start server.js --name "exercise-calendar"
@@ -319,6 +342,7 @@ sudo apt install nginx
 # SSL証明書の設定
 # ドメインの設定
 ```
+
 - 高いセキュリティ
 - HTTPS対応
 - 外部からアクセス可能
@@ -328,11 +352,13 @@ sudo apt install nginx
 ### ローカルネットワークでのアクセス
 
 1. サーバーを起動：
+
 ```bash
 npm start
 ```
 
 2. IPアドレスを確認：
+
 ```bash
 # Windows
 ipconfig

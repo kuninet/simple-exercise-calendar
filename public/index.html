@@ -1,45 +1,70 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>エクササイズカレンダー</title>
-    
+
     <!-- PWA対応 -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#4CAF50">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="エクササイズカレンダー">
-    <link rel="apple-touch-icon" href="/icon-192.png">
-    
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#4CAF50" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="エクササイズカレンダー" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+
     <!-- ファビコン -->
-    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png">
-    
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/icon-512.png" />
+
+    <link rel="stylesheet" href="style.css" />
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-</head>
-<body>
+  </head>
+  <body>
     <div id="app">
-        <!-- Vue.jsアプリがここにマウント -->
+      <!-- 初期・静的表示（Vueマウント時に置き換え） -->
+      <header class="header">
+        <div class="header-top">
+          <div class="header-title-group">
+            <h1>エクササイズカレンダー</h1>
+            <div class="sync-status-badge offline" id="sync-status-indicator">
+              <span class="sync-status-dot"></span>
+              <span class="sync-status-text">ローカル動作中</span>
+            </div>
+          </div>
+          <div class="header-controls">
+            <div class="header-backup-section">
+              <button class="header-btn backup-btn" id="header-btn-backup">
+                💾 JSONバックアップ保存
+              </button>
+              <button class="header-btn restore-btn" id="header-btn-restore">
+                📥 JSONバックアップ復元
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
     </div>
-    
+
     <script src="app.js"></script>
-    
+
     <!-- Service Worker登録 -->
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then((registration) => {
-                        console.log('Service Worker登録成功:', registration.scope)
-                    })
-                    .catch((error) => {
-                        console.log('Service Worker登録失敗:', error)
-                    })
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {
+              console.log('Service Worker登録成功:', registration.scope)
             })
-        }
+            .catch((error) => {
+              console.log('Service Worker登録失敗:', error)
+            })
+        })
+      }
     </script>
-</body>
+  </body>
 </html>

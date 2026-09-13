@@ -1,4 +1,4 @@
-const CACHE_NAME = 'exercise-calendar-v1'
+const CACHE_NAME = 'exercise-calendar-v2'
 const urlsToCache = [
   '/',
   '/index.html',
@@ -10,43 +10,94 @@ const urlsToCache = [
   'https://unpkg.com/vue@3/dist/vue.global.js'
 ]
 
-// インストール時にキャッシュを作成
+// インストール時に静的アセットをキャッシュ（Cache-First用）
 self.addEventListener('install', (event) => {
+  self.skipWaiting()
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('キャッシュを開きました')
-        return cache.addAll(urlsToCache)
-      })
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('📦 Service Worker: 静的アセットをキャッシュしています...')
+      return cache.addAll(urlsToCache)
+    })
   )
 })
 
-// リクエスト時にキャッシュから返す
+// リクエスト時のハンドリング
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // キャッシュにあれば返す、なければネットワークから取得
-        if (response) {
-          return response
-        }
-        return fetch(event.request)
+  const url = new URL(event.request.url)
+
+  // APIリクエストはNetwork-First（失敗時はオフラインフォールバックJSONを返却）
+  if (url.pathname.startsWith('/api/')) {
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        console.log(
+          `🔌 Service Worker: オフラインのためAPIをフォールバック [${url.pathname}]`
+        )
+        return new Response(
+          JSON.stringify({
+            success: false,
+            offline: true,
+            status: 'offline',
+            error: 'オフラインのためローカルモードで動作中'
+          }),
+          {
+            status: 503,
+            statusText: 'Service Unavailable (Offline)',
+            headers: { 'Content-Type': 'application/json; charset=utf-8' }
+          }
+        )
       })
+    )
+    return
+  }
+
+  // 静的アセットはCache-First（キャッシュ優先、なければネットワーク取得してキャッシュ保存）
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) {
+        return cachedResponse
+      }
+
+      return fetch(event.request)
+        .then((networkResponse) => {
+          // 正常なGETレスポンスならキャッシュに保存
+          if (
+            networkResponse &&
+            networkResponse.status === 200 &&
+            event.request.method === 'GET'
+          ) {
+            const responseClone = networkResponse.clone()
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone)
+            })
+          }
+          return networkResponse
+        })
+        .catch(() => {
+          // ナビゲーションリクエスト（画面リロード等）の場合はindex.htmlを返す
+          if (event.request.mode === 'navigate') {
+            return caches.match('/index.html')
+          }
+          return null
+        })
+    })
   )
 })
 
 // 古いキャッシュを削除
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('古いキャッシュを削除:', cacheName)
-            return caches.delete(cacheName)
-          }
-        })
-      )
-    })
+    caches
+      .keys()
+      .then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            if (cacheName !== CACHE_NAME) {
+              console.log('🗑️ Service Worker: 古いキャッシュを削除:', cacheName)
+              return caches.delete(cacheName)
+            }
+          })
+        )
+      })
+      .then(() => self.clients.claim())
   )
 })
