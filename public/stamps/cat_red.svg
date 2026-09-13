@@ -1,35 +1,45 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <!-- ねこ耳 (左耳・右耳) -->
-  <path d="M 18 38 L 26 12 L 44 26 Z" fill="#2d3436" stroke="#2d3436" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M 23 34 L 28 17 L 41 27 Z" fill="#ff7675"/>
-  <path d="M 82 38 L 74 12 L 56 26 Z" fill="#2d3436" stroke="#2d3436" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M 77 34 L 72 17 L 59 27 Z" fill="#ff7675"/>
+  <defs>
+    <path id="textArcTop" d="M 21 50 A 29 29 0 1 1 79 50" />
+    <path id="textArcBottom" d="M 79 50 A 29 29 0 1 1 21 50" />
+  </defs>
+
+  <!-- ねこ耳 (黒耳・ピンクインナー) -->
+  <path d="M 16 42 L 23 8 C 24 6, 27 6, 29 8 L 44 26 Z" fill="#2d3436" stroke="#2d3436" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M 21 38 L 26 15 L 39 27 Z" fill="#ff7675"/>
   
-  <!-- 丸ハンコ外枠 -->
-  <circle cx="50" cy="55" r="38" fill="#fff5f5" stroke="#d63031" stroke-width="6" />
-  <circle cx="50" cy="55" r="34" fill="none" stroke="#d63031" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <path d="M 84 42 L 77 8 C 76 6, 73 6, 71 8 L 56 26 Z" fill="#2d3436" stroke="#2d3436" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M 79 38 L 74 15 L 61 27 Z" fill="#ff7675"/>
+
+  <!-- 朱肉ハンコ外枠 (赤) -->
+  <circle cx="50" cy="54" r="40" fill="#d63031" />
+  <circle cx="50" cy="54" r="38" fill="none" stroke="#ffffff" stroke-width="1.5" />
+  <circle cx="50" cy="54" r="27" fill="#d63031" stroke="#ffffff" stroke-width="2" />
+
+  <!-- アーチ状の英語テキスト "CALENDAR STAMP" -->
+  <text font-family="'Arial Black', sans-serif" font-size="5" font-weight="900" fill="#ffffff" letter-spacing="0.5">
+    <textPath href="#textArcTop" startOffset="50%" text-anchor="middle">CALENDAR STAMP</textPath>
+  </text>
+  <text font-family="'Arial Black', sans-serif" font-size="5" font-weight="900" fill="#ffffff" letter-spacing="0.5">
+    <textPath href="#textArcBottom" startOffset="50%" text-anchor="middle">CALENDAR STAMP</textPath>
+  </text>
   
-  <!-- 「済」文字の純粋な図形パス (文字化けゼロ) -->
-  <g fill="#d63031">
-    <!-- サンズイ (左側) -->
-    <circle cx="28" cy="42" r="3"/>
-    <circle cx="26" cy="54" r="3"/>
-    <path d="M 24 70 L 33 60 L 31 71 Z"/>
-    <!-- 右側 (斉部分) -->
-    <!-- 上の横棒と点 -->
-    <rect x="42" y="38" width="34" height="4.5" rx="2"/>
-    <circle cx="59" cy="34" r="2.5"/>
-    <!-- 中央の構造 -->
-    <path d="M 46 47 L 72 47 L 72 51 L 46 51 Z"/>
-    <path d="M 44 57 L 74 57 L 74 61 L 44 61 Z"/>
-    <path d="M 52 47 L 52 74 L 47 74 L 47 47 Z"/>
-    <!-- 右下のハライ -->
-    <path d="M 64 61 C 64 70, 72 74, 76 74 L 74 78 C 68 78, 59 73, 59 61 Z"/>
+  <!-- 左右のぽち点 -->
+  <circle cx="21" cy="54" r="1.5" fill="#ffffff" />
+  <circle cx="79" cy="54" r="1.5" fill="#ffffff" />
+
+  <!-- 中央の大きな白文字「済」 -->
+  <g fill="#ffffff">
+    <!-- サンズイ -->
+    <circle cx="34" cy="46" r="2"/>
+    <circle cx="33" cy="54" r="2"/>
+    <path d="M 31 65 L 38 57 L 37 66 Z"/>
+    <!-- 右側 (斉) -->
+    <rect x="44" y="42" width="24" height="3.5" rx="1"/>
+    <circle cx="56" cy="39" r="2"/>
+    <path d="M 47 49 L 65 49 L 65 52 L 47 52 Z"/>
+    <path d="M 45 56 L 67 56 L 67 59 L 45 59 Z"/>
+    <path d="M 51 49 L 51 68 L 47 68 L 47 49 Z"/>
+    <path d="M 60 59 C 60 65, 65 67, 68 67 L 67 70 C 62 70, 56 67, 56 59 Z"/>
   </g>
-  
-  <!-- ねこヒゲ -->
-  <line x1="6" y1="50" x2="18" y2="52" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
-  <line x1="8" y1="60" x2="19" y2="59" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
-  <line x1="94" y1="50" x2="82" y2="52" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
-  <line x1="92" y1="60" x2="81" y2="59" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
 </svg>

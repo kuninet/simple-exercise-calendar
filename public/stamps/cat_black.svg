@@ -1,36 +1,49 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
-  <!-- 猫耳 (黒耳) -->
-  <path d="M 22 36 L 28 10 L 44 26 Z" fill="#2d3436" stroke="#2d3436" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M 26 33 L 30 16 L 41 27 Z" fill="#ff7675"/>
-  
-  <path d="M 78 36 L 72 10 L 56 26 Z" fill="#2d3436" stroke="#2d3436" stroke-width="4" stroke-linejoin="round"/>
-  <path d="M 74 33 L 70 16 L 59 27 Z" fill="#ff7675"/>
+  <defs>
+    <path id="blackTextArc" d="M 23 78 A 34 34 0 0 0 77 78" />
+  </defs>
 
-  <!-- 猫顔本体 -->
-  <circle cx="50" cy="52" r="40" fill="#2d3436" stroke="#2d3436" stroke-width="2"/>
+  <!-- 背後円形バッジ (黒色ベース) -->
+  <circle cx="50" cy="50" r="42" fill="#ffffff" stroke="#1e272e" stroke-width="5" />
 
-  <!-- 大きな黄色い目 -->
-  <circle cx="36" cy="46" r="7.5" fill="#fdcb6e"/>
-  <ellipse cx="36" cy="46" rx="2.5" ry="6.5" fill="#2d3436"/>
-  <circle cx="34" cy="42" r="2" fill="#ffffff"/>
+  <!-- 黒猫の顔＆耳 (全黒 `#1e272e`) -->
+  <!-- 左耳 -->
+  <path d="M 18 38 L 26 8 C 27 6, 30 6, 32 8 L 46 26 Z" fill="#1e272e" stroke="#1e272e" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M 24 34 L 28 14 L 40 25 Z" fill="#ff7675"/>
+  <!-- 右耳 -->
+  <path d="M 82 38 L 74 8 C 73 6, 70 6, 68 8 L 54 26 Z" fill="#1e272e" stroke="#1e272e" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M 76 34 L 72 14 L 60 25 Z" fill="#ff7675"/>
 
-  <circle cx="64" cy="46" r="7.5" fill="#fdcb6e"/>
-  <ellipse cx="64" cy="46" rx="2.5" ry="6.5" fill="#2d3436"/>
-  <circle cx="62" cy="42" r="2" fill="#ffffff"/>
+  <!-- 猫顔の本体 (黒い円) -->
+  <circle cx="50" cy="48" r="33" fill="#1e272e" />
 
-  <!-- 八重歯と鼻 -->
-  <polygon points="50,54 48,51 52,51" fill="#ff7675"/>
-  <!-- 小さな牙/口 -->
-  <path d="M 44 57 Q 50 63 56 57" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
-  <polygon points="46,58 48,63 49,58" fill="#ffffff"/>
-  <polygon points="51,58 52,63 54,58" fill="#ffffff"/>
+  <!-- 大きな黄色い瞳 (左) -->
+  <circle cx="34" cy="44" r="8" fill="#f1c40f"/>
+  <ellipse cx="34" cy="44" rx="3" ry="7" fill="#1e272e"/>
+  <circle cx="32" cy="40" r="2.2" fill="#ffffff"/>
 
-  <!-- 白いヒゲ -->
-  <line x1="8" y1="46" x2="21" y2="48" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="10" y1="54" x2="22" y2="53" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="92" y1="46" x2="79" y2="48" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="90" y1="54" x2="78" y2="53" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- 大きな黄色い瞳 (右) -->
+  <circle cx="66" cy="44" r="8" fill="#f1c40f"/>
+  <ellipse cx="66" cy="44" rx="3" ry="7" fill="#1e272e"/>
+  <circle cx="64" cy="40" r="2.2" fill="#ffffff"/>
 
-  <!-- 下部飾り -->
-  <circle cx="50" cy="80" r="4" fill="#fdcb6e"/>
+  <!-- 鼻 (ピンク) と八重歯/お口 -->
+  <polygon points="50,51 47,48 53,48" fill="#ff7675"/>
+  <!-- にっこり口ライン (グレー/白) -->
+  <path d="M 42 54 Q 50 61 58 54" fill="#1e272e" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- ちょこんと出た白い八重歯ふたつ -->
+  <polygon points="45,55 47,60 48.5,55" fill="#ffffff"/>
+  <polygon points="51.5,55 53,60 55,55" fill="#ffffff"/>
+
+  <!-- 白いヒゲ (左右2本ずつ) -->
+  <line x1="8" y1="45" x2="21" y2="47" stroke="#7f8c8d" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="10" y1="53" x2="22" y2="51" stroke="#7f8c8d" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="92" y1="45" x2="79" y2="47" stroke="#7f8c8d" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="90" y1="53" x2="78" y2="51" stroke="#7f8c8d" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- 下部ブラックバッジ領域 & "TRACKED" テキスト -->
+  <path d="M 15 62 A 42 42 0 0 0 85 62 C 80 90, 20 90, 15 62 Z" fill="#1e272e" stroke="#1e272e" stroke-width="2" />
+  <text font-family="'Arial Black', sans-serif" font-size="8" font-weight="900" fill="#ffffff" letter-spacing="1">
+    <textPath href="#blackTextArc" startOffset="50%" text-anchor="middle">TRACKED</textPath>
+  </text>
 </svg>
