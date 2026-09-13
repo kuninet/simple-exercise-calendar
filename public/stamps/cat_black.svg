@@ -10,12 +10,12 @@
   <circle cx="50" cy="52" r="40" fill="#2d3436" stroke="#2d3436" stroke-width="2"/>
 
   <!-- 大きな黄色い目 -->
-  <circle cx="36" cy="46" r="7" fill="#fdcb6e"/>
-  <ellipse cx="36" cy="46" rx="2.5" ry="6" fill="#2d3436"/>
+  <circle cx="36" cy="46" r="7.5" fill="#fdcb6e"/>
+  <ellipse cx="36" cy="46" rx="2.5" ry="6.5" fill="#2d3436"/>
   <circle cx="34" cy="42" r="2" fill="#ffffff"/>
 
-  <circle cx="64" cy="46" r="7" fill="#fdcb6e"/>
-  <ellipse cx="64" cy="46" rx="2.5" ry="6" fill="#2d3436"/>
+  <circle cx="64" cy="46" r="7.5" fill="#fdcb6e"/>
+  <ellipse cx="64" cy="46" rx="2.5" ry="6.5" fill="#2d3436"/>
   <circle cx="62" cy="42" r="2" fill="#ffffff"/>
 
   <!-- 八重歯と鼻 -->
@@ -26,12 +26,11 @@
   <polygon points="51,58 52,63 54,58" fill="#ffffff"/>
 
   <!-- 白いヒゲ -->
-  <line x1="10" y1="46" x2="22" y1="48" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="12" y1="54" x2="23" y1="53" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="90" y1="46" x2="78" y1="48" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="88" y1="54" x2="77" y1="53" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="8" y1="46" x2="21" y1="48" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="10" y1="54" x2="22" y1="53" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="92" y1="46" x2="79" y1="48" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="90" y1="54" x2="78" y1="53" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
 
-  <!-- 下部テキスト枠 -->
-  <path d="M 22 74 Q 50 82 78 74 L 75 88 Q 50 96 25 88 Z" fill="#000000" stroke="#fdcb6e" stroke-width="1.5"/>
-  <text x="50" y="86" font-family="'Rounded Mplus 1c', sans-serif" font-weight="900" font-size="11" fill="#fdcb6e" text-anchor="middle">済 OK!</text>
+  <!-- 下部飾り -->
+  <circle cx="50" cy="80" r="4" fill="#fdcb6e"/>
 </svg>

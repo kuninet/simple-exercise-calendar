@@ -11,29 +11,29 @@
   <path d="M 74 33 L 70 18 L 59 27 Z" fill="#ff7675"/>
 
   <!-- 目 (キラキラ目) -->
-  <circle cx="36" cy="46" r="6" fill="#2d3436"/>
-  <circle cx="34" cy="44" r="2.2" fill="#ffffff"/>
-  <circle cx="38" cy="48" r="1.2" fill="#ffffff"/>
+  <circle cx="36" cy="46" r="6.5" fill="#2d3436"/>
+  <circle cx="34" cy="44" r="2.5" fill="#ffffff"/>
+  <circle cx="38" cy="48" r="1.3" fill="#ffffff"/>
 
-  <circle cx="64" cy="46" r="6" fill="#2d3436"/>
-  <circle cx="62" cy="44" r="2.2" fill="#ffffff"/>
-  <circle cx="66" cy="48" r="1.2" fill="#ffffff"/>
+  <circle cx="64" cy="46" r="6.5" fill="#2d3436"/>
+  <circle cx="62" cy="44" r="2.5" fill="#ffffff"/>
+  <circle cx="66" cy="48" r="1.3" fill="#ffffff"/>
 
   <!-- 鼻と口 -->
   <polygon points="50,54 47,51 53,51" fill="#ff7675"/>
   <path d="M 43 57 Q 50 64 57 57" fill="none" stroke="#2d3436" stroke-width="3" stroke-linecap="round"/>
 
   <!-- ほっぺ -->
-  <ellipse cx="28" cy="52" rx="4.5" ry="3" fill="#ff7675" opacity="0.6"/>
-  <ellipse cx="72" cy="52" rx="4.5" ry="3" fill="#ff7675" opacity="0.6"/>
+  <ellipse cx="27" cy="52" rx="4.5" ry="3" fill="#ff7675" opacity="0.6"/>
+  <ellipse cx="73" cy="52" rx="4.5" ry="3" fill="#ff7675" opacity="0.6"/>
 
   <!-- ヒゲ -->
-  <line x1="12" y1="46" x2="22" y1="48" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="14" y1="54" x2="23" y1="53" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="88" y1="46" x2="78" y1="48" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="86" y1="54" x2="77" y1="53" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="10" y1="46" x2="21" y1="48" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="12" y1="54" x2="22" y1="53" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="90" y1="46" x2="79" y1="48" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="88" y1="54" x2="78" y1="53" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
 
-  <!-- 下部テキストリボン -->
-  <path d="M 25 76 Q 50 86 75 76 L 72 88 Q 50 96 28 88 Z" fill="#6c5ce7"/>
-  <text x="50" y="87" font-family="'Rounded Mplus 1c', sans-serif" font-weight="900" font-size="11" fill="#ffffff" text-anchor="middle">DONE!</text>
+  <!-- 下部星＆リボン飾り -->
+  <path d="M 28 73 Q 50 82 72 73 L 69 84 Q 50 92 31 84 Z" fill="#6c5ce7"/>
+  <circle cx="50" cy="81" r="3.5" fill="#fdcb6e"/>
 </svg>

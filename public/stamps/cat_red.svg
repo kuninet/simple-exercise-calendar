@@ -1,20 +1,35 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
   <!-- ねこ耳 (左耳・右耳) -->
-  <path d="M 18 35 L 28 10 L 45 25 Z" fill="#2d3436" stroke="#2d3436" stroke-width="3" stroke-linejoin="round"/>
-  <path d="M 23 32 L 30 15 L 42 26 Z" fill="#ff7675"/>
-  <path d="M 82 35 L 72 10 L 55 25 Z" fill="#2d3436" stroke="#2d3436" stroke-width="3" stroke-linejoin="round"/>
-  <path d="M 77 32 L 70 15 L 58 26 Z" fill="#ff7675"/>
+  <path d="M 18 38 L 26 12 L 44 26 Z" fill="#2d3436" stroke="#2d3436" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M 23 34 L 28 17 L 41 27 Z" fill="#ff7675"/>
+  <path d="M 82 38 L 74 12 L 56 26 Z" fill="#2d3436" stroke="#2d3436" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M 77 34 L 72 17 L 59 27 Z" fill="#ff7675"/>
   
   <!-- 丸ハンコ外枠 -->
-  <circle cx="50" cy="55" r="40" fill="none" stroke="#d63031" stroke-width="7" />
-  <circle cx="50" cy="55" r="36" fill="rgba(214, 48, 49, 0.08)" stroke="#d63031" stroke-width="1.5" stroke-dasharray="4,2"/>
+  <circle cx="50" cy="55" r="38" fill="#fff5f5" stroke="#d63031" stroke-width="6" />
+  <circle cx="50" cy="55" r="34" fill="none" stroke="#d63031" stroke-width="1.5" stroke-dasharray="4,2"/>
   
-  <!-- 「済」文字 -->
-  <text x="50" y="67" font-family="'Hiragino Mincho ProN', 'Yu Mincho', serif" font-weight="900" font-size="38" fill="#d63031" text-anchor="middle">済</text>
+  <!-- 「済」文字の純粋な図形パス (文字化けゼロ) -->
+  <g fill="#d63031">
+    <!-- サンズイ (左側) -->
+    <circle cx="28" cy="42" r="3"/>
+    <circle cx="26" cy="54" r="3"/>
+    <path d="M 24 70 L 33 60 L 31 71 Z"/>
+    <!-- 右側 (斉部分) -->
+    <!-- 上の横棒と点 -->
+    <rect x="42" y="38" width="34" height="4.5" rx="2"/>
+    <circle cx="59" cy="34" r="2.5"/>
+    <!-- 中央の構造 -->
+    <path d="M 46 47 L 72 47 L 72 51 L 46 51 Z"/>
+    <path d="M 44 57 L 74 57 L 74 61 L 44 61 Z"/>
+    <path d="M 52 47 L 52 74 L 47 74 L 47 47 Z"/>
+    <!-- 右下のハライ -->
+    <path d="M 64 61 C 64 70, 72 74, 76 74 L 74 78 C 68 78, 59 73, 59 61 Z"/>
+  </g>
   
   <!-- ねこヒゲ -->
-  <line x1="8" y1="50" x2="20" y1="52" stroke="#d63031" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="10" y1="60" x2="21" y1="59" stroke="#d63031" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="92" y1="50" x2="80" y1="52" stroke="#d63031" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="90" y1="60" x2="79" y1="59" stroke="#d63031" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="6" y1="50" x2="18" y1="52" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
+  <line x1="8" y1="60" x2="19" y1="59" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
+  <line x1="94" y1="50" x2="82" y1="52" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
+  <line x1="92" y1="60" x2="81" y1="59" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
 </svg>
