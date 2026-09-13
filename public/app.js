@@ -1970,8 +1970,8 @@ createApp({
                      :title="day.recordCount >= 3 ? '大変よくできましたニャ！🐾' : (day.recordCount === 2 ? 'よくできましたニャ！🐾' : 'できたニャ！🐾')">
                   <img :src="getCatStampSrc(currentUser?.cat_stamp_type)" class="cat-stamp-img" alt="ネコスタンプ" />
                   <span v-if="day.recordCount >= 2" class="cat-paw-badge" aria-hidden="true">🐾</span>
+                  <span v-if="day.recordCount > 1" class="record-count">{{ day.recordCount }}</span>
                 </div>
-                <span v-if="day.recordCount > 1" class="record-count">{{ day.recordCount }}</span>
                 <span v-if="day.isStreakDay && day.status === 'completed'" class="streak-indicator">🔥</span>
               </div>
             </div>
