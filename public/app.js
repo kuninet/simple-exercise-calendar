@@ -1,5 +1,658 @@
 const { createApp, ref, computed, onMounted } = Vue
 
+// ==========================================
+// LocalStore: ローカルファーストストレージモジュール
+// ==========================================
+const LocalStore = {
+  KEYS: {
+    USERS: 'exercise_users',
+    EXERCISES: 'exercise_exercises',
+    RECORDS: 'exercise_records',
+    DELETED_RECORDS: 'exercise_deleted_record_ids',
+    LAST_SYNC: 'exercise_last_sync',
+    INITIALIZED: 'exercise_initialized'
+  },
+
+  DEFAULT_USERS: [
+    {
+      id: 1,
+      username: 'user1',
+      display_name: 'ユーザー1',
+      color_theme: 'blue',
+      default_exercise_id: 5
+    },
+    {
+      id: 2,
+      username: 'user2',
+      display_name: 'ユーザー2',
+      color_theme: 'green',
+      default_exercise_id: 5
+    },
+    {
+      id: 3,
+      username: 'user3',
+      display_name: 'ユーザー3',
+      color_theme: 'purple',
+      default_exercise_id: 5
+    }
+  ],
+
+  DEFAULT_EXERCISES: [
+    {
+      id: 1,
+      name: '腹筋',
+      category: '筋トレ',
+      unit: '回',
+      icon: '💪',
+      is_active: 1
+    },
+    {
+      id: 2,
+      name: '腕立て伏せ',
+      category: '筋トレ',
+      unit: '回',
+      icon: '🤲',
+      is_active: 1
+    },
+    {
+      id: 3,
+      name: 'スクワット',
+      category: '筋トレ',
+      unit: '回',
+      icon: '🦵',
+      is_active: 1
+    },
+    {
+      id: 4,
+      name: 'プランク',
+      category: '筋トレ',
+      unit: '秒',
+      icon: '⏱️',
+      is_active: 1
+    },
+    {
+      id: 5,
+      name: 'ランニング',
+      category: '有酸素',
+      unit: '分',
+      icon: '🏃',
+      is_active: 1
+    },
+    {
+      id: 6,
+      name: 'ウォーキング',
+      category: '有酸素',
+      unit: '分',
+      icon: '🚶',
+      is_active: 1
+    },
+    {
+      id: 7,
+      name: 'ストレッチ',
+      category: 'その他',
+      unit: '分',
+      icon: '🧘',
+      is_active: 1
+    },
+    {
+      id: 8,
+      name: 'ヨガ',
+      category: 'その他',
+      unit: '分',
+      icon: '🧘‍♀️',
+      is_active: 1
+    }
+  ],
+
+  // 初期化：ローカルにデータが無ければ初期データを投入
+  async init() {
+    const initialized = localStorage.getItem(this.KEYS.INITIALIZED)
+    if (initialized) {
+      return
+    }
+
+    // 初回起動時：オンラインかつサーバー接続可能ならサーバーから引継ぎ
+    if (navigator.onLine) {
+      try {
+        const controller = new AbortController()
+        const timer = setTimeout(() => controller.abort(), 800)
+        const ping = await fetch('/api/ping', { signal: controller.signal })
+        clearTimeout(timer)
+
+        if (ping.ok) {
+          const [usersRes, exRes, recRes] = await Promise.all([
+            fetch('/api/users'),
+            fetch('/api/exercises'),
+            fetch('/api/records')
+          ])
+
+          if (usersRes.ok && exRes.ok && recRes.ok) {
+            const uData = await usersRes.json()
+            const eData = await exRes.json()
+            const rData = await recRes.json()
+
+            if (uData.users && uData.users.length > 0) {
+              this.saveUsers(uData.users)
+              this.saveExercises(
+                eData.exercises && eData.exercises.length > 0
+                  ? eData.exercises
+                  : this.DEFAULT_EXERCISES
+              )
+              this.saveRecords(rData.records || [])
+              localStorage.setItem(this.KEYS.INITIALIZED, 'true')
+              localStorage.setItem(
+                this.KEYS.LAST_SYNC,
+                formatCurrentJSTTimestamp()
+              )
+              return
+            }
+          }
+        }
+      } catch (e) {
+        console.log(
+          '初回サーバーデータ引継ぎをスキップ（ローカル初期データを使用）:',
+          e.message
+        )
+      }
+    }
+
+    // デフォルト値で初期化
+    if (!localStorage.getItem(this.KEYS.USERS)) {
+      this.saveUsers(this.DEFAULT_USERS)
+    }
+    if (!localStorage.getItem(this.KEYS.EXERCISES)) {
+      this.saveExercises(this.DEFAULT_EXERCISES)
+    }
+    if (!localStorage.getItem(this.KEYS.RECORDS)) {
+      this.saveRecords([])
+    }
+    localStorage.setItem(this.KEYS.INITIALIZED, 'true')
+  },
+
+  // ユーザー操作
+  getUsers() {
+    try {
+      const raw = localStorage.getItem(this.KEYS.USERS)
+      return raw ? JSON.parse(raw) : [...this.DEFAULT_USERS]
+    } catch {
+      return [...this.DEFAULT_USERS]
+    }
+  },
+
+  saveUsers(users) {
+    localStorage.setItem(this.KEYS.USERS, JSON.stringify(users))
+  },
+
+  addUser({ displayName, colorTheme = 'blue' }) {
+    const users = this.getUsers()
+    const nextId =
+      users.reduce((max, u) => Math.max(max, Number(u.id) || 0), 0) + 1
+    const newUser = {
+      id: nextId,
+      username: `user_${nextId}_${Date.now()}`,
+      display_name: displayName,
+      color_theme: colorTheme,
+      default_exercise_id: 5
+    }
+    users.push(newUser)
+    this.saveUsers(users)
+    return newUser
+  },
+
+  updateUserName(userId, displayName) {
+    const users = this.getUsers()
+    const user = users.find((u) => u.id === userId)
+    if (user) {
+      user.display_name = displayName
+      this.saveUsers(users)
+    }
+    return user
+  },
+
+  updateDefaultExercise(userId, exerciseId) {
+    const users = this.getUsers()
+    const user = users.find((u) => u.id === userId)
+    if (user) {
+      user.default_exercise_id = exerciseId
+      this.saveUsers(users)
+    }
+    return user
+  },
+
+  // エクササイズ操作
+  getExercises() {
+    try {
+      const raw = localStorage.getItem(this.KEYS.EXERCISES)
+      return raw ? JSON.parse(raw) : [...this.DEFAULT_EXERCISES]
+    } catch {
+      return [...this.DEFAULT_EXERCISES]
+    }
+  },
+
+  saveExercises(exercises) {
+    localStorage.setItem(this.KEYS.EXERCISES, JSON.stringify(exercises))
+  },
+
+  // 記録操作
+  getAllRecords() {
+    try {
+      const raw = localStorage.getItem(this.KEYS.RECORDS)
+      return raw ? JSON.parse(raw) : []
+    } catch {
+      return []
+    }
+  },
+
+  getRecords(userId) {
+    const records = this.getAllRecords()
+    const exercises = this.getExercises()
+    const exMap = new Map(exercises.map((e) => [e.id, e]))
+
+    const filtered = userId
+      ? records.filter((r) => r.user_id === userId)
+      : records
+    return filtered
+      .map((r) => {
+        const ex = exMap.get(r.exercise_id) || {}
+        return {
+          ...r,
+          exercise_name: ex.name || 'エクササイズ',
+          exercise_category: ex.category || '',
+          exercise_icon: ex.icon || '🏃'
+        }
+      })
+      .sort((a, b) => b.record_date.localeCompare(a.record_date) || b.id - a.id)
+  },
+
+  saveRecords(records) {
+    localStorage.setItem(this.KEYS.RECORDS, JSON.stringify(records))
+  },
+
+  addRecord({ userId, exerciseId, date, isQuickRecord = false, notes = '' }) {
+    const records = this.getAllRecords()
+    const existing = records.find(
+      (r) =>
+        r.user_id === userId &&
+        r.exercise_id === exerciseId &&
+        r.record_date === date
+    )
+    if (existing) {
+      return { record: existing, isDuplicate: true }
+    }
+
+    const nextId =
+      records.reduce((max, r) => Math.max(max, Number(r.id) || 0), 0) + 1
+    const newRecord = {
+      id: nextId,
+      user_id: userId,
+      exercise_id: exerciseId,
+      record_date: date,
+      is_quick_record: isQuickRecord ? 1 : 0,
+      notes: notes || '',
+      created_at: formatCurrentJSTTimestamp()
+    }
+    records.push(newRecord)
+    this.saveRecords(records)
+    return { record: newRecord, isDuplicate: false }
+  },
+
+  removeRecord(recordId) {
+    let records = this.getAllRecords()
+    records = records.filter((r) => r.id !== recordId)
+    this.saveRecords(records)
+    this.trackDeletedRecordId(recordId)
+  },
+
+  removeRecordsForDate(userId, date) {
+    let records = this.getAllRecords()
+    const toDelete = records.filter(
+      (r) => r.user_id === userId && r.record_date === date
+    )
+    records = records.filter(
+      (r) => !(r.user_id === userId && r.record_date === date)
+    )
+    this.saveRecords(records)
+    toDelete.forEach((r) => this.trackDeletedRecordId(r.id))
+    return toDelete.length
+  },
+
+  trackDeletedRecordId(recordId) {
+    try {
+      const raw = localStorage.getItem(this.KEYS.DELETED_RECORDS)
+      const list = raw ? JSON.parse(raw) : []
+      if (!list.includes(recordId)) {
+        list.push(recordId)
+        localStorage.setItem(this.KEYS.DELETED_RECORDS, JSON.stringify(list))
+      }
+    } catch {
+      localStorage.setItem(
+        this.KEYS.DELETED_RECORDS,
+        JSON.stringify([recordId])
+      )
+    }
+  },
+
+  getDeletedRecordIds() {
+    try {
+      const raw = localStorage.getItem(this.KEYS.DELETED_RECORDS)
+      return raw ? JSON.parse(raw) : []
+    } catch {
+      return []
+    }
+  },
+
+  clearDeletedRecordIds() {
+    localStorage.removeItem(this.KEYS.DELETED_RECORDS)
+  },
+
+  // 全データ取得（エクスポート・同期用）
+  getAllData() {
+    return {
+      version: 1,
+      exportedAt: formatCurrentJSTTimestamp(),
+      users: this.getUsers(),
+      exercises: this.getExercises(),
+      records: this.getAllRecords()
+    }
+  },
+
+  // 全データ復元（インポート用）
+  restoreAllData(data) {
+    if (!data || typeof data !== 'object') {
+      throw new Error('無効なデータ形式です')
+    }
+
+    if (Array.isArray(data.users) && data.users.length > 0) {
+      this.saveUsers(data.users)
+    }
+    if (Array.isArray(data.exercises) && data.exercises.length > 0) {
+      this.saveExercises(data.exercises)
+    }
+    if (Array.isArray(data.records)) {
+      this.saveRecords(data.records)
+    }
+    this.clearDeletedRecordIds()
+    localStorage.setItem(this.KEYS.INITIALIZED, 'true')
+  }
+}
+
+// ==========================================
+// JST日時ヘルパー関数
+// ==========================================
+function formatCurrentJSTTimestamp() {
+  const now = new Date()
+  const offset = 9 * 60 // JSTはUTC+9
+  const jstDate = new Date(
+    now.getTime() + (offset + now.getTimezoneOffset()) * 60000
+  )
+  const y = jstDate.getFullYear()
+  const m = String(jstDate.getMonth() + 1).padStart(2, '0')
+  const d = String(jstDate.getDate()).padStart(2, '0')
+  const hh = String(jstDate.getHours()).padStart(2, '0')
+  const mm = String(jstDate.getMinutes()).padStart(2, '0')
+  const ss = String(jstDate.getSeconds()).padStart(2, '0')
+  return `${y}-${m}-${d}T${hh}:${mm}:${ss}+09:00`
+}
+
+function getCurrentJSTDateString() {
+  const now = new Date()
+  const offset = 9 * 60
+  const jstDate = new Date(
+    now.getTime() + (offset + now.getTimezoneOffset()) * 60000
+  )
+  const y = jstDate.getFullYear()
+  const m = String(jstDate.getMonth() + 1).padStart(2, '0')
+  const d = String(jstDate.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
+}
+
+// ==========================================
+// 統計・褒めメッセージ計算ヘルパー（完全オフライン対応）
+// ==========================================
+function calculateCurrentStreakForStats(records) {
+  if (!records || records.length === 0) return 0
+  const dates = [...new Set(records.map((r) => r.record_date))].sort().reverse()
+  if (dates.length === 0) return 0
+
+  const todayStr = getCurrentJSTDateString()
+  const today = new Date(todayStr)
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
+  const yesterdayYear = yesterday.getFullYear()
+  const yesterdayMonth = String(yesterday.getMonth() + 1).padStart(2, '0')
+  const yesterdayDay = String(yesterday.getDate()).padStart(2, '0')
+  const yesterdayStr = `${yesterdayYear}-${yesterdayMonth}-${yesterdayDay}`
+
+  const latestDate = dates[0]
+  if (latestDate !== todayStr && latestDate !== yesterdayStr) {
+    return 0
+  }
+
+  let streak = 0
+  let checkDate = new Date(latestDate)
+
+  for (const d of dates) {
+    const y = checkDate.getFullYear()
+    const m = String(checkDate.getMonth() + 1).padStart(2, '0')
+    const day = String(checkDate.getDate()).padStart(2, '0')
+    const expected = `${y}-${m}-${day}`
+    if (d === expected) {
+      streak++
+      checkDate.setDate(checkDate.getDate() - 1)
+    } else {
+      break
+    }
+  }
+
+  return streak
+}
+
+function calculateLongestStreak(records) {
+  if (!records || records.length === 0) return 0
+  const dates = [...new Set(records.map((r) => r.record_date))].sort()
+  if (dates.length === 0) return 0
+
+  let longest = 1
+  let current = 1
+
+  for (let i = 1; i < dates.length; i++) {
+    const prev = new Date(dates[i - 1])
+    const curr = new Date(dates[i])
+    const diffDays = Math.round((curr - prev) / (1000 * 60 * 60 * 24))
+    if (diffDays === 1) {
+      current++
+      longest = Math.max(longest, current)
+    } else if (diffDays > 1) {
+      current = 1
+    }
+  }
+
+  return longest
+}
+
+function calculatePersonalStats(records) {
+  const totalRecords = records.length
+  const todayStr = getCurrentJSTDateString()
+  const currentYearMonth = todayStr.substring(0, 7) // 'YYYY-MM'
+  const thisMonthRecords = records.filter(
+    (r) => r.record_date && r.record_date.startsWith(currentYearMonth)
+  ).length
+
+  return {
+    totalRecords,
+    currentStreak: calculateCurrentStreakForStats(records),
+    longestStreak: calculateLongestStreak(records),
+    thisMonthRecords
+  }
+}
+
+function calculateFamilyStatsFromRecords(allRecords) {
+  const totalFamilyRecords = allRecords.length
+  const todayStr = getCurrentJSTDateString()
+  const currentYearMonth = todayStr.substring(0, 7)
+
+  const monthRecords = allRecords.filter(
+    (r) => r.record_date && r.record_date.startsWith(currentYearMonth)
+  )
+  const activeFamilyMembers = new Set(monthRecords.map((r) => r.user_id)).size
+  const familyRecordsToday = allRecords.filter(
+    (r) => r.record_date === todayStr
+  ).length
+
+  return {
+    totalFamilyRecords,
+    activeFamilyMembers,
+    familyRecordsToday
+  }
+}
+
+function generatePraiseMessage(records) {
+  const currentStreak = calculateCurrentStreakForStats(records)
+  const totalRecords = records.length
+
+  const streakMilestones = [
+    {
+      days: 100,
+      message: '100日連続！🎊 伝説の領域！',
+      type: 'legendary',
+      animationType: 'celebration'
+    },
+    {
+      days: 50,
+      message: '50日連続！🏆 もはや達人！',
+      type: 'master',
+      animationType: 'fireworks'
+    },
+    {
+      days: 30,
+      message: '30日連続！🎯 完全に習慣化！',
+      type: 'habit',
+      animationType: 'rainbow'
+    },
+    {
+      days: 21,
+      message: '21日連続！🌟 習慣形成完了！',
+      type: 'milestone',
+      animationType: 'sparkle'
+    },
+    {
+      days: 14,
+      message: '14日連続！🔥 2週間達成！',
+      type: 'milestone',
+      animationType: 'fire'
+    },
+    {
+      days: 10,
+      message: '10日連続！⭐ 二桁達成！',
+      type: 'milestone',
+      animationType: 'star'
+    },
+    {
+      days: 7,
+      message: '7日連続！🎉 1週間達成！',
+      type: 'milestone',
+      animationType: 'confetti'
+    }
+  ]
+
+  const totalMilestones = [
+    {
+      count: 365,
+      message: '365回達成！🎊 1年分の記録！',
+      type: 'legendary',
+      animationType: 'celebration'
+    },
+    {
+      count: 200,
+      message: '200回達成！🏆 継続の王者！',
+      type: 'master',
+      animationType: 'fireworks'
+    },
+    {
+      count: 100,
+      message: '100回達成！🎯 三桁の壁突破！',
+      type: 'milestone',
+      animationType: 'rainbow'
+    },
+    {
+      count: 50,
+      message: '50回達成！🌟 半世紀達成！',
+      type: 'milestone',
+      animationType: 'sparkle'
+    },
+    {
+      count: 30,
+      message: '30回達成！⭐ 継続の力！',
+      type: 'milestone',
+      animationType: 'star'
+    },
+    {
+      count: 10,
+      message: '10回達成！🎉 二桁突入！',
+      type: 'milestone',
+      animationType: 'confetti'
+    }
+  ]
+
+  for (const m of streakMilestones) {
+    if (currentStreak === m.days) {
+      return { ...m, isMilestone: true }
+    }
+  }
+
+  for (const m of totalMilestones) {
+    if (totalRecords === m.count) {
+      return { ...m, isMilestone: true }
+    }
+  }
+
+  if (currentStreak >= 30) {
+    return {
+      message: `${currentStreak}日連続！もはや習慣！🎉`,
+      type: 'streak-long',
+      animationType: 'pulse'
+    }
+  } else if (currentStreak >= 14) {
+    return {
+      message: `${currentStreak}日連続！すごすぎる！🔥`,
+      type: 'streak-medium',
+      animationType: 'pulse'
+    }
+  } else if (currentStreak >= 7) {
+    return {
+      message: `${currentStreak}日連続！1週間達成！⭐`,
+      type: 'streak-week',
+      animationType: 'bounce'
+    }
+  } else if (currentStreak >= 3) {
+    return {
+      message: `${currentStreak}日連続！調子いいね！💪`,
+      type: 'streak-short',
+      animationType: 'bounce'
+    }
+  } else if (currentStreak >= 2) {
+    return {
+      message: `${currentStreak}日連続！その調子！👍`,
+      type: 'streak-start',
+      animationType: 'bounce'
+    }
+  }
+
+  const dailyMessages = [
+    '今日やってえらい！',
+    'すごい！',
+    'その調子！',
+    '素晴らしい！',
+    'よくやった！',
+    '継続は力なり！'
+  ]
+  return {
+    message: dailyMessages[Math.floor(Math.random() * dailyMessages.length)],
+    type: 'daily',
+    animationType: 'bounce'
+  }
+}
+
 createApp({
   setup() {
     // 状態管理
@@ -14,6 +667,130 @@ createApp({
     const praiseMessage = ref('')
     const praiseClass = ref('praise-message')
     const praiseTimer = ref(null)
+
+    // 同期・Wi-Fi接続状態管理
+    const syncStatus = ref(navigator.onLine ? 'synced' : 'offline')
+    const isSyncing = ref(false)
+    const lastSyncTime = ref(
+      localStorage.getItem(LocalStore.KEYS.LAST_SYNC) || ''
+    )
+    let syncDebounceTimer = null
+    const fileInput = ref(null)
+
+    const syncStatusText = computed(() => {
+      if (syncStatus.value === 'syncing') return '同期中...'
+      if (syncStatus.value === 'synced') return '同期完了'
+      return 'ローカル動作中'
+    })
+
+    const syncStatusClass = computed(() => syncStatus.value)
+
+    const syncStatusTooltip = computed(() => {
+      if (syncStatus.value === 'synced') {
+        return lastSyncTime.value
+          ? `最終同期: ${formatTimeJST(lastSyncTime.value)}`
+          : 'Wi-Fi同期完了'
+      }
+      if (syncStatus.value === 'syncing') {
+        return 'サーバーと同期中...'
+      }
+      return 'オフラインまたはサーバー未接続のため、端末内のローカルデータで動作中'
+    })
+
+    // サーバーとの自動バックグラウンド同期
+    const triggerSync = async () => {
+      if (isSyncing.value) return
+      if (!navigator.onLine) {
+        syncStatus.value = 'offline'
+        return
+      }
+
+      try {
+        // 1. /api/ping でサーバー疎通確認（超高速800msタイムアウト）
+        const controller = new AbortController()
+        const timer = setTimeout(() => controller.abort(), 800)
+        const pingRes = await fetch('/api/ping', { signal: controller.signal })
+        clearTimeout(timer)
+
+        if (!pingRes.ok) {
+          syncStatus.value = 'offline'
+          return
+        }
+
+        const pingData = await pingRes.json()
+        if (pingData.status !== 'ok') {
+          syncStatus.value = 'offline'
+          return
+        }
+
+        // 2. /api/sync に LocalStore データを送信
+        isSyncing.value = true
+        syncStatus.value = 'syncing'
+
+        const payload = {
+          users: LocalStore.getUsers(),
+          exercises: LocalStore.getExercises(),
+          records: LocalStore.getAllRecords(),
+          deletedRecordIds: LocalStore.getDeletedRecordIds()
+        }
+
+        const syncRes = await fetch('/api/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+
+        if (syncRes.ok) {
+          const result = await syncRes.json()
+          if (result.success) {
+            LocalStore.clearDeletedRecordIds()
+            const ts = result.timestamp || formatCurrentJSTTimestamp()
+            lastSyncTime.value = ts
+            localStorage.setItem(LocalStore.KEYS.LAST_SYNC, ts)
+            syncStatus.value = 'synced'
+            console.log('✅ バックグラウンド同期完了:', ts)
+          } else {
+            syncStatus.value = 'offline'
+          }
+        } else {
+          syncStatus.value = 'offline'
+        }
+      } catch (error) {
+        console.log(
+          '同期スキップ（オフラインまたはサーバー未接続）:',
+          error.message
+        )
+        syncStatus.value = 'offline'
+      } finally {
+        isSyncing.value = false
+      }
+    }
+
+    // デバウンス付き同期リクエスト
+    const requestSync = () => {
+      if (syncDebounceTimer) {
+        clearTimeout(syncDebounceTimer)
+      }
+      syncDebounceTimer = setTimeout(() => {
+        triggerSync()
+      }, 400)
+    }
+
+    // オンライン/オフラインイベント監視
+    window.addEventListener('online', () => {
+      console.log('🌐 オンラインに復帰しました。同期を開始します。')
+      triggerSync()
+    })
+
+    window.addEventListener('offline', () => {
+      console.log('🔌 オフラインになりました。ローカル動作に切り替えます。')
+      syncStatus.value = 'offline'
+    })
+
+    // 定期同期間隔（30秒ごと）
+    setInterval(() => {
+      triggerSync()
+    }, 30000)
 
     // トーストの同時表示上限（これを超えたら古いものから消す）
     const MAX_TOASTS = 3
@@ -60,7 +837,13 @@ createApp({
     }
 
     // トーストを1件表示する
-    const showToast = ({ message, icon = '', bodyClass = '', duration = 3000, closable = false }) => {
+    const showToast = ({
+      message,
+      icon = '',
+      bodyClass = '',
+      duration = 3000,
+      closable = false
+    }) => {
       const toast = document.createElement('div')
       toast.className = 'toast'
 
@@ -96,8 +879,12 @@ createApp({
       const container = getToastContainer()
       container.appendChild(toast)
       // 連投で画面上部が埋まらないよう、古いものから間引く
-      const living = [...container.children].filter(t => t.dataset.closing !== 'true')
-      living.slice(0, Math.max(0, living.length - MAX_TOASTS)).forEach(removeToast)
+      const living = [...container.children].filter(
+        (t) => t.dataset.closing !== 'true'
+      )
+      living
+        .slice(0, Math.max(0, living.length - MAX_TOASTS))
+        .forEach(removeToast)
 
       toast.dismissTimer = setTimeout(() => removeToast(toast), duration)
       return toast
@@ -132,237 +919,142 @@ createApp({
 
     // 「今日やった」ボタンの処理（改良版）
     const recordToday = async () => {
-      // 日本時間での今日の日付を取得
-      const today = new Date()
-      const year = today.getFullYear()
-      const month = String(today.getMonth() + 1).padStart(2, '0')
-      const day = String(today.getDate()).padStart(2, '0')
-      const todayStr = `${year}-${month}-${day}`
-      
+      const todayStr = getCurrentJSTDateString()
+
       // 今日の記録があるかチェック
-      const todayRecords = exerciseRecords.value.filter(record => record.record_date === todayStr)
-      
+      const todayRecords = exerciseRecords.value.filter(
+        (record) => record.record_date === todayStr
+      )
+
       if (todayRecords.length > 0) {
         // 既に記録がある場合は、エクササイズ選択画面を表示
         showTodayExerciseSelector.value = true
         return
       }
-      
-      // 記録がない場合は従来通りの処理
-      await performTodayRecord(todayStr)
+
+      // 記録がない場合は記録処理を実行
+      performTodayRecord(todayStr)
     }
-    
-    // 実際の記録処理
-    const performTodayRecord = async (todayStr) => {
-      // ボタンを一時的に無効化
-      const button = document.querySelector('.today-button')
-      const originalText = button.textContent
-      button.disabled = true
-      button.textContent = '記録中...'
-      
-      try {
-        const response = await fetch('/api/record-day', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: currentUser.value.id,
-            date: todayStr
-          })
-        })
-        
-        const result = await response.json()
-        
-        if (!response.ok) {
-          throw new Error(result.error || `HTTP ${response.status}: ${response.statusText}`)
-        }
-        
-        if (!result.success) {
-          // サーバー側のエラーコードに応じた処理
-          if (result.code === 'DATABASE_BUSY') {
-            showError('データベースが一時的に利用できません。しばらく待ってから再試行してください。', 'warning')
-          } else if (result.code === 'FUTURE_DATE_NOT_ALLOWED') {
-            showError('未来の日付は記録できません。', 'warning')
-          } else {
-            showError(result.error || '記録に失敗しました')
-          }
-          return
-        }
-        
-        if (result.success) {
-          // 記録成功時の処理
-          await loadExerciseRecords()
-          await loadStats() // 統計も更新
-          await loadFamilyStats() // 家族統計も更新
-          
-          if (result.isDuplicate) {
-            // 既に記録済みの場合
-            showPraiseAnimation('今日はもう記録済みです！', 'daily', 'bounce')
-          } else if (result.praise) {
-            // 新規記録の場合
-            showPraiseAnimation(
-              result.praise, 
-              result.praiseType || 'daily',
-              result.animationType || 'bounce',
-              result.isMilestone || false
-            )
-          }
-        }
-      } catch (error) {
-        console.error('記録エラー:', error)
-        if (error.message.includes('Failed to fetch')) {
-          showError('ネットワーク接続を確認してください。')
-        } else {
-          showError(`記録に失敗しました: ${error.message}`)
-        }
-      } finally {
-        // ボタンを元に戻す
-        button.disabled = false
-        button.textContent = originalText
+
+    // 実際の記録処理（ローカル即時反映 + バックグラウンド同期）
+    const performTodayRecord = (todayStr) => {
+      if (!currentUser.value) return
+
+      const defaultExId = currentUser.value.default_exercise_id || 5
+      const { isDuplicate } = LocalStore.addRecord({
+        userId: currentUser.value.id,
+        exerciseId: defaultExId,
+        date: todayStr,
+        isQuickRecord: true
+      })
+
+      // ローカル即時再描画
+      loadExerciseRecords()
+      loadStats()
+      loadFamilyStats()
+
+      if (isDuplicate) {
+        showPraiseAnimation('今日はもう記録済みです！', 'daily', 'bounce')
+      } else {
+        const userRecords = LocalStore.getRecords(currentUser.value.id)
+        const praise = generatePraiseMessage(userRecords, todayStr)
+        showPraiseAnimation(
+          praise.message,
+          praise.type || 'daily',
+          praise.animationType || 'bounce',
+          praise.isMilestone || false
+        )
       }
+
+      // バックグラウンド同期
+      requestSync()
     }
-    
-    // 今日のエクササイズ追加
-    const addTodayExercise = async (exerciseId) => {
-      const today = new Date()
-      const year = today.getFullYear()
-      const month = String(today.getMonth() + 1).padStart(2, '0')
-      const day = String(today.getDate()).padStart(2, '0')
-      const todayStr = `${year}-${month}-${day}`
-      
-      try {
-        const response = await fetch('/api/add-exercise', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: currentUser.value.id,
-            exerciseId: exerciseId,
-            date: todayStr
-          })
-        })
-        
-        const result = await response.json()
-        
-        if (result.success) {
-          await loadExerciseRecords()
-          await loadStats()
-          await loadFamilyStats()
-          showTodayExerciseSelector.value = false
-          showSuccess('エクササイズを追加しました')
-        } else {
-          showError(result.error || 'エクササイズの追加に失敗しました')
-        }
-      } catch (error) {
-        console.error('エクササイズ追加エラー:', error)
-        showError('エクササイズの追加に失敗しました')
+
+    // 今日のエクササイズ追加（ローカル即時反映）
+    const addTodayExercise = (exerciseId) => {
+      if (!currentUser.value) return
+      const todayStr = getCurrentJSTDateString()
+
+      const { isDuplicate } = LocalStore.addRecord({
+        userId: currentUser.value.id,
+        exerciseId: exerciseId,
+        date: todayStr,
+        isQuickRecord: false
+      })
+
+      if (isDuplicate) {
+        showError('このエクササイズは既に記録済みです')
+        return
       }
+
+      loadExerciseRecords()
+      loadStats()
+      loadFamilyStats()
+      showTodayExerciseSelector.value = false
+      showSuccess('エクササイズを追加しました')
+
+      requestSync()
     }
-    
+
     // 今日既に登録済みのエクササイズかどうかを判定
     const isTodayExerciseRegistered = (exerciseId) => {
-      const today = new Date()
-      const year = today.getFullYear()
-      const month = String(today.getMonth() + 1).padStart(2, '0')
-      const day = String(today.getDate()).padStart(2, '0')
-      const todayStr = `${year}-${month}-${day}`
-      
-      return exerciseRecords.value.some(record => 
-        record.record_date === todayStr && record.exercise_id === exerciseId
+      const todayStr = getCurrentJSTDateString()
+      return exerciseRecords.value.some(
+        (record) =>
+          record.record_date === todayStr && record.exercise_id === exerciseId
       )
     }
-    
+
     // 今日のエクササイズ選択をキャンセル
     const cancelTodayExerciseSelector = () => {
       showTodayExerciseSelector.value = false
     }
-    
+
     // 日付のリセット確認を表示
     const showResetConfirmation = () => {
-      if (!selectedDay.value || !selectedDay.value.records || selectedDay.value.records.length === 0) {
+      if (
+        !selectedDay.value ||
+        !selectedDay.value.records ||
+        selectedDay.value.records.length === 0
+      ) {
         showError('削除する記録がありません')
         return
       }
       showResetConfirm.value = true
     }
-    
+
     // リセット確認をキャンセル
     const cancelReset = () => {
       showResetConfirm.value = false
     }
-    
-    // 選択した日のすべてのエクササイズを削除
-    const resetDayExercises = async () => {
-      // リセット確認モーダルが表示された時点でのselectedDayの情報を保存
+
+    // 選択した日のすべてのエクササイズを削除（ローカル即時反映）
+    const resetDayExercises = () => {
       const dayToReset = selectedDay.value
-      
-      if (!dayToReset || !dayToReset.records || dayToReset.records.length === 0) {
-        console.error('削除対象の日付データが見つかりません:', dayToReset)
+
+      if (
+        !dayToReset ||
+        !dayToReset.records ||
+        dayToReset.records.length === 0
+      ) {
         showError('削除する記録がありません')
         return
       }
-      
+
       const targetDate = dayToReset.date
       const recordCount = dayToReset.records.length
-      const recordIds = dayToReset.records.map(record => record.id)
-      
-      console.log('=== リセット処理開始 ===')
-      console.log('対象日:', targetDate)
-      console.log('削除対象記録数:', recordCount)
-      console.log('削除対象ID:', recordIds)
-      
-      try {
-        // 各記録を削除
-        for (let i = 0; i < recordIds.length; i++) {
-          const recordId = recordIds[i]
-          console.log(`削除処理 ${i + 1}/${recordIds.length}: 記録ID ${recordId}`)
-          
-          const response = await fetch('/api/remove-exercise', {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ recordId: recordId })
-          })
-          
-          if (!response.ok) {
-            const errorText = await response.text()
-            console.error(`HTTP エラー: ${response.status}`, errorText)
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-          }
-          
-          const result = await response.json()
-          
-          if (!result.success) {
-            console.error(`削除失敗: 記録ID ${recordId}`, result)
-            throw new Error(result.error || `記録ID ${recordId} の削除に失敗しました`)
-          }
-          
-          console.log(`✅ 記録ID ${recordId} を削除しました`)
-        }
-        
-        console.log('=== すべての削除処理完了 ===')
-        
-        // データを再読み込み
-        console.log('データ再読み込み開始...')
-        await Promise.all([
-          loadExerciseRecords(),
-          loadStats(),
-          loadFamilyStats()
-        ])
-        console.log('データ再読み込み完了')
-        
-        // モーダルを閉じる
-        console.log('モーダルを閉じます')
-        showResetConfirm.value = false
-        closeDayDetails()
-        
-        console.log('成功メッセージを表示')
-        showSuccess(`${recordCount}件のエクササイズ記録を削除しました`)
-        
-        console.log('=== リセット処理正常終了 ===')
-      } catch (error) {
-        console.error('=== リセットエラー発生 ===')
-        console.error('エラー詳細:', error)
-        console.error('エラースタック:', error.stack)
-        showError(`記録の削除に失敗しました: ${error.message}`)
-      }
+
+      LocalStore.removeRecordsForDate(currentUser.value.id, targetDate)
+
+      loadExerciseRecords()
+      loadStats()
+      loadFamilyStats()
+
+      showResetConfirm.value = false
+      closeDayDetails()
+      showSuccess(`${recordCount}件のエクササイズ記録を削除しました`)
+
+      requestSync()
     }
 
     // マイルストーン演出のキー操作（PC 向けの Esc クローズ）
@@ -384,7 +1076,12 @@ createApp({
     }
 
     // 褒めアニメーション表示
-    const showPraiseAnimation = (message, type = 'daily', animationType = 'bounce', isMilestone = false) => {
+    const showPraiseAnimation = (
+      message,
+      type = 'daily',
+      animationType = 'bounce',
+      isMilestone = false
+    ) => {
       // 通常の褒めは操作をブロックしないトーストで表示する（見た目のバリエーションはクラスで維持）
       if (!isMilestone) {
         showToast({
@@ -400,7 +1097,9 @@ createApp({
       closePraise()
       praiseMessage.value = message
       // praiseType が 'milestone' の場合にクラスが重複しないよう Set でまとめる
-      praiseClass.value = [...new Set(['praise-message', type, animationType, 'milestone'])].join(' ')
+      praiseClass.value = [
+        ...new Set(['praise-message', type, animationType, 'milestone'])
+      ].join(' ')
       showPraise.value = true
       createConfettiEffect()
 
@@ -430,13 +1129,21 @@ createApp({
     // 紙吹雪エフェクト
     const createConfettiEffect = () => {
       // シンプルな紙吹雪エフェクトを作成
-      const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD']
-      
+      const colors = [
+        '#FF6B6B',
+        '#4ECDC4',
+        '#45B7D1',
+        '#96CEB4',
+        '#FFEAA7',
+        '#DDA0DD'
+      ]
+
       for (let i = 0; i < 50; i++) {
-        confettiTimers.push(setTimeout(() => {
-          const confetti = document.createElement('div')
-          confetti.className = 'confetti'
-          confetti.style.cssText = `
+        confettiTimers.push(
+          setTimeout(() => {
+            const confetti = document.createElement('div')
+            confetti.className = 'confetti'
+            confetti.style.cssText = `
             position: fixed;
             width: 10px;
             height: 10px;
@@ -448,103 +1155,56 @@ createApp({
             pointer-events: none;
             animation: confetti-fall 3s linear forwards;
           `
-          document.body.appendChild(confetti)
-          confettiElements.push(confetti)
-          
-          confettiTimers.push(setTimeout(() => {
-            const index = confettiElements.indexOf(confetti)
-            if (index !== -1) {
-              confettiElements.splice(index, 1)
-            }
-            if (confetti.parentNode) {
-              confetti.parentNode.removeChild(confetti)
-            }
-          }, 3000))
-        }, i * 50))
+            document.body.appendChild(confetti)
+            confettiElements.push(confetti)
+
+            confettiTimers.push(
+              setTimeout(() => {
+                const index = confettiElements.indexOf(confetti)
+                if (index !== -1) {
+                  confettiElements.splice(index, 1)
+                }
+                if (confetti.parentNode) {
+                  confetti.parentNode.removeChild(confetti)
+                }
+              }, 3000)
+            )
+          }, i * 50)
+        )
       }
     }
 
-    // ユーザー管理機能
-    const loadUsers = async () => {
-      try {
-        const response = await fetch('/api/users')
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-        }
-        
-        const result = await response.json()
-        
-        if (!result.success) {
-          throw new Error(result.error || 'ユーザーデータの読み込みに失敗しました')
-        }
-        
-        users.value = result.users
-        
-        // 初期ユーザーの自動設定
-        if (!currentUser.value && users.value.length > 0) {
-          currentUser.value = users.value[0]
-          await loadUserData()
-        }
-      } catch (error) {
-        console.error('ユーザー読み込みエラー:', error)
-        showError(`ユーザーデータの読み込みに失敗しました: ${error.message}`)
-        users.value = []
+    // ユーザー管理機能（ローカル即時読み込み）
+    const loadUsers = () => {
+      users.value = LocalStore.getUsers()
+
+      // 初期ユーザーの自動設定および既存ユーザーの最新化
+      if (currentUser.value) {
+        const matching = users.value.find((u) => u.id === currentUser.value.id)
+        currentUser.value =
+          matching || (users.value.length > 0 ? users.value[0] : null)
+      } else if (users.value.length > 0) {
+        currentUser.value = users.value[0]
+        loadUserData()
       }
     }
 
-    const switchUser = async (user) => {
+    const switchUser = (user) => {
       if (currentUser.value?.id === user.id) {
         showUserSelector.value = false
         return
       }
-      
-      // ローディング状態を表示
-      const appElement = document.querySelector('.app')
-      if (appElement) {
-        appElement.classList.add('user-switching')
-      }
-      
+
       currentUser.value = user
       showUserSelector.value = false
-      
-      try {
-        await loadUserData()
-      } finally {
-        // ローディング状態を解除
-        if (appElement) {
-          appElement.classList.remove('user-switching')
-        }
-      }
+      loadUserData()
     }
 
-    const loadUserData = async () => {
+    const loadUserData = () => {
       if (!currentUser.value) return
-      
-      // ローディング状態を表示
-      const loadingOverlay = document.createElement('div')
-      loadingOverlay.className = 'loading-overlay'
-      loadingOverlay.innerHTML = `
-        <div class="loading-message">
-          <div class="loading-spinner"></div>
-          <div class="loading-text">データを読み込み中...</div>
-        </div>
-      `
-      document.body.appendChild(loadingOverlay)
-      
-      try {
-        // ユーザー切り替え時にデータを並行読み込み（パフォーマンス最適化）
-        await Promise.all([
-          loadExerciseRecords(),
-          loadStats(),
-          loadFamilyStats()
-        ])
-      } finally {
-        // ローディング状態を解除
-        if (loadingOverlay.parentNode) {
-          loadingOverlay.parentNode.removeChild(loadingOverlay)
-        }
-      }
+      loadExerciseRecords()
+      loadStats()
+      loadFamilyStats()
     }
 
     const toggleUserSelector = () => {
@@ -564,50 +1224,18 @@ createApp({
       return colors[theme] || colors.blue
     }
 
-    // データ読み込み
-    const loadExerciseRecords = async () => {
-      try {
-        const response = await fetch(`/api/records?userId=${currentUser.value.id}`)
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-        }
-        
-        const result = await response.json()
-        
-        if (!result.success) {
-          throw new Error(result.error || '記録の読み込みに失敗しました')
-        }
-        
-        exerciseRecords.value = result.records || []
-      } catch (error) {
-        console.error('記録読み込みエラー:', error)
-        showError(`記録の読み込みに失敗しました: ${error.message}`)
-        exerciseRecords.value = [] // エラー時は空配列
+    // データ読み込み（LocalStoreから即時取得）
+    const loadExerciseRecords = () => {
+      if (!currentUser.value) {
+        exerciseRecords.value = []
+        return
       }
+      exerciseRecords.value = LocalStore.getRecords(currentUser.value.id)
     }
 
-    const loadExercises = async () => {
-      try {
-        const response = await fetch('/api/exercises')
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-        }
-        
-        const result = await response.json()
-        
-        if (!result.success) {
-          throw new Error(result.error || 'エクササイズデータの読み込みに失敗しました')
-        }
-        
-        exercises.value = result.exercises || []
-        selectedExercise.value = null
-      } catch (error) {
-        console.error('エクササイズ読み込みエラー:', error)
-        showError(`エクササイズデータの読み込みに失敗しました: ${error.message}`)
-        exercises.value = []
-      }
+    const loadExercises = () => {
+      exercises.value = LocalStore.getExercises()
+      selectedExercise.value = null
     }
 
     // 月の変更
@@ -631,81 +1259,98 @@ createApp({
       familyRecordsToday: 0
     })
 
-    const loadStats = async () => {
-      try {
-        const response = await fetch(`/api/stats?userId=${currentUser.value.id}`)
-        const result = await response.json()
-        if (result.success) {
-          stats.value = result.stats
-        }
-      } catch (error) {
-        console.error('統計読み込みエラー:', error)
-      }
+    const loadStats = () => {
+      if (!currentUser.value) return
+      const userRecords = LocalStore.getRecords(currentUser.value.id)
+      stats.value = calculatePersonalStats(userRecords)
     }
 
-    const loadFamilyStats = async () => {
-      try {
-        const response = await fetch('/api/family-stats')
-        const result = await response.json()
-        if (result.success) {
-          familyStats.value = result.stats
-        }
-      } catch (error) {
-        console.error('家族統計読み込みエラー:', error)
-      }
+    const loadFamilyStats = () => {
+      const allRecords = LocalStore.getAllRecords()
+      familyStats.value = calculateFamilyStatsFromRecords(allRecords)
     }
 
-    // データ管理機能
-    const createBackup = async () => {
+    // データ管理機能（JSONバックアップ保存・復元）
+    const exportData = () => {
       try {
-        const response = await fetch('/api/backup')
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-        }
-        
-        const result = await response.json()
-        
-        if (result.success) {
-          showSuccess(`バックアップが作成されました: ${result.backupFile}`)
-        } else {
-          throw new Error(result.error || 'バックアップの作成に失敗しました')
-        }
-      } catch (error) {
-        console.error('バックアップエラー:', error)
-        showError(`バックアップの作成に失敗しました: ${error.message}`)
-      }
-    }
+        const allData = LocalStore.getAllData()
+        const jsonStr = JSON.stringify(allData, null, 2)
+        const blob = new Blob([jsonStr], {
+          type: 'application/json;charset=utf-8'
+        })
+        const today = getCurrentJSTDateString()
+        const filename = `exercise_backup_${today}.json`
 
-    const exportData = async () => {
-      if (!currentUser.value) {
-        showError('ユーザーが選択されていません')
-        return
-      }
-      
-      try {
-        const response = await fetch(`/api/export?userId=${currentUser.value.id}`)
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-        }
-        
-        // ファイルダウンロード
-        const blob = await response.blob()
-        const url = window.URL.createObjectURL(blob)
+        const url = URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = url
-        a.download = `exercise-data-${currentUser.value.display_name}-${new Date().toISOString().split('T')[0]}.json`
+        a.download = filename
         document.body.appendChild(a)
         a.click()
         document.body.removeChild(a)
-        window.URL.revokeObjectURL(url)
-        
-        showSuccess('データのエクスポートが完了しました')
+        URL.revokeObjectURL(url)
+
+        showSuccess(`JSONバックアップを保存しました (${filename})`)
       } catch (error) {
-        console.error('エクスポートエラー:', error)
-        showError(`データのエクスポートに失敗しました: ${error.message}`)
+        console.error('バックアップ保存エラー:', error)
+        showError(`バックアップ保存に失敗しました: ${error.message}`)
       }
+    }
+
+    const triggerImportFile = () => {
+      if (fileInput.value) {
+        fileInput.value.click()
+      }
+    }
+
+    const onFileInputChange = (event) => {
+      const file = event.target.files && event.target.files[0]
+      if (file) {
+        importData(file)
+      }
+      event.target.value = ''
+    }
+
+    const importData = (file) => {
+      if (!file) return
+
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        try {
+          const content = e.target.result
+          const parsed = JSON.parse(content)
+
+          if (!parsed || typeof parsed !== 'object') {
+            showError('バックアップファイルの形式が無効です')
+            return
+          }
+
+          if (!parsed.users && !parsed.exercises && !parsed.records) {
+            showError('エクササイズカレンダーのデータが見つかりません')
+            return
+          }
+
+          LocalStore.restoreAllData(parsed)
+
+          loadUsers()
+          loadExercises()
+          loadUserData()
+
+          showSuccess('JSONバックアップからデータを復元しました')
+          requestSync()
+        } catch (err) {
+          console.error('バックアップ復元エラー:', err)
+          showError(`復元に失敗しました: ${err.message}`)
+        }
+      }
+      reader.onerror = () => {
+        showError('ファイルの読み込みに失敗しました')
+      }
+      reader.readAsText(file)
+    }
+
+    const createBackup = async () => {
+      exportData()
     }
 
     // ユーザー管理用の状態
@@ -734,99 +1379,63 @@ createApp({
       editUserName.value = currentUser.value?.display_name || ''
     }
 
-    // ユーザー追加
-    const addUser = async () => {
+    // ユーザー追加（ローカル即時反映）
+    const addUser = () => {
       if (!newUserName.value.trim()) {
         showError('ユーザー名を入力してください')
         return
       }
-      
-      try {
-        const response = await fetch('/api/user', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            displayName: newUserName.value.trim(),
-            colorTheme: newUserColor.value
-          })
-        })
-        
-        const result = await response.json()
-        
-        if (result.success) {
-          await loadUsers()
-          showAddUser.value = false
-          newUserName.value = ''
-          showSuccess('ユーザーを追加しました')
-        } else {
-          showError(result.error || 'ユーザーの追加に失敗しました')
-        }
-      } catch (error) {
-        console.error('ユーザー追加エラー:', error)
-        showError('ユーザーの追加に失敗しました')
-      }
+
+      LocalStore.addUser({
+        displayName: newUserName.value.trim(),
+        colorTheme: newUserColor.value
+      })
+
+      loadUsers()
+      showAddUser.value = false
+      newUserName.value = ''
+      showSuccess('ユーザーを追加しました')
+
+      requestSync()
     }
 
-    // ユーザー名更新
-    const updateUserName = async () => {
-      if (!editUserName.value.trim()) {
+    // ユーザー名更新（ローカル即時反映）
+    const updateUserName = () => {
+      if (!editUserName.value.trim() || !currentUser.value) {
         showError('ユーザー名を入力してください')
         return
       }
-      
-      try {
-        const response = await fetch('/api/user/name', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: currentUser.value.id,
-            displayName: editUserName.value.trim()
-          })
-        })
-        
-        const result = await response.json()
-        
-        if (result.success) {
-          currentUser.value.display_name = editUserName.value.trim()
-          await loadUsers()
-          showEditUser.value = false
-          showSuccess('ユーザー名を更新しました')
-        } else {
-          showError(result.error || 'ユーザー名の更新に失敗しました')
-        }
-      } catch (error) {
-        console.error('ユーザー名更新エラー:', error)
-        showError('ユーザー名の更新に失敗しました')
+
+      const updated = LocalStore.updateUserName(
+        currentUser.value.id,
+        editUserName.value.trim()
+      )
+      if (updated) {
+        currentUser.value.display_name = updated.display_name
+        loadUsers()
+        showEditUser.value = false
+        showSuccess('ユーザー名を更新しました')
+
+        requestSync()
       }
     }
     // デフォルトエクササイズ設定用の状態
     const showDefaultExerciseSettings = ref(false)
 
-    // デフォルトエクササイズ更新
-    const updateDefaultExercise = async (exerciseId) => {
-      try {
-        const response = await fetch('/api/user/default-exercise', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: currentUser.value.id,
-            exerciseId: exerciseId
-          })
-        })
-        
-        const result = await response.json()
-        
-        if (result.success) {
-          // ユーザー情報を更新
-          currentUser.value.default_exercise_id = exerciseId
-          showDefaultExerciseSettings.value = false
-          showSuccess('デフォルトエクササイズを更新しました')
-        } else {
-          showError(result.error || 'デフォルトエクササイズの更新に失敗しました')
-        }
-      } catch (error) {
-        console.error('デフォルトエクササイズ更新エラー:', error)
-        showError('デフォルトエクササイズの更新に失敗しました')
+    // デフォルトエクササイズ更新（ローカル即時反映）
+    const updateDefaultExercise = (exerciseId) => {
+      if (!currentUser.value) return
+
+      const updated = LocalStore.updateDefaultExercise(
+        currentUser.value.id,
+        exerciseId
+      )
+      if (updated) {
+        currentUser.value.default_exercise_id = exerciseId
+        showDefaultExerciseSettings.value = false
+        showSuccess('デフォルトエクササイズを更新しました')
+
+        requestSync()
       }
     }
 
@@ -834,76 +1443,62 @@ createApp({
     const toggleDefaultExerciseSettings = () => {
       showDefaultExerciseSettings.value = !showDefaultExerciseSettings.value
     }
-    // エクササイズの追加・削除機能
-    const addExerciseToDay = async (date, exerciseId) => {
-      try {
-        const response = await fetch('/api/add-exercise', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: currentUser.value.id,
-            exerciseId: exerciseId,
-            date: date
-          })
-        })
-        
-        const result = await response.json()
-        
-        if (result.success) {
-          await loadExerciseRecords()
-          // 選択された日のデータを更新
-          const updatedDay = calendarDays.value.find(day => day.date === date)
-          if (updatedDay) {
-            selectedDay.value = updatedDay
-          }
-          showSuccess('エクササイズを追加しました')
-        } else {
-          showError(result.error || 'エクササイズの追加に失敗しました')
-        }
-      } catch (error) {
-        console.error('エクササイズ追加エラー:', error)
-        showError('エクササイズの追加に失敗しました')
+    // エクササイズの追加・削除機能（ローカル即時反映）
+    const addExerciseToDay = (date, exerciseId) => {
+      if (!currentUser.value) return
+
+      const { isDuplicate } = LocalStore.addRecord({
+        userId: currentUser.value.id,
+        exerciseId: exerciseId,
+        date: date,
+        isQuickRecord: false
+      })
+
+      if (isDuplicate) {
+        showError('このエクササイズは既に記録済みです')
+        return
       }
+
+      loadExerciseRecords()
+      loadStats()
+      loadFamilyStats()
+
+      const updatedDay = calendarDays.value.find((day) => day.date === date)
+      if (updatedDay) {
+        selectedDay.value = updatedDay
+      }
+      showSuccess('エクササイズを追加しました')
+
+      requestSync()
     }
 
-    const removeExerciseFromDay = async (recordId) => {
-      try {
-        const response = await fetch('/api/remove-exercise', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            recordId: recordId
-          })
-        })
-        
-        const result = await response.json()
-        
-        if (result.success) {
-          await loadExerciseRecords()
-          // 選択された日のデータを更新
-          if (selectedDay.value) {
-            const updatedDay = calendarDays.value.find(day => day.date === selectedDay.value.date)
-            if (updatedDay) {
-              selectedDay.value = updatedDay
-            }
-          }
-          showSuccess('エクササイズを削除しました')
-        } else {
-          showError(result.error || 'エクササイズの削除に失敗しました')
+    const removeExerciseFromDay = (recordId) => {
+      LocalStore.removeRecord(recordId)
+
+      loadExerciseRecords()
+      loadStats()
+      loadFamilyStats()
+
+      if (selectedDay.value) {
+        const updatedDay = calendarDays.value.find(
+          (day) => day.date === selectedDay.value.date
+        )
+        if (updatedDay) {
+          selectedDay.value = updatedDay
         }
-      } catch (error) {
-        console.error('エクササイズ削除エラー:', error)
-        showError('エクササイズの削除に失敗しました')
       }
+      showSuccess('エクササイズを削除しました')
+
+      requestSync()
     }
     // 日付詳細表示用の状態
     const showDayDetails = ref(false)
     const selectedDay = ref(null)
     const showAddExercise = ref(false)
-    
+
     // 「今日やった」ボタン用の状態
     const showTodayExerciseSelector = ref(false)
-    
+
     // リセット確認用の状態
     const showResetConfirm = ref(false)
 
@@ -912,7 +1507,7 @@ createApp({
       if (day.status === 'other-month') {
         return // 他月の日付はクリック無効
       }
-      
+
       selectedDay.value = day
       showDayDetails.value = true
       showAddExercise.value = false
@@ -927,18 +1522,21 @@ createApp({
 
     // エクササイズ追加モードの切り替え
     const toggleAddExercise = () => {
-      console.log('toggleAddExercise called, current state:', showAddExercise.value)
+      console.log(
+        'toggleAddExercise called, current state:',
+        showAddExercise.value
+      )
       showAddExercise.value = !showAddExercise.value
       console.log('toggleAddExercise new state:', showAddExercise.value)
     }
     // JST時刻フォーマット関数（改良版）
     const formatTimeJST = (timeString) => {
       if (!timeString) return ''
-      
+
       try {
         // JST形式のタイムスタンプ（例: 2024-12-24T15:30:45+09:00）を処理
         let date
-        
+
         if (timeString.includes('+09:00')) {
           // 既にJST形式の場合はそのまま使用
           date = new Date(timeString)
@@ -946,15 +1544,15 @@ createApp({
           // 古い形式やUTC形式の場合は変換
           date = new Date(timeString)
         }
-        
+
         if (isNaN(date.getTime())) {
           console.warn('無効な日付形式:', timeString)
           return '時刻不明'
         }
-        
+
         // 日本時間で時刻を表示
-        return date.toLocaleTimeString('ja-JP', { 
-          hour: '2-digit', 
+        return date.toLocaleTimeString('ja-JP', {
+          hour: '2-digit',
           minute: '2-digit',
           timeZone: 'Asia/Tokyo'
         })
@@ -967,11 +1565,11 @@ createApp({
     // 日付フォーマット関数（JST改良版）
     const formatDateJST = (timeString) => {
       if (!timeString) return ''
-      
+
       try {
         // JST形式のタイムスタンプ（例: 2024-12-24T15:30:45+09:00）を処理
         let date
-        
+
         if (timeString.includes('+09:00')) {
           // 既にJST形式の場合はそのまま使用
           date = new Date(timeString)
@@ -979,12 +1577,12 @@ createApp({
           // 古い形式やUTC形式の場合は変換
           date = new Date(timeString)
         }
-        
+
         if (isNaN(date.getTime())) {
           console.warn('無効な日付形式:', timeString)
           return '日付不明'
         }
-        
+
         return date.toLocaleDateString('ja-JP', {
           year: 'numeric',
           month: 'long',
@@ -1000,10 +1598,10 @@ createApp({
     // 日付のツールチップテキストを生成
     const getdayTooltip = (day) => {
       if (day.status === 'other-month') return ''
-      
+
       const date = new Date(day.date)
       const dateStr = `${date.getMonth() + 1}月${date.getDate()}日`
-      
+
       if (day.recordCount === 0) {
         return `${dateStr}: 記録なし (クリックで記録追加)`
       } else if (day.recordCount === 1) {
@@ -1043,10 +1641,11 @@ createApp({
     }
 
     // 初期化
-    onMounted(() => {
-      // ユーザー読み込みから開始
+    onMounted(async () => {
+      await LocalStore.init()
       loadUsers()
       loadExercises()
+      triggerSync()
     })
 
     return {
@@ -1106,7 +1705,16 @@ createApp({
       toggleUserSelector,
       getColorForTheme,
       createBackup,
-      exportData
+      exportData,
+      importData,
+      triggerImportFile,
+      onFileInputChange,
+      fileInput,
+      syncStatus,
+      syncStatusText,
+      syncStatusClass,
+      syncStatusTooltip,
+      triggerSync
     }
   },
 
@@ -1114,30 +1722,42 @@ createApp({
     <div class="app">
       <!-- ヘッダー -->
       <header class="header">
-        <h1>エクササイズカレンダー</h1>
-        <div class="user-section">
-          <div class="user-info" @click="toggleUserSelector">
-            <span class="user-icon">👤</span>
-            <span class="user-name">{{ currentUser?.display_name || 'ユーザーを選択' }}</span>
-            <span class="dropdown-arrow">{{ showUserSelector ? '▲' : '▼' }}</span>
-          </div>
-          
-          <!-- ユーザー選択ドロップダウン -->
-          <div v-if="showUserSelector" class="user-dropdown">
-            <div 
-              v-for="user in users" 
-              :key="user.id"
-              :class="['user-option', { active: currentUser?.id === user.id }]"
-              @click="switchUser(user)"
-            >
-              <span class="user-color" :style="{ backgroundColor: getColorForTheme(user.color_theme) }"></span>
-              <span>{{ user.display_name }}</span>
-              <span v-if="currentUser?.id === user.id" class="check-icon">✓</span>
+        <div class="header-top">
+          <div class="header-title-group">
+            <h1>エクササイズカレンダー</h1>
+            <!-- 同期ステータスバッジ -->
+            <div :class="['sync-status-badge', syncStatusClass]" :title="syncStatusTooltip">
+              <span class="sync-status-dot"></span>
+              <span class="sync-status-text">{{ syncStatusText }}</span>
             </div>
-            <div class="user-management-section">
-              <button class="user-management-button" @click="toggleUserManagement">
-                ⚙️ ユーザー管理
-              </button>
+          </div>
+
+          <div class="header-controls">
+            <div class="user-section">
+              <div class="user-info" @click="toggleUserSelector">
+                <span class="user-icon">👤</span>
+                <span class="user-name">{{ currentUser?.display_name || 'ユーザーを選択' }}</span>
+                <span class="dropdown-arrow">{{ showUserSelector ? '▲' : '▼' }}</span>
+              </div>
+              
+              <!-- ユーザー選択ドロップダウン -->
+              <div v-if="showUserSelector" class="user-dropdown">
+                <div 
+                  v-for="user in users" 
+                  :key="user.id"
+                  :class="['user-option', { active: currentUser?.id === user.id }]"
+                  @click="switchUser(user)"
+                >
+                  <span class="user-color" :style="{ backgroundColor: getColorForTheme(user.color_theme) }"></span>
+                  <span>{{ user.display_name }}</span>
+                  <span v-if="currentUser?.id === user.id" class="check-icon">✓</span>
+                </div>
+                <div class="user-management-section">
+                  <button class="user-management-button" @click="toggleUserManagement">
+                    ⚙️ ユーザー管理
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1331,15 +1951,17 @@ createApp({
 
           <!-- データ管理セクション -->
           <div class="data-management">
-            <h4 class="data-management-title">📊 データ管理</h4>
+            <h4 class="data-management-title">📊 データ管理（JSONバックアップ）</h4>
             <div class="data-management-buttons">
-              <button class="backup-button" @click="createBackup">
-                💾 バックアップ作成
+              <button class="backup-button" @click="exportData">
+                💾 JSONバックアップ保存
               </button>
-              <button class="export-button" @click="exportData">
-                📤 データエクスポート
+              <button class="restore-button" @click="triggerImportFile">
+                📥 JSONバックアップ復元
               </button>
             </div>
+            <!-- ファイル選択用インプット（非表示） -->
+            <input type="file" ref="fileInput" accept=".json,application/json" style="display: none" @change="onFileInputChange">
           </div>
         </div>
       </main>
@@ -1552,14 +2174,16 @@ function generateCalendarDays(currentDate, exerciseRecords) {
   const firstDay = new Date(year, month, 1)
   const startDate = new Date(firstDay)
   startDate.setDate(startDate.getDate() - firstDay.getDay()) // 週の始まりを日曜日に調整
-  
+
   const days = []
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
   // 記録のある日付をセットに変換（高速検索用）
-  const recordDates = new Set(exerciseRecords.map(record => record.record_date))
-  
+  const recordDates = new Set(
+    exerciseRecords.map((record) => record.record_date)
+  )
+
   // 連続記録の計算
   const streakDays = calculateStreakDays(exerciseRecords)
 
@@ -1567,22 +2191,24 @@ function generateCalendarDays(currentDate, exerciseRecords) {
   for (let i = 0; i < 42; i++) {
     const dayDate = new Date(startDate)
     dayDate.setDate(startDate.getDate() + i)
-    
+
     // 日本時間での日付文字列を生成
     const dayYear = dayDate.getFullYear()
     const dayMonth = String(dayDate.getMonth() + 1).padStart(2, '0')
     const dayDay = String(dayDate.getDate()).padStart(2, '0')
     const dateString = `${dayYear}-${dayMonth}-${dayDay}`
-    
+
     const isCurrentMonth = dayDate.getMonth() === month
     const isToday = dayDate.getTime() === today.getTime()
-    
+
     // その日にエクササイズ記録があるかチェック
     const hasRecord = recordDates.has(dateString)
     const isStreakDay = streakDays.has(dateString)
-    
+
     // その日の記録数を取得
-    const dayRecords = exerciseRecords.filter(record => record.record_date === dateString)
+    const dayRecords = exerciseRecords.filter(
+      (record) => record.record_date === dateString
+    )
     const recordCount = dayRecords.length
 
     let status = 'none'
@@ -1614,9 +2240,11 @@ function calculateStreakDays(exerciseRecords) {
   }
 
   // 記録のある日付を取得してソート
-  const recordDates = [...new Set(exerciseRecords.map(record => record.record_date))]
+  const recordDates = [
+    ...new Set(exerciseRecords.map((record) => record.record_date))
+  ]
     .sort()
-    .map(dateStr => {
+    .map((dateStr) => {
       // 日付文字列から直接Dateオブジェクトを作成（タイムゾーン問題を回避）
       const [year, month, day] = dateStr.split('-').map(Number)
       return new Date(year, month - 1, day)
@@ -1636,7 +2264,7 @@ function calculateStreakDays(exerciseRecords) {
       // 連続が途切れた場合
       if (currentStreak.length >= 2) {
         // 2日以上の連続記録をstreakDaysに追加
-        currentStreak.forEach(date => {
+        currentStreak.forEach((date) => {
           const year = date.getFullYear()
           const month = String(date.getMonth() + 1).padStart(2, '0')
           const day = String(date.getDate()).padStart(2, '0')
@@ -1649,7 +2277,7 @@ function calculateStreakDays(exerciseRecords) {
 
   // 最後の連続記録を処理
   if (currentStreak.length >= 2) {
-    currentStreak.forEach(date => {
+    currentStreak.forEach((date) => {
       const year = date.getFullYear()
       const month = String(date.getMonth() + 1).padStart(2, '0')
       const day = String(date.getDate()).padStart(2, '0')

@@ -98,3 +98,5 @@ Thumbs.db
 
 # Test files (keeping test-scenarios.md as it's documentation)
 # test-scenarios.md は残す
+test-results/
+playwright-report/

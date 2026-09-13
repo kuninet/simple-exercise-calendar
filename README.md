@@ -49,22 +49,26 @@
 ### インストール
 
 1. リポジトリをクローン
+
 ```bash
 git clone https://github.com/kuninet/simple-exercise-calendar.git
 cd simple-exercise-calendar
 ```
 
 2. 依存関係をインストール
+
 ```bash
 npm install
 ```
 
 3. データベースを初期化
+
 ```bash
 npm run init-db
 ```
 
 4. サーバーを起動
+
 ```bash
 npm start
 ```
@@ -83,12 +87,14 @@ npm start
 ### 📱 モバイル・タブレットでの使い方
 
 **アプリとしてインストール後：**
+
 - ホーム画面のアイコンをタップして起動
 - ネイティブアプリと同様の操作感
 - オフラインでも基本機能が利用可能
 - バックグラウンドで自動更新
 
 **画面サイズ別の最適化：**
+
 - **iPhone**: コンパクトな表示で片手操作しやすい
 - **iPad**: 大画面を活かした見やすいレイアウト
 - **Android**: 各デバイスサイズに自動対応
@@ -96,7 +102,7 @@ npm start
 ### エクササイズの種類
 
 - 🏃 ランニング
-- 🚶 ウォーキング  
+- 🚶 ウォーキング
 - 💪 腹筋
 - 🤲 腕立て伏せ
 - 🦵 スクワット
@@ -165,6 +171,7 @@ npx nodemon server.js
 ## 📊 データベース構造
 
 ### users テーブル
+
 - `id`: ユーザーID
 - `username`: ユーザー名
 - `display_name`: 表示名
@@ -172,6 +179,7 @@ npx nodemon server.js
 - `default_exercise_id`: デフォルトエクササイズID
 
 ### exercises テーブル
+
 - `id`: エクササイズID
 - `name`: エクササイズ名
 - `category`: カテゴリ
@@ -179,6 +187,7 @@ npx nodemon server.js
 - `unit`: 単位
 
 ### exercise_records テーブル
+
 - `id`: 記録ID
 - `user_id`: ユーザーID
 - `exercise_id`: エクササイズID
@@ -218,16 +227,19 @@ const colors = {
 
 1. Heroku CLI をインストール
 2. Heroku アプリを作成
+
 ```bash
 heroku create your-app-name
 ```
 
 3. 環境変数を設定
+
 ```bash
 heroku config:set NODE_ENV=production
 ```
 
 4. デプロイ
+
 ```bash
 git push heroku main
 ```

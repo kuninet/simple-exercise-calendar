@@ -108,14 +108,14 @@ const praiseMessages = [
   ['その調子！', 'daily', 1, 'bounce'],
   ['よくやった！', 'daily', 1, 'bounce'],
   ['継続は力なり！', 'daily', 1, 'bounce'],
-  
+
   // 連続記録の褒め
   ['2日連続！すごい！', 'streak', 2, 'pulse'],
   ['3日連続！調子いいね！', 'streak', 3, 'pulse'],
   ['1週間継続！素晴らしい！', 'streak', 7, 'shake'],
   ['2週間継続！すごすぎる！', 'streak', 14, 'shake'],
   ['1ヶ月継続！もはや習慣！', 'streak', 30, 'rainbow'],
-  
+
   // マイルストーン
   ['10回達成！', 'milestone', 10, 'fireworks'],
   ['50回達成！継続の力！', 'milestone', 50, 'fireworks'],
@@ -135,11 +135,13 @@ async function initializeDatabase() {
       console.log('✅ テーブルが作成されました')
 
       // ユーザーデータ投入
-      const insertUser = db.prepare('INSERT OR IGNORE INTO users (username, display_name, color_theme) VALUES (?, ?, ?)')
-      
+      const insertUser = db.prepare(
+        'INSERT OR IGNORE INTO users (username, display_name, color_theme) VALUES (?, ?, ?)'
+      )
+
       let userPromises = users.map(([username, displayName, colorTheme]) => {
         return new Promise((resolve, reject) => {
-          insertUser.run(username, displayName, colorTheme, function(err) {
+          insertUser.run(username, displayName, colorTheme, function (err) {
             if (err) {
               console.error('❌ ユーザー追加エラー:', err.message)
               reject(err)
@@ -154,11 +156,13 @@ async function initializeDatabase() {
       })
 
       // エクササイズデータ投入
-      const insertExercise = db.prepare('INSERT OR IGNORE INTO exercises (name, category, unit, icon) VALUES (?, ?, ?, ?)')
-      
+      const insertExercise = db.prepare(
+        'INSERT OR IGNORE INTO exercises (name, category, unit, icon) VALUES (?, ?, ?, ?)'
+      )
+
       let exercisePromises = exercises.map(([name, category, unit, icon]) => {
         return new Promise((resolve, reject) => {
-          insertExercise.run(name, category, unit, icon, function(err) {
+          insertExercise.run(name, category, unit, icon, function (err) {
             if (err) {
               console.error('❌ エクササイズ追加エラー:', err.message)
               reject(err)
@@ -173,23 +177,33 @@ async function initializeDatabase() {
       })
 
       // 褒めメッセージデータ投入
-      const insertPraise = db.prepare('INSERT OR IGNORE INTO praise_messages (message, type, min_streak, animation_type) VALUES (?, ?, ?, ?)')
-      
-      let praisePromises = praiseMessages.map(([message, type, minStreak, animationType]) => {
-        return new Promise((resolve, reject) => {
-          insertPraise.run(message, type, minStreak, animationType, function(err) {
-            if (err) {
-              console.error('❌ 褒めメッセージ追加エラー:', err.message)
-              reject(err)
-            } else {
-              if (this.changes > 0) {
-                console.log(`💬 褒めメッセージ「${message}」を追加しました`)
+      const insertPraise = db.prepare(
+        'INSERT OR IGNORE INTO praise_messages (message, type, min_streak, animation_type) VALUES (?, ?, ?, ?)'
+      )
+
+      let praisePromises = praiseMessages.map(
+        ([message, type, minStreak, animationType]) => {
+          return new Promise((resolve, reject) => {
+            insertPraise.run(
+              message,
+              type,
+              minStreak,
+              animationType,
+              function (err) {
+                if (err) {
+                  console.error('❌ 褒めメッセージ追加エラー:', err.message)
+                  reject(err)
+                } else {
+                  if (this.changes > 0) {
+                    console.log(`💬 褒めメッセージ「${message}」を追加しました`)
+                  }
+                  resolve()
+                }
               }
-              resolve()
-            }
+            )
           })
-        })
-      })
+        }
+      )
 
       // すべての挿入が完了してから統計を表示
       Promise.all([...userPromises, ...exercisePromises, ...praisePromises])
@@ -207,39 +221,52 @@ async function initializeDatabase() {
               return
             }
 
-            db.get('SELECT COUNT(*) as count FROM exercises', (err, exerciseResult) => {
-              if (err) {
-                console.error('❌ エクササイズ数取得エラー:', err.message)
-                reject(err)
-                return
-              }
-
-              db.get('SELECT COUNT(*) as count FROM praise_messages', (err, praiseResult) => {
+            db.get(
+              'SELECT COUNT(*) as count FROM exercises',
+              (err, exerciseResult) => {
                 if (err) {
-                  console.error('❌ 褒めメッセージ数取得エラー:', err.message)
+                  console.error('❌ エクササイズ数取得エラー:', err.message)
                   reject(err)
                   return
                 }
 
-                console.log('\n📊 データベース統計:')
-                console.log(`   ユーザー数: ${userResult.count}`)
-                console.log(`   エクササイズ種目数: ${exerciseResult.count}`)
-                console.log(`   褒めメッセージ数: ${praiseResult.count}`)
+                db.get(
+                  'SELECT COUNT(*) as count FROM praise_messages',
+                  (err, praiseResult) => {
+                    if (err) {
+                      console.error(
+                        '❌ 褒めメッセージ数取得エラー:',
+                        err.message
+                      )
+                      reject(err)
+                      return
+                    }
 
-                console.log('\n✅ データベースの初期化が完了しました！')
-                console.log('🚀 次のコマンドでサーバーを起動できます: npm start')
+                    console.log('\n📊 データベース統計:')
+                    console.log(`   ユーザー数: ${userResult.count}`)
+                    console.log(
+                      `   エクササイズ種目数: ${exerciseResult.count}`
+                    )
+                    console.log(`   褒めメッセージ数: ${praiseResult.count}`)
 
-                db.close((err) => {
-                  if (err) {
-                    console.error('❌ データベース切断エラー:', err.message)
-                    reject(err)
-                  } else {
-                    console.log('✅ データベース接続を閉じました')
-                    resolve()
+                    console.log('\n✅ データベースの初期化が完了しました！')
+                    console.log(
+                      '🚀 次のコマンドでサーバーを起動できます: npm start'
+                    )
+
+                    db.close((err) => {
+                      if (err) {
+                        console.error('❌ データベース切断エラー:', err.message)
+                        reject(err)
+                      } else {
+                        console.log('✅ データベース接続を閉じました')
+                        resolve()
+                      }
+                    })
                   }
-                })
-              })
-            })
+                )
+              }
+            )
           })
         })
         .catch((err) => {
