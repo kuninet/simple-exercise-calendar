@@ -415,87 +415,346 @@ body {
   position: relative;
 }
 
-/* 済スタンプのスタイル（透過重ね合わせ版） */
+/* 可愛いネコ済スタンプのスタイル */
 .stamp-done {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(-15deg);
-  width: 35px;
-  height: 35px;
-  background: transparent;
-  color: rgba(220, 53, 69, 0.8);
+  transform: translate(-50%, -50%) rotate(-12deg);
+  width: 38px;
+  height: 38px;
+  background: radial-gradient(
+    circle at 45% 45%,
+    rgba(255, 107, 129, 0.18) 0%,
+    rgba(255, 71, 87, 0.08) 65%,
+    transparent 100%
+  );
+  color: #ff4757;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 900;
-  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'MS Mincho', serif;
-  border: 3px solid rgba(220, 53, 69, 0.8);
+  font-family:
+    'Hiragino Maru Gothic ProN', 'Rounded Mplus 1c', 'Yu Gothic', 'Meiryo',
+    sans-serif;
+  border: 2.8px solid rgba(255, 71, 87, 0.88);
   z-index: 10;
-  animation: stampAppear 0.3s ease-out;
-  text-shadow: none;
-  letter-spacing: -0.5px;
+  animation: catStampBounce 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   pointer-events: none; /* クリックイベントを通す */
-  /* ハンコらしい質感 */
-  filter: contrast(1.2) saturate(1.1);
+  user-select: none;
+  overflow: visible;
+  filter: drop-shadow(0 2px 4px rgba(255, 71, 87, 0.25));
+  box-sizing: border-box;
 }
 
-/* ハンコの不規則な質感を表現（透過版） */
-.stamp-done::before {
+/* 可愛いネコ耳（::before: 左耳, ::after: 右耳） */
+.stamp-done::before,
+.stamp-done::after {
   content: '';
   position: absolute;
-  top: -3px;
-  left: -3px;
-  right: -3px;
-  bottom: -3px;
-  border-radius: 50%;
-  background:
-    radial-gradient(
-      circle at 30% 40%,
-      rgba(220, 53, 69, 0.1) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 70% 60%,
-      rgba(220, 53, 69, 0.08) 0%,
-      transparent 40%
-    );
-  z-index: -1;
+  top: -8px;
+  width: 11px;
+  height: 11px;
+  background: rgba(255, 107, 129, 0.22);
+  border-top: 2.8px solid rgba(255, 71, 87, 0.88);
+  box-sizing: border-box;
+  pointer-events: none;
 }
 
+/* 左耳: 少し外側に傾けて丸みを持たせる */
+.stamp-done::before {
+  left: 3px;
+  border-left: 2.8px solid rgba(255, 71, 87, 0.88);
+  border-top-left-radius: 6px 8px;
+  border-top-right-radius: 2px;
+  transform: rotate(-18deg) skewX(-10deg);
+}
+
+/* 右耳: 少し外側に傾けて丸みを持たせる */
+.stamp-done::after {
+  right: 3px;
+  border-right: 2.8px solid rgba(255, 71, 87, 0.88);
+  border-top-right-radius: 6px 8px;
+  border-top-left-radius: 2px;
+  transform: rotate(18deg) skewX(10deg);
+}
+
+/* ネコ耳の内側アクセント */
+.stamp-done .cat-ear-l,
+.stamp-done .cat-ear-r {
+  position: absolute;
+  top: -5px;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 107, 129, 0.6);
+  pointer-events: none;
+}
+
+.stamp-done .cat-ear-l {
+  left: 6px;
+  border-top-left-radius: 4px;
+  transform: rotate(-18deg);
+}
+
+.stamp-done .cat-ear-r {
+  right: 6px;
+  border-top-right-radius: 4px;
+  transform: rotate(18deg);
+}
+
+/* 可愛いヒゲ（左右） */
+.stamp-done .cat-whiskers {
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 1.5px;
+  background-color: rgba(255, 71, 87, 0.85);
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+.stamp-done .cat-whisker-l {
+  left: 2px;
+  box-shadow: 0 4px 0 rgba(255, 71, 87, 0.85);
+  transform: translateY(-2px) rotate(8deg);
+}
+
+.stamp-done .cat-whisker-r {
+  right: 2px;
+  box-shadow: 0 4px 0 rgba(255, 71, 87, 0.85);
+  transform: translateY(-2px) rotate(-8deg);
+}
+
+/* スタンプ中央の文字（済） */
+.stamp-done .cat-face-text {
+  position: relative;
+  z-index: 2;
+  line-height: 1;
+  text-shadow: 0 0 1px rgba(255, 71, 87, 0.4);
+}
+
+/* 肉球バッジ（複数記録時のアクセント） */
+.stamp-done .cat-paw-badge {
+  position: absolute;
+  bottom: -4px;
+  right: -5px;
+  font-size: 11px;
+  line-height: 1;
+  z-index: 3;
+  filter: drop-shadow(0 1px 2px rgba(255, 71, 87, 0.4));
+  transform: rotate(15deg);
+  animation: pawBounce 1.8s ease-in-out infinite alternate;
+}
+
+/* 2回記録時のスタンプ（ラージ） */
 .stamp-done.stamp-large {
-  width: 40px;
-  height: 40px;
-  font-size: 16px;
-  border: 3.5px solid rgba(220, 53, 69, 0.8);
-  color: rgba(220, 53, 69, 0.85);
-  transform: translate(-50%, -50%) rotate(-12deg);
+  width: 44px;
+  height: 44px;
+  font-size: 17px;
+  border-width: 3.2px;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  animation: catStampBounceLarge 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* 3つ以上のエクササイズ用の特大サイズ */
+.stamp-done.stamp-large::before,
+.stamp-done.stamp-large::after {
+  top: -9px;
+  width: 12px;
+  height: 12px;
+  border-top-width: 3.2px;
+}
+
+.stamp-done.stamp-large::before {
+  left: 4px;
+  border-left-width: 3.2px;
+}
+
+.stamp-done.stamp-large::after {
+  right: 4px;
+  border-right-width: 3.2px;
+}
+
+.stamp-done.stamp-large .cat-ear-l {
+  top: -6px;
+  left: 7px;
+  width: 6px;
+  height: 6px;
+}
+
+.stamp-done.stamp-large .cat-ear-r {
+  top: -6px;
+  right: 7px;
+  width: 6px;
+  height: 6px;
+}
+
+.stamp-done.stamp-large .cat-whiskers {
+  width: 7px;
+}
+
+.stamp-done.stamp-large .cat-paw-badge {
+  font-size: 13px;
+  bottom: -5px;
+  right: -6px;
+}
+
+/* 3つ以上のエクササイズ用の特大サイズ（エクストララージ） */
 .stamp-done.stamp-xlarge {
-  width: 50px;
-  height: 50px;
-  font-size: 20px;
-  border: 4px solid rgba(220, 53, 69, 0.8);
-  color: rgba(220, 53, 69, 0.9);
-  transform: translate(-50%, -50%) rotate(-10deg);
+  width: 52px;
+  height: 52px;
+  font-size: 21px;
+  border-width: 3.6px;
+  transform: translate(-50%, -50%) rotate(-5deg);
+  animation: catStampBounceXLarge 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.stamp-done.stamp-xlarge::before,
+.stamp-done.stamp-xlarge::after {
+  top: -11px;
+  width: 14px;
+  height: 14px;
+  border-top-width: 3.6px;
+}
+
+.stamp-done.stamp-xlarge::before {
+  left: 5px;
+  border-left-width: 3.6px;
+}
+
+.stamp-done.stamp-xlarge::after {
+  right: 5px;
+  border-right-width: 3.6px;
+}
+
+.stamp-done.stamp-xlarge .cat-ear-l {
+  top: -7px;
+  left: 8px;
+  width: 7px;
+  height: 7px;
+}
+
+.stamp-done.stamp-xlarge .cat-ear-r {
+  top: -7px;
+  right: 8px;
+  width: 7px;
+  height: 7px;
+}
+
+.stamp-done.stamp-xlarge .cat-whiskers {
+  width: 9px;
+}
+
+.stamp-done.stamp-xlarge .cat-paw-badge {
+  font-size: 16px;
+  bottom: -6px;
+  right: -7px;
+}
+
+/* ネコスタンプのアニメーション（ぽんと可愛く押されるバウンス演出） */
+@keyframes catStampBounce {
+  0% {
+    transform: translate(-50%, -50%) scale(0.1) rotate(-30deg);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1.22) rotate(-8deg);
+    opacity: 0.95;
+  }
+  80% {
+    transform: translate(-50%, -50%) scale(0.92) rotate(-14deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(-12deg);
+    opacity: 1;
+  }
+}
+
+@keyframes catStampBounceLarge {
+  0% {
+    transform: translate(-50%, -50%) scale(0.1) rotate(-28deg);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1.24) rotate(-5deg);
+    opacity: 0.95;
+  }
+  80% {
+    transform: translate(-50%, -50%) scale(0.94) rotate(-10deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(-8deg);
+    opacity: 1;
+  }
+}
+
+@keyframes catStampBounceXLarge {
+  0% {
+    transform: translate(-50%, -50%) scale(0.1) rotate(-25deg);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1.26) rotate(-2deg);
+    opacity: 0.95;
+  }
+  80% {
+    transform: translate(-50%, -50%) scale(0.95) rotate(-7deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(-5deg);
+    opacity: 1;
+  }
+}
+
+/* エイリアス: catStampAppear / stampAppear も互換性のため維持 */
+@keyframes catStampAppear {
+  0% {
+    transform: translate(-50%, -50%) scale(0.1) rotate(-30deg);
+    opacity: 0;
+  }
+  60% {
+    transform: translate(-50%, -50%) scale(1.22) rotate(-8deg);
+    opacity: 0.95;
+  }
+  80% {
+    transform: translate(-50%, -50%) scale(0.92) rotate(-14deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(-12deg);
+    opacity: 1;
+  }
 }
 
 @keyframes stampAppear {
   0% {
-    transform: rotate(-15deg) scale(0) translateY(-10px);
+    transform: translate(-50%, -50%) scale(0.1) rotate(-30deg);
     opacity: 0;
   }
-  70% {
-    transform: rotate(-15deg) scale(1.1) translateY(0px);
-    opacity: 0.9;
+  60% {
+    transform: translate(-50%, -50%) scale(1.22) rotate(-8deg);
+    opacity: 0.95;
+  }
+  80% {
+    transform: translate(-50%, -50%) scale(0.92) rotate(-14deg);
+    opacity: 1;
   }
   100% {
-    transform: rotate(-15deg) scale(1) translateY(0px);
+    transform: translate(-50%, -50%) scale(1) rotate(-12deg);
     opacity: 1;
+  }
+}
+
+@keyframes pawBounce {
+  0% {
+    transform: rotate(10deg) scale(0.95);
+  }
+  100% {
+    transform: rotate(22deg) scale(1.15);
   }
 }
 
@@ -1182,26 +1441,44 @@ body {
     font-size: 18px;
   }
 
-  /* iPadでのスタンプサイズ */
+  /* iPadでのネコスタンプサイズ */
   .stamp-done {
-    width: 45px;
-    height: 45px;
+    width: 46px;
+    height: 46px;
     font-size: 18px;
-    border: 4px solid rgba(220, 53, 69, 0.8);
+    border-width: 3.2px;
+  }
+
+  .stamp-done::before,
+  .stamp-done::after {
+    top: -10px;
+    width: 13px;
+    height: 13px;
+    border-top-width: 3.2px;
+  }
+
+  .stamp-done::before {
+    left: 4px;
+    border-left-width: 3.2px;
+  }
+
+  .stamp-done::after {
+    right: 4px;
+    border-right-width: 3.2px;
   }
 
   .stamp-done.stamp-large {
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
-    border: 4.5px solid rgba(220, 53, 69, 0.8);
+    width: 52px;
+    height: 52px;
+    font-size: 21px;
+    border-width: 3.6px;
   }
 
   .stamp-done.stamp-xlarge {
-    width: 55px;
-    height: 55px;
-    font-size: 22px;
-    border: 5px solid rgba(220, 53, 69, 0.8);
+    width: 58px;
+    height: 58px;
+    font-size: 24px;
+    border-width: 4px;
   }
 
   .stats-display {
@@ -1303,29 +1580,74 @@ body {
     font-size: 14px;
   }
 
-  /* 済スタンプのモバイル調整（透過重ね合わせ版） */
+  /* 可愛いネコスタンプのモバイル調整 */
   .stamp-done {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     font-size: 12px;
-    border: 2.5px solid rgba(220, 53, 69, 0.8);
-    color: rgba(220, 53, 69, 0.8);
+    border-width: 2.4px;
+    color: #ff4757;
+  }
+
+  .stamp-done::before,
+  .stamp-done::after {
+    top: -6px;
+    width: 9px;
+    height: 9px;
+    border-top-width: 2.4px;
+  }
+
+  .stamp-done::before {
+    left: 2px;
+    border-left-width: 2.4px;
+  }
+
+  .stamp-done::after {
+    right: 2px;
+    border-right-width: 2.4px;
+  }
+
+  .stamp-done .cat-ear-l {
+    top: -4px;
+    left: 4px;
+    width: 4px;
+    height: 4px;
+  }
+
+  .stamp-done .cat-ear-r {
+    top: -4px;
+    right: 4px;
+    width: 4px;
+    height: 4px;
+  }
+
+  .stamp-done .cat-whiskers {
+    width: 4px;
+    height: 1.2px;
+  }
+
+  .stamp-done .cat-whisker-l {
+    left: 1.5px;
+    box-shadow: 0 3px 0 rgba(255, 71, 87, 0.85);
+  }
+
+  .stamp-done .cat-whisker-r {
+    right: 1.5px;
+    box-shadow: 0 3px 0 rgba(255, 71, 87, 0.85);
   }
 
   .stamp-done.stamp-large {
-    width: 32px;
-    height: 32px;
+    width: 35px;
+    height: 35px;
     font-size: 14px;
-    border: 3px solid rgba(220, 53, 69, 0.8);
-    color: rgba(220, 53, 69, 0.85);
+    border-width: 2.6px;
   }
 
   .stamp-done.stamp-xlarge {
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-    border: 3.5px solid rgba(220, 53, 69, 0.8);
-    color: rgba(220, 53, 69, 0.9);
+    width: 42px;
+    height: 42px;
+    font-size: 17px;
+    border-width: 3px;
   }
 
   .record-count {
@@ -1476,29 +1798,65 @@ body {
     font-size: 12px;
   }
 
-  /* 超小画面用のスタンプ調整（透過重ね合わせ版） */
+  /* 超小画面用のネコスタンプ調整 */
   .stamp-done {
-    width: 25px;
-    height: 25px;
+    width: 26px;
+    height: 26px;
     font-size: 11px;
-    border: 2px solid rgba(220, 53, 69, 0.8);
-    color: rgba(220, 53, 69, 0.8);
+    border-width: 2px;
+    color: #ff4757;
+  }
+
+  .stamp-done::before,
+  .stamp-done::after {
+    top: -5px;
+    width: 7px;
+    height: 7px;
+    border-top-width: 2px;
+  }
+
+  .stamp-done::before {
+    left: 2px;
+    border-left-width: 2px;
+  }
+
+  .stamp-done::after {
+    right: 2px;
+    border-right-width: 2px;
+  }
+
+  .stamp-done .cat-ear-l,
+  .stamp-done .cat-ear-r {
+    display: none; /* 超小画面では耳のアウトラインをすっきり見せる */
+  }
+
+  .stamp-done .cat-whiskers {
+    width: 3.5px;
+    height: 1px;
+  }
+
+  .stamp-done .cat-whisker-l {
+    left: 1px;
+    box-shadow: 0 2.5px 0 rgba(255, 71, 87, 0.85);
+  }
+
+  .stamp-done .cat-whisker-r {
+    right: 1px;
+    box-shadow: 0 2.5px 0 rgba(255, 71, 87, 0.85);
   }
 
   .stamp-done.stamp-large {
-    width: 28px;
-    height: 28px;
+    width: 30px;
+    height: 30px;
     font-size: 12px;
-    border: 2.5px solid rgba(220, 53, 69, 0.8);
-    color: rgba(220, 53, 69, 0.85);
+    border-width: 2.2px;
   }
 
   .stamp-done.stamp-xlarge {
     width: 36px;
     height: 36px;
-    font-size: 16px;
-    border: 3px solid rgba(220, 53, 69, 0.8);
-    color: rgba(220, 53, 69, 0.9);
+    font-size: 15px;
+    border-width: 2.6px;
   }
 
   .today-button {
@@ -2683,34 +3041,24 @@ body {
   }
 }
 
-/* ハンコのモバイル対応 */
+/* ネコスタンプのモバイル調整（中央配置維持） */
 @media (max-width: 768px) {
   .stamp-done {
-    width: 38px;
-    height: 38px;
-    font-size: 15px;
-    top: -3px;
-    right: -3px;
-    border: 3px solid #dc3545;
-    font-weight: 900;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-12deg);
   }
 
   .stamp-done.stamp-large {
-    width: 44px;
-    height: 44px;
-    font-size: 17px;
-    top: -6px;
-    right: -6px;
-    border: 3.5px solid #dc3545;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-8deg);
   }
 
   .stamp-done.stamp-xlarge {
-    width: 50px;
-    height: 50px;
-    font-size: 19px;
-    top: -9px;
-    right: -9px;
-    border: 4px solid #dc3545;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-5deg);
   }
 }
 /* 日付詳細ヘッダーのアクション部分 */
@@ -2902,4 +3250,141 @@ body {
     padding: 10px 16px;
     font-size: 15px;
   }
+}
+
+/* ==========================================================================
+   ネコスタンプ タイプ別バリエーション (ユーザー設定対応)
+   ========================================================================== */
+
+/* ① 朱肉にゃんこ (デフォルト・コーラルレッド) */
+.stamp-done.stamp-type-red_cat {
+  color: #ff4757;
+  border-color: rgba(255, 71, 87, 0.88);
+}
+.stamp-done.stamp-type-red_cat::before,
+.stamp-done.stamp-type-red_cat::after {
+  border-color: rgba(255, 71, 87, 0.88);
+  background: rgba(255, 107, 129, 0.22);
+}
+
+/* ② ぷにぷに肉球 (ピンク足跡) */
+.stamp-done.stamp-type-pink_paw {
+  color: #e84393;
+  border-color: rgba(232, 67, 147, 0.88);
+  border-style: dashed;
+  background: radial-gradient(
+    circle at 45% 45%,
+    rgba(253, 121, 168, 0.25) 0%,
+    transparent 100%
+  );
+}
+.stamp-done.stamp-type-pink_paw::before,
+.stamp-done.stamp-type-pink_paw::after {
+  border-color: rgba(232, 67, 147, 0.88);
+  background: rgba(253, 121, 168, 0.35);
+}
+
+/* ③ ニッコリしろねこ (パステルクリーム & パープル) */
+.stamp-done.stamp-type-white_cat {
+  color: #6c5ce7;
+  border-color: rgba(108, 92, 231, 0.88);
+  background: radial-gradient(
+    circle at 45% 45%,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(162, 155, 254, 0.15) 100%
+  );
+}
+.stamp-done.stamp-type-white_cat::before,
+.stamp-done.stamp-type-white_cat::after {
+  border-color: rgba(108, 92, 231, 0.88);
+  background: #a29bfe;
+}
+
+/* ④ おちゃめクロネコ (シックダーク) */
+.stamp-done.stamp-type-black_cat {
+  color: #ffeaa7;
+  border-color: #2d3436;
+  background: radial-gradient(
+    circle at 45% 45%,
+    rgba(45, 52, 54, 0.92) 0%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
+}
+.stamp-done.stamp-type-black_cat::before,
+.stamp-done.stamp-type-black_cat::after {
+  border-color: #2d3436;
+  background: #2d3436;
+}
+.stamp-done.stamp-type-black_cat .cat-whiskers {
+  background: #fdcb6e;
+  box-shadow: 0 4px 0 #fdcb6e;
+}
+
+/* ネコスタンプ選択カード (ユーザー管理モーダル用) */
+.cat-stamp-selector-section {
+  margin: 15px 0;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.cat-stamp-selector-section h5 {
+  margin: 0 0 10px 0;
+  font-size: 13px;
+  color: #495057;
+}
+
+.cat-stamp-type-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.cat-stamp-type-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: 1.5px solid #dee2e6;
+  border-radius: 8px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+  text-align: left;
+}
+
+.cat-stamp-type-card:hover {
+  border-color: #ff6b81;
+  background: #fff5f6;
+  transform: translateY(-1px);
+}
+
+.cat-stamp-type-card.active {
+  border-color: #ff4757;
+  background: #ffeef0;
+  box-shadow: 0 0 0 2px rgba(255, 71, 87, 0.2);
+  font-weight: bold;
+}
+
+.cat-stamp-icon {
+  font-size: 18px;
+}
+
+.cat-stamp-name {
+  color: #333;
+}
+
+.cat-stamp-select-group {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cat-stamp-select-group label {
+  font-size: 13px;
+  color: #495057;
+  white-space: nowrap;
 }

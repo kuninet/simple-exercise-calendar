@@ -19,21 +19,24 @@ const LocalStore = {
       username: 'user1',
       display_name: 'ユーザー1',
       color_theme: 'blue',
-      default_exercise_id: 5
+      default_exercise_id: 5,
+      cat_stamp_type: 'red_cat'
     },
     {
       id: 2,
       username: 'user2',
       display_name: 'ユーザー2',
       color_theme: 'green',
-      default_exercise_id: 5
+      default_exercise_id: 5,
+      cat_stamp_type: 'pink_paw'
     },
     {
       id: 3,
       username: 'user3',
       display_name: 'ユーザー3',
       color_theme: 'purple',
-      default_exercise_id: 5
+      default_exercise_id: 5,
+      cat_stamp_type: 'white_cat'
     }
   ],
 
@@ -183,7 +186,7 @@ const LocalStore = {
     localStorage.setItem(this.KEYS.USERS, JSON.stringify(users))
   },
 
-  addUser({ displayName, colorTheme = 'blue' }) {
+  addUser({ displayName, colorTheme = 'blue', catStampType = 'red_cat' }) {
     const users = this.getUsers()
     const nextId =
       users.reduce((max, u) => Math.max(max, Number(u.id) || 0), 0) + 1
@@ -192,7 +195,8 @@ const LocalStore = {
       username: `user_${nextId}_${Date.now()}`,
       display_name: displayName,
       color_theme: colorTheme,
-      default_exercise_id: 5
+      default_exercise_id: 5,
+      cat_stamp_type: catStampType
     }
     users.push(newUser)
     this.saveUsers(users)
@@ -204,6 +208,16 @@ const LocalStore = {
     const user = users.find((u) => u.id === userId)
     if (user) {
       user.display_name = displayName
+      this.saveUsers(users)
+    }
+    return user
+  },
+
+  updateUserCatStamp(userId, catStampType) {
+    const users = this.getUsers()
+    const user = users.find((u) => u.id === userId)
+    if (user) {
+      user.cat_stamp_type = catStampType
       this.saveUsers(users)
     }
     return user
@@ -1353,13 +1367,43 @@ createApp({
       exportData()
     }
 
+    // ネコスタンプ種類定義
+    const catStampTypes = [
+      {
+        id: 'red_cat',
+        name: '朱肉にゃんこ',
+        icon: '🐱',
+        desc: '王道の済ハンコ'
+      },
+      {
+        id: 'pink_paw',
+        name: 'ぷにぷに肉球',
+        icon: '🐾',
+        desc: 'ピンクの足跡'
+      },
+      {
+        id: 'white_cat',
+        name: 'ニッコリしろねこ',
+        icon: '😺',
+        desc: '笑顔のしろねこ'
+      },
+      {
+        id: 'black_cat',
+        name: 'おちゃめクロネコ',
+        icon: '🐈‍⬛',
+        desc: '黒猫アイコン'
+      }
+    ]
+
     // ユーザー管理用の状態
     const showUserManagement = ref(false)
     const showAddUser = ref(false)
     const showEditUser = ref(false)
     const newUserName = ref('')
     const newUserColor = ref('blue')
+    const newUserCatStamp = ref('red_cat')
     const editUserName = ref('')
+    const editUserCatStamp = ref('red_cat')
 
     // ユーザー管理機能
     const toggleUserManagement = () => {
@@ -1372,11 +1416,13 @@ createApp({
       showAddUser.value = !showAddUser.value
       newUserName.value = ''
       newUserColor.value = 'blue'
+      newUserCatStamp.value = 'red_cat'
     }
 
     const toggleEditUser = () => {
       showEditUser.value = !showEditUser.value
       editUserName.value = currentUser.value?.display_name || ''
+      editUserCatStamp.value = currentUser.value?.cat_stamp_type || 'red_cat'
     }
 
     // ユーザー追加（ローカル即時反映）
@@ -1388,7 +1434,8 @@ createApp({
 
       LocalStore.addUser({
         displayName: newUserName.value.trim(),
-        colorTheme: newUserColor.value
+        colorTheme: newUserColor.value,
+        catStampType: newUserCatStamp.value
       })
 
       loadUsers()
@@ -1397,6 +1444,23 @@ createApp({
       showSuccess('ユーザーを追加しました')
 
       requestSync()
+    }
+
+    // ネコスタンプの種類変更
+    const updateUserStamp = (stampType) => {
+      if (!currentUser.value) return
+      const updated = LocalStore.updateUserCatStamp(
+        currentUser.value.id,
+        stampType
+      )
+      if (updated) {
+        currentUser.value.cat_stamp_type = stampType
+        editUserCatStamp.value = stampType
+        loadUsers()
+        showSuccess('ネコスタンプの種類を変更しました！')
+
+        requestSync()
+      }
     }
 
     // ユーザー名更新（ローカル即時反映）
@@ -1710,6 +1774,10 @@ createApp({
       triggerImportFile,
       onFileInputChange,
       fileInput,
+      catStampTypes,
+      newUserCatStamp,
+      editUserCatStamp,
+      updateUserStamp,
       syncStatus,
       syncStatusText,
       syncStatusClass,
@@ -1799,9 +1867,22 @@ createApp({
           今日やった！
         </button>
         
-        <!-- デフォルトエクササイズ設定 -->
+        <!-- デフォルトエクササイズ ＆ ネコスタンプ設定 -->
         <div v-if="showDefaultExerciseSettings" class="default-exercise-settings">
-          <h4>デフォルトエクササイズを選択</h4>
+          <h4>🐾 お気に入りネコスタンプを選択</h4>
+          <div class="cat-stamp-type-grid" style="margin-bottom: 20px;">
+            <button 
+              v-for="st in catStampTypes" 
+              :key="st.id"
+              :class="['cat-stamp-type-card', { active: (currentUser?.cat_stamp_type || 'red_cat') === st.id }]"
+              @click="updateUserStamp(st.id)"
+            >
+              <span class="cat-stamp-icon">{{ st.icon }}</span>
+              <span class="cat-stamp-name">{{ st.name }}</span>
+            </button>
+          </div>
+
+          <h4>デフォルト運動を選択</h4>
           <div class="exercise-grid">
             <button 
               v-for="exercise in exercises" 
@@ -1855,16 +1936,23 @@ createApp({
             >
               <span class="day-number">{{ day.dayNumber }}</span>
               <div class="day-indicators">
-                <!-- 済スタンプ -->
+                <!-- 可愛いネコ済スタンプ -->
                 <div v-if="day.status === 'completed' || day.status === 'multiple-completed'" 
                      :class="[
-                       'stamp-done', 
+                       'stamp-done',
+                       'stamp-type-' + (currentUser?.cat_stamp_type || 'red_cat'),
                        { 
                          'stamp-large': day.recordCount === 2,
                          'stamp-xlarge': day.recordCount >= 3
                        }
-                     ]">
-                  済
+                     ]"
+                     :title="day.recordCount >= 3 ? '大変よくできましたニャ！🐾' : (day.recordCount === 2 ? 'よくできましたニャ！🐾' : 'できたニャ！🐾')">
+                  <span class="cat-ear-l" aria-hidden="true"></span>
+                  <span class="cat-ear-r" aria-hidden="true"></span>
+                  <span class="cat-whiskers cat-whisker-l" aria-hidden="true"></span>
+                  <span class="cat-face-text">済</span>
+                  <span class="cat-whiskers cat-whisker-r" aria-hidden="true"></span>
+                  <span v-if="day.recordCount >= 2" class="cat-paw-badge" aria-hidden="true">🐾</span>
                 </div>
                 <span v-if="day.recordCount > 1" class="record-count">{{ day.recordCount }}</span>
                 <span v-if="day.isStreakDay && day.status === 'completed'" class="streak-indicator">🔥</span>
@@ -1981,9 +2069,26 @@ createApp({
             <button class="close-button" @click="toggleUserManagement">×</button>
           </div>
           <div class="user-management-content">
-            <!-- 現在のユーザー編集 -->
+            <!-- 現在のユーザー設定（スタンプ切り替え含む） -->
             <div class="current-user-section">
               <h4>現在のユーザー: {{ currentUser?.display_name }}</h4>
+              
+              <!-- ネコスタンプ切り替え -->
+              <div class="cat-stamp-selector-section">
+                <h5>🐾 ネコスタンプのデザイン</h5>
+                <div class="cat-stamp-type-grid">
+                  <button 
+                    v-for="st in catStampTypes" 
+                    :key="st.id"
+                    :class="['cat-stamp-type-card', { active: (currentUser?.cat_stamp_type || 'red_cat') === st.id }]"
+                    @click="updateUserStamp(st.id)"
+                  >
+                    <span class="cat-stamp-icon">{{ st.icon }}</span>
+                    <span class="cat-stamp-name">{{ st.name }}</span>
+                  </button>
+                </div>
+              </div>
+
               <div v-if="!showEditUser" class="user-actions">
                 <button class="edit-user-button" @click="toggleEditUser">
                   ✏️ 名前を変更
@@ -2027,6 +2132,16 @@ createApp({
                   <option value="red">🔴 レッド</option>
                   <option value="teal">🟢 ティール</option>
                 </select>
+
+                <div class="cat-stamp-select-group">
+                  <label>スタンプタイプ:</label>
+                  <select v-model="newUserCatStamp" class="color-select">
+                    <option v-for="st in catStampTypes" :key="st.id" :value="st.id">
+                      {{ st.icon }} {{ st.name }}
+                    </option>
+                  </select>
+                </div>
+
                 <div class="form-buttons">
                   <button class="save-button" @click="addUser">追加</button>
                   <button class="cancel-button" @click="toggleAddUser">キャンセル</button>

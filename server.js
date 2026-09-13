@@ -55,7 +55,12 @@ function initializeDatabase() {
             reject(new Error('データベース整合性エラー'))
           } else {
             console.log('✅ データベース整合性チェック完了')
-            resolve()
+            db.run(
+              "ALTER TABLE users ADD COLUMN cat_stamp_type TEXT DEFAULT 'red_cat'",
+              () => {
+                resolve()
+              }
+            )
           }
         })
       }
@@ -150,12 +155,13 @@ app.post('/api/sync', (req, res) => {
             // 1. ユーザーの同期（挿入または更新）
             if (Array.isArray(users) && users.length > 0) {
               const userStmt = db.prepare(`
-              INSERT INTO users (id, username, display_name, color_theme, default_exercise_id)
-              VALUES (?, ?, ?, ?, ?)
+              INSERT INTO users (id, username, display_name, color_theme, default_exercise_id, cat_stamp_type)
+              VALUES (?, ?, ?, ?, ?, ?)
               ON CONFLICT(id) DO UPDATE SET
                 display_name = excluded.display_name,
                 color_theme = excluded.color_theme,
-                default_exercise_id = excluded.default_exercise_id
+                default_exercise_id = excluded.default_exercise_id,
+                cat_stamp_type = excluded.cat_stamp_type
             `)
               for (const u of users) {
                 userStmt.run(
@@ -163,7 +169,8 @@ app.post('/api/sync', (req, res) => {
                   u.username || `user_${u.id}`,
                   u.display_name,
                   u.color_theme || 'blue',
-                  u.default_exercise_id || 5
+                  u.default_exercise_id || 5,
+                  u.cat_stamp_type || 'red_cat'
                 )
               }
               userStmt.finalize()
@@ -364,7 +371,7 @@ app.get('/api/export', (req, res) => {
 app.get('/api/users', (req, res) => {
   try {
     const query =
-      'SELECT id, username, display_name, color_theme, default_exercise_id FROM users ORDER BY id'
+      'SELECT id, username, display_name, color_theme, default_exercise_id, cat_stamp_type FROM users ORDER BY id'
 
     db.all(query, [], (err, users) => {
       if (err) {
