@@ -1367,6 +1367,14 @@ createApp({
       exportData()
     }
 
+    // ネコスタンプ SVG Data URI (通信0回・iPhone/PWA完全即時表示)
+    const CAT_STAMPS_DATA_URI = {
+      red_cat: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M18 38 L26 12 L44 26 Z" fill="%232d3436" stroke="%232d3436" stroke-width="4" stroke-linejoin="round"/><path d="M23 34 L28 17 L41 27 Z" fill="%23ff7675"/><path d="M82 38 L74 12 L56 26 Z" fill="%232d3436" stroke="%232d3436" stroke-width="4" stroke-linejoin="round"/><path d="M77 34 L72 17 L59 27 Z" fill="%23ff7675"/><circle cx="50" cy="55" r="38" fill="%23fff5f5" stroke="%23d63031" stroke-width="6"/><circle cx="50" cy="55" r="34" fill="none" stroke="%23d63031" stroke-width="1.5" stroke-dasharray="4,2"/><g fill="%23d63031"><circle cx="28" cy="42" r="3"/><circle cx="26" cy="54" r="3"/><path d="M24 70 L33 60 L31 71 Z"/><rect x="42" y="38" width="34" height="4.5" rx="2"/><circle cx="59" cy="34" r="2.5"/><path d="M46 47 L72 47 L72 51 L46 51 Z"/><path d="M44 57 L74 57 L74 61 L44 61 Z"/><path d="M52 47 L52 74 L47 74 L47 47 Z"/><path d="M64 61 C64 70, 72 74, 76 74 L74 78 C68 78, 59 73, 59 61 Z"/></g><line x1="6" y1="50" x2="18" y1="52" stroke="%23d63031" stroke-width="3" stroke-linecap="round"/><line x1="8" y1="60" x2="19" y1="59" stroke="%23d63031" stroke-width="3" stroke-linecap="round"/><line x1="94" y1="50" x2="82" y1="52" stroke="%23d63031" stroke-width="3" stroke-linecap="round"/><line x1="92" y1="60" x2="81" y1="59" stroke="%23d63031" stroke-width="3" stroke-linecap="round"/></svg>`,
+      pink_paw: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 14 C76 14, 94 32, 94 58 C94 80, 76 92, 50 92 C24 92, 6 80, 6 58 C6 32, 24 14, 50 14 Z" fill="%23fff5f9" stroke="%23e84393" stroke-width="5" stroke-dasharray="8 4"/><path d="M50 48 C34 48, 26 61, 31 74 C36 83, 64 83, 69 74 C74 61, 66 48, 50 48 Z" fill="%23fd79a8" stroke="%23e84393" stroke-width="2.5"/><path d="M42 56 C45 52, 52 52, 55 56 C53 58, 45 58, 42 56 Z" fill="%23ffffff" opacity="0.6"/><ellipse cx="23" cy="42" rx="8.5" ry="11.5" transform="rotate(-25 23 42)" fill="%23fd79a8" stroke="%23e84393" stroke-width="2.5"/><ellipse cx="37" cy="25" rx="8.5" ry="11.5" transform="rotate(-10 37 25)" fill="%23fd79a8" stroke="%23e84393" stroke-width="2.5"/><ellipse cx="63" cy="25" rx="8.5" ry="11.5" transform="rotate(10 63 25)" fill="%23fd79a8" stroke="%23e84393" stroke-width="2.5"/><ellipse cx="77" cy="42" rx="8.5" ry="11.5" transform="rotate(25 77 42)" fill="%23fd79a8" stroke="%23e84393" stroke-width="2.5"/><circle cx="35" cy="22" r="2.5" fill="%23ffffff" opacity="0.7"/><circle cx="61" cy="22" r="2.5" fill="%23ffffff" opacity="0.7"/><circle cx="21" cy="38" r="2" fill="%23ffffff" opacity="0.7"/><circle cx="75" cy="38" r="2" fill="%23ffffff" opacity="0.7"/></svg>`,
+      white_cat: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="44" fill="%23ffffff" stroke="%236c5ce7" stroke-width="5"/><circle cx="50" cy="50" r="40" fill="none" stroke="%23a29bfe" stroke-width="1.5" stroke-dasharray="3 3"/><path d="M22 36 L28 12 L44 26 Z" fill="%23ffffff" stroke="%236c5ce7" stroke-width="4" stroke-linejoin="round"/><path d="M26 33 L30 18 L41 27 Z" fill="%23ff7675"/><path d="M78 36 L72 12 L56 26 Z" fill="%23ffffff" stroke="%236c5ce7" stroke-width="4" stroke-linejoin="round"/><path d="M74 33 L70 18 L59 27 Z" fill="%23ff7675"/><circle cx="36" cy="46" r="6.5" fill="%232d3436"/><circle cx="34" cy="44" r="2.5" fill="%23ffffff"/><circle cx="38" cy="48" r="1.3" fill="%23ffffff"/><circle cx="64" cy="46" r="6.5" fill="%232d3436"/><circle cx="62" cy="44" r="2.5" fill="%23ffffff"/><circle cx="66" cy="48" r="1.3" fill="%23ffffff"/><polygon points="50,54 47,51 53,51" fill="%23ff7675"/><path d="M43 57 Q50 64 57 57" fill="none" stroke="%232d3436" stroke-width="3" stroke-linecap="round"/><ellipse cx="27" cy="52" rx="4.5" ry="3" fill="%23ff7675" opacity="0.6"/><ellipse cx="73" cy="52" rx="4.5" ry="3" fill="%23ff7675" opacity="0.6"/><line x1="10" y1="46" x2="21" y1="48" stroke="%232d3436" stroke-width="2.5" stroke-linecap="round"/><line x1="12" y1="54" x2="22" y1="53" stroke="%232d3436" stroke-width="2.5" stroke-linecap="round"/><line x1="90" y1="46" x2="79" y1="48" stroke="%232d3436" stroke-width="2.5" stroke-linecap="round"/><line x1="88" y1="54" x2="78" y1="53" stroke="%232d3436" stroke-width="2.5" stroke-linecap="round"/><path d="M28 73 Q50 82 72 73 L69 84 Q50 92 31 84 Z" fill="%236c5ce7"/><circle cx="50" cy="81" r="3.5" fill="%23fdcb6e"/></svg>`,
+      black_cat: `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M22 36 L28 10 L44 26 Z" fill="%232d3436" stroke="%232d3436" stroke-width="4" stroke-linejoin="round"/><path d="M26 33 L30 16 L41 27 Z" fill="%23ff7675"/><path d="M78 36 L72 10 L56 26 Z" fill="%232d3436" stroke="%232d3436" stroke-width="4" stroke-linejoin="round"/><path d="M74 33 L70 16 L59 27 Z" fill="%23ff7675"/><circle cx="50" cy="52" r="40" fill="%232d3436" stroke="%232d3436" stroke-width="2"/><circle cx="36" cy="46" r="7.5" fill="%23fdcb6e"/><ellipse cx="36" cy="46" rx="2.5" ry="6.5" fill="%232d3436"/><circle cx="34" cy="42" r="2" fill="%23ffffff"/><circle cx="64" cy="46" r="7.5" fill="%23fdcb6e"/><ellipse cx="64" cy="46" rx="2.5" ry="6.5" fill="%232d3436"/><circle cx="62" cy="42" r="2" fill="%23ffffff"/><polygon points="50,54 48,51 52,51" fill="%23ff7675"/><path d="M44 57 Q50 63 56 57" fill="none" stroke="%23ffffff" stroke-width="2.5" stroke-linecap="round"/><polygon points="46,58 48,63 49,58" fill="%23ffffff"/><polygon points="51,58 52,63 54,58" fill="%23ffffff"/><line x1="8" y1="46" x2="21" y1="48" stroke="%23fdcb6e" stroke-width="2.5" stroke-linecap="round"/><line x1="10" y1="54" x2="22" y1="53" stroke="%23fdcb6e" stroke-width="2.5" stroke-linecap="round"/><line x1="90" y1="46" x2="79" y1="48" stroke="%23fdcb6e" stroke-width="2.5" stroke-linecap="round"/><line x1="88" y1="54" x2="78" y1="53" stroke="%23fdcb6e" stroke-width="2.5" stroke-linecap="round"/><circle cx="50" cy="80" r="4" fill="%23fdcb6e"/></svg>`
+    }
+
     // ネコスタンプ種類定義
     const catStampTypes = [
       {
@@ -1399,9 +1407,8 @@ createApp({
       }
     ]
 
-    const getCatStampFile = (type) => {
-      const found = catStampTypes.find((st) => st.id === type)
-      return found ? found.file : 'cat_red.svg'
+    const getCatStampSrc = (type) => {
+      return CAT_STAMPS_DATA_URI[type] || CAT_STAMPS_DATA_URI.red_cat
     }
 
     // ユーザー管理用の状態
@@ -1784,7 +1791,7 @@ createApp({
       onFileInputChange,
       fileInput,
       catStampTypes,
-      getCatStampFile,
+      getCatStampSrc,
       newUserCatStamp,
       editUserCatStamp,
       updateUserStamp,
@@ -1887,7 +1894,7 @@ createApp({
               :class="['cat-stamp-type-card', { active: (currentUser?.cat_stamp_type || 'red_cat') === st.id }]"
               @click="updateUserStamp(st.id)"
             >
-              <img :src="'/stamps/' + st.file" class="cat-stamp-thumb-img" alt="スタンプ" />
+              <img :src="getCatStampSrc(st.id)" class="cat-stamp-thumb-img" alt="スタンプ" />
               <span class="cat-stamp-name">{{ st.name }}</span>
             </button>
           </div>
@@ -1957,7 +1964,7 @@ createApp({
                        }
                      ]"
                      :title="day.recordCount >= 3 ? '大変よくできましたニャ！🐾' : (day.recordCount === 2 ? 'よくできましたニャ！🐾' : 'できたニャ！🐾')">
-                  <img :src="'/stamps/' + getCatStampFile(currentUser?.cat_stamp_type)" class="cat-stamp-img" alt="ネコスタンプ" />
+                  <img :src="getCatStampSrc(currentUser?.cat_stamp_type)" class="cat-stamp-img" alt="ネコスタンプ" />
                   <span v-if="day.recordCount >= 2" class="cat-paw-badge" aria-hidden="true">🐾</span>
                 </div>
                 <span v-if="day.recordCount > 1" class="record-count">{{ day.recordCount }}</span>
@@ -2089,7 +2096,7 @@ createApp({
                     :class="['cat-stamp-type-card', { active: (currentUser?.cat_stamp_type || 'red_cat') === st.id }]"
                     @click="updateUserStamp(st.id)"
                   >
-                    <img :src="'/stamps/' + st.file" class="cat-stamp-thumb-img" alt="スタンプ" />
+                    <img :src="getCatStampSrc(st.id)" class="cat-stamp-thumb-img" alt="スタンプ" />
                     <span class="cat-stamp-name">{{ st.name }}</span>
                   </button>
                 </div>
