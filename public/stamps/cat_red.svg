@@ -28,8 +28,8 @@
   </g>
   
   <!-- ねこヒゲ -->
-  <line x1="6" y1="50" x2="18" y1="52" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
-  <line x1="8" y1="60" x2="19" y1="59" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
-  <line x1="94" y1="50" x2="82" y1="52" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
-  <line x1="92" y1="60" x2="81" y1="59" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
+  <line x1="6" y1="50" x2="18" y2="52" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
+  <line x1="8" y1="60" x2="19" y2="59" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
+  <line x1="94" y1="50" x2="82" y2="52" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
+  <line x1="92" y1="60" x2="81" y2="59" stroke="#d63031" stroke-width="3" stroke-linecap="round"/>
 </svg>

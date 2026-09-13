@@ -28,10 +28,10 @@
   <ellipse cx="73" cy="52" rx="4.5" ry="3" fill="#ff7675" opacity="0.6"/>
 
   <!-- ヒゲ -->
-  <line x1="10" y1="46" x2="21" y1="48" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="12" y1="54" x2="22" y1="53" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="90" y1="46" x2="79" y1="48" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="88" y1="54" x2="78" y1="53" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="10" y1="46" x2="21" y2="48" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="12" y1="54" x2="22" y2="53" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="90" y1="46" x2="79" y2="48" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="88" y1="54" x2="78" y2="53" stroke="#2d3436" stroke-width="2.5" stroke-linecap="round"/>
 
   <!-- 下部星＆リボン飾り -->
   <path d="M 28 73 Q 50 82 72 73 L 69 84 Q 50 92 31 84 Z" fill="#6c5ce7"/>

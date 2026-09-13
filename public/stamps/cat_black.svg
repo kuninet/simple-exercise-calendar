@@ -26,10 +26,10 @@
   <polygon points="51,58 52,63 54,58" fill="#ffffff"/>
 
   <!-- 白いヒゲ -->
-  <line x1="8" y1="46" x2="21" y1="48" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="10" y1="54" x2="22" y1="53" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="92" y1="46" x2="79" y1="48" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
-  <line x1="90" y1="54" x2="78" y1="53" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="8" y1="46" x2="21" y2="48" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="10" y1="54" x2="22" y2="53" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="92" y1="46" x2="79" y2="48" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="90" y1="54" x2="78" y2="53" stroke="#fdcb6e" stroke-width="2.5" stroke-linecap="round"/>
 
   <!-- 下部飾り -->
   <circle cx="50" cy="80" r="4" fill="#fdcb6e"/>
