@@ -421,8 +421,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-8deg);
-  width: 90px;
-  height: 90px;
+  width: 115px;
+  height: 115px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -461,9 +461,9 @@ body {
 /* 肉球バッジ（複数記録時のアクセント・猫スタンプ右下の中央寄りに配置） */
 .stamp-done .cat-paw-badge {
   position: absolute;
-  bottom: 6px;
-  right: 6px;
-  font-size: 15px;
+  bottom: 8px;
+  right: 8px;
+  font-size: 22px;
   line-height: 1;
   z-index: 12;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
@@ -474,16 +474,16 @@ body {
 /* 回数数字バッジ（猫スタンプの左下隅に配置） */
 .stamp-done .record-count {
   position: absolute;
-  bottom: 4px;
-  left: 4px;
+  bottom: 6px;
+  left: 6px;
   top: auto;
   right: auto;
-  font-size: 11px;
+  font-size: 13px;
   background: #ff4757;
   color: white;
   border-radius: 50%;
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -495,8 +495,8 @@ body {
 
 /* 2回記録時のスタンプ（ラージ） */
 .stamp-done.stamp-large {
-  width: 105px;
-  height: 105px;
+  width: 135px;
+  height: 135px;
   font-size: 19px;
   border-width: 3.2px;
   transform: translate(-50%, -50%) rotate(-8deg);
@@ -540,23 +540,23 @@ body {
 }
 
 .stamp-done.stamp-large .cat-paw-badge {
-  font-size: 16px;
-  bottom: 8px;
-  right: 8px;
+  font-size: 25px;
+  bottom: 10px;
+  right: 10px;
 }
 
 .stamp-done.stamp-large .record-count {
-  font-size: 12px;
-  width: 20px;
-  height: 20px;
-  bottom: 6px;
-  left: 6px;
+  font-size: 15px;
+  width: 25px;
+  height: 25px;
+  bottom: 8px;
+  left: 8px;
 }
 
 /* 3つ以上のエクササイズ用の特大サイズ（エクストララージ） */
 .stamp-done.stamp-xlarge {
-  width: 120px;
-  height: 120px;
+  width: 155px;
+  height: 155px;
   font-size: 23px;
   border-width: 3.6px;
   transform: translate(-50%, -50%) rotate(-5deg);
@@ -600,17 +600,17 @@ body {
 }
 
 .stamp-done.stamp-xlarge .cat-paw-badge {
-  font-size: 17px;
-  bottom: 10px;
-  right: 10px;
+  font-size: 28px;
+  bottom: 12px;
+  right: 12px;
 }
 
 .stamp-done.stamp-xlarge .record-count {
-  font-size: 13px;
-  width: 22px;
-  height: 22px;
-  bottom: 8px;
-  left: 8px;
+  font-size: 17px;
+  width: 28px;
+  height: 28px;
+  bottom: 10px;
+  left: 10px;
 }
 
 /* ネコスタンプのアニメーション（ぽんと可愛く押されるバウンス演出） */
@@ -1406,8 +1406,8 @@ body {
 
   /* iPadでのネコスタンプサイズ */
   .stamp-done {
-    width: 75px;
-    height: 75px;
+    width: 95px;
+    height: 95px;
     font-size: 18px;
     border-width: 3.2px;
   }
@@ -1431,15 +1431,15 @@ body {
   }
 
   .stamp-done.stamp-large {
-    width: 88px;
-    height: 88px;
+    width: 115px;
+    height: 115px;
     font-size: 21px;
     border-width: 3.6px;
   }
 
   .stamp-done.stamp-xlarge {
-    width: 100px;
-    height: 100px;
+    width: 130px;
+    height: 130px;
     font-size: 24px;
     border-width: 4px;
   }
@@ -1545,8 +1545,8 @@ body {
 
   /* 可愛いネコスタンプのモバイル調整 */
   .stamp-done {
-    width: 60px;
-    height: 60px;
+    width: 75px;
+    height: 75px;
     font-size: 12px;
     border-width: 2.4px;
     color: #ff4757;
@@ -1600,15 +1600,15 @@ body {
   }
 
   .stamp-done.stamp-large {
-    width: 70px;
-    height: 70px;
+    width: 90px;
+    height: 90px;
     font-size: 14px;
     border-width: 2.6px;
   }
 
   .stamp-done.stamp-xlarge {
-    width: 80px;
-    height: 80px;
+    width: 105px;
+    height: 105px;
     font-size: 17px;
     border-width: 3px;
   }
@@ -1765,8 +1765,8 @@ body {
 
   /* 超小画面用のネコスタンプ調整 */
   .stamp-done {
-    width: 50px;
-    height: 50px;
+    width: 65px;
+    height: 65px;
     font-size: 11px;
     border-width: 2px;
     color: #ff4757;
